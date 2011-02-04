@@ -1,9 +1,9 @@
 P_NAME          :=  teststl
-P_C_SRCS        :=  $(wildcard *.c)
-P_CXX_SRCS      :=  $(wildcard *.cpp)
+P_C_SRCS        :=  $(wildcard src/*.c)
+P_C_SRCS        +=  $(wildcard test/*.c)
 P_C_OBJS        :=  ${P_C_SRCS:.c=.o}
-P_CXX_OBJS      :=  ${P_CXX_SRCS:.cpp=.o}
 P_OBJS          :=  $(P_C_OBJS) $(P_CXX_OBJS)
+P_INCLUDE_DIRS  :=  inc
 CPPFLAGS        +=  $(foreach includedir,$(P_INCLUDE_DIRS),-I$(includedir))
 LDFLAGS         +=  $(foreach librarydir,$(P_LIBRARY_DIRS),-L$(librarydir))
 LDFLAGS         +=  $(foreach library,$(P_LIBRARIES),-l$(library))
