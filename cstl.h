@@ -3,6 +3,5 @@
 
 #include "iterator.h"
 #include "vector.h"
-#include "list.h"
 
 #endif
