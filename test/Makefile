@@ -12,7 +12,7 @@ CCFLAGS         :=  -Wall -g
 
 .PHONY:         all clean
 all:            $(P_NAME)
-$(P_NAME):      $(P_OBJS)
+$(P_NAME):      $(P_C_OBJS)
 		  $(CC) $(CCFLAGS) $(P_C_OBJS) -o $(P_NAME) $(LDFLAGS)
 clean:
 	@- $(RM) $(P_NAME)
