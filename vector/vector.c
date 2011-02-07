@@ -71,7 +71,7 @@ vector_back( vector *vec){
     return vec->elem[vec->cur_size];
 }
 void
-vector_insert( vector *vec,int pos,void** elem) {
+vector_insert( vector *vec,int pos,void* elem) {
     if ( !vec ) return ;
 
     if ( pos == vec->cur_size + 1 ) {

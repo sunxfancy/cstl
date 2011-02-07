@@ -97,7 +97,7 @@ vector_back( vector *);
  * Note           : 
  */
 void 
-vector_insert( vector *,int,void**);
+vector_insert( vector *,int,void*);
 
 
 #endif
