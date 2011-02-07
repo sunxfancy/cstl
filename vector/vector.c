@@ -74,7 +74,7 @@ void
 vector_insert( vector *vec,int pos,void* elem) {
     if ( !vec ) return ;
 
-    if ( pos == vec->cur_size + 1 ) {
+    if ( pos == vec->cur_size ) {
 	vector_push_back( vec, elem );
     } else if ( pos > vec->cur_size ) {
 	int i = 0;
