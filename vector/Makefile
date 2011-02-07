@@ -1,22 +1,18 @@
-P_NAME          :=  libcstl.a
+P_NAME          :=  tvector
 P_C_SRCS        :=  $(wildcard *.c)
 P_C_OBJS        :=  ${P_C_SRCS:.c=.o}
-P_OBJS          :=  $(P_C_OBJS) $(P_CXX_OBJS)
-P_INCLUDE_DIRS  :=  ../inc
 CPPFLAGS        +=  $(foreach includedir,$(P_INCLUDE_DIRS),-I$(includedir))
 LDFLAGS         +=  $(foreach librarydir,$(P_LIBRARY_DIRS),-L$(librarydir))
 LDFLAGS         +=  $(foreach library,$(P_LIBRARIES),-l$(library))
-CXX             :=  gcc
 CC              :=  gcc -g
-CXXFLAGS        :=  -Wall -g
+CCFLAGS         :=  -Wall -g 
 
 .PHONY:         all clean
 all:            $(P_NAME)
-$(P_NAME):      $(P_OBJS)
-		ar rcs $(P_NAME) $(P_OBJS)
-
+$(P_NAME):      $(P_C_OBJS)
+		  $(CC) $(CCFLAGS) $(P_C_OBJS) -o $(P_NAME) $(LDFLAGS)
 clean:
 	@- $(RM) $(P_NAME)
-	@- $(RM) $(P_OBJS)
+	@- $(RM) $(P_C_OBJS)
 	@- $(RM) core*
 
