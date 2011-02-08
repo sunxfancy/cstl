@@ -78,7 +78,7 @@ vector_insert( vector *vec,int pos,void* elem) {
 	vector_push_back( vec, elem );
     } else if ( pos > vec->cur_size ) {
 	int i = 0;
-	for ( i = 0; i < pos - 1 ; i++ ) {
+	for ( i = vec->cur_size; i < pos ; i++ ) {
 	    vector_push_back( vec, (void*) 0 );
 	}
 	vector_push_back( vec, elem );
@@ -92,6 +92,7 @@ vector_insert( vector *vec,int pos,void* elem) {
 	          &vec->elem[pos],
 		  (vec->cur_size - pos ) * sizeof ( void * ) );
 	vec->elem[pos] = elem;
+	vec->cur_size++;
     }
 }
 
