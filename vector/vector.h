@@ -8,6 +8,7 @@ typedef struct __vector {
     void **elem     ; /* opeque pointer array */
     int    capacity ; /* Current capacity */
     int    cur_size ; /* number of elements in the vector */
+    pfnDestruct _destroy;
 }vector;
 
 /*
@@ -98,6 +99,46 @@ vector_back( vector *);
  */
 void 
 vector_insert( vector *,int,void*);
+/*
+ * Interface Name : vector_clear
+ * Parameter      : 1. pointer to vector
+ * Return         : none
+ * Note           : destroy the vectory elements
+ *                  using the destructor function pointer set
+ *                  if destructor function pointer is not set
+ *                  then there will be memory leak.
+ */
+void 
+vector_clear( vector *);
+/*
+ * Interface Name : vector_pop_back
+ * Parameter      : 1. pointer to vector
+ * Return         : None.
+ * Note           : 
+ */
+void 
+vector_pop_back( vector *);
+/*
+ * Interface Name : vector_erase
+ * Parameter      : 1. pointer to vector
+ *                  2. position of the element to erase
+ * Return         : None.
+ * Note           : 
+ */
+void 
+vector_erase( vector *, int);
+/*
+ * Interface Name : vector_resize
+ * Parameter      : 1. pointer to vector
+ *                  2. New size
+ * Return         : Changes the number of elements to new size
+ * Note           : All the new elements will be NULL
+ */
+void 
+vector_resize( vector *, int);
+
+
+    
 
 
 #endif

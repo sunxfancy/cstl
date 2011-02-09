@@ -2,14 +2,16 @@
 #include <malloc.h>
 #include <string.h>
 
+#define VALIDATE_POINTER if ( ! vec )  return; 
+
 vector *
 vector_new(int s, pfnDestruct fn) {
 
     int size = ( s < 8 ) ? 8 : s;
-    
+
     vector *ptr_vector = ( vector *) malloc ( size * sizeof ( vector));
     if ( !ptr_vector ) return (vector*)0;
-    
+
     ptr_vector->capacity = size;
     ptr_vector->cur_size = 0;
 
@@ -18,12 +20,14 @@ vector_new(int s, pfnDestruct fn) {
 	free ( ptr_vector );
 	return ( vector *)0;
     }
+    ptr_vector->_destroy = fn;
     return ptr_vector;
 }
 void
 vector_push_back ( vector *vec, void *elem) {
     int temp_size = 0;
-    if ( ! vec )  return; 
+    VALIDATE_POINTER;
+
     /* TODO :
      * Need to add a check if elem is pointer from stack or heap
      * Not sure as of now how to get that
@@ -38,7 +42,8 @@ vector_push_back ( vector *vec, void *elem) {
 }
 void *
 vector_element_at ( vector *vec, int pos ) {
-    if ( ! vec ) return ;
+    VALIDATE_POINTER;
+
     if ( pos > vec->cur_size ) return (vector*)0;
     return (void*)vec->elem[pos];
 
@@ -46,18 +51,20 @@ vector_element_at ( vector *vec, int pos ) {
 }
 int
 vector_size( vector *vec) {
-    if ( !vec ) return 0;
+    VALIDATE_POINTER;
+
     return vec->cur_size;
 }
 int
 vector_empty( vector *vec ) {
-    if ( ! vec ) return 1;
+    VALIDATE_POINTER;
+
     if ( vec->cur_size == 0 ) return 1;
     return 0;
 }
 int
 vector_capacity( vector *vec ) {
-    if ( !vec ) return 0;
+    VALIDATE_POINTER;
     return vec->capacity;
 }
 void *
@@ -68,11 +75,11 @@ vector_front( vector *vec){
 void *
 vector_back( vector *vec){
     if ( !vec ) return (vector*) 0;
-    return vec->elem[vec->cur_size];
+    return vec->elem[vec->cur_size - 1];
 }
 void
 vector_insert( vector *vec,int pos,void* elem) {
-    if ( !vec ) return ;
+    VALIDATE_POINTER;
 
     if ( pos == vec->cur_size ) {
 	vector_push_back( vec, elem );
@@ -89,10 +96,49 @@ vector_insert( vector *vec,int pos,void* elem) {
 	    vec->capacity = tmpsize;
 	}
 	memmove ( &(vec->elem[pos + 1]),
-	          &vec->elem[pos],
+		  &vec->elem[pos],
 		  (vec->cur_size - pos ) * sizeof ( void * ) );
 	vec->elem[pos] = elem;
 	vec->cur_size++;
     }
 }
+void
+vector_clear ( vector *vec ) {
+    int i = 0;
 
+    VALIDATE_POINTER;
+
+    for ( i = 0; i < vec->cur_size; i++ ){
+	(vec->_destroy)(vec->elem[i]);
+    }
+    if ( vec->elem ) free ( vec->elem );
+    if ( vec ) free ( vec );
+}
+void 
+vector_pop_back( vector *vec) {
+    VALIDATE_POINTER;
+
+    (vec->_destroy)(vec->elem[vec->cur_size - 1]);
+    vec->cur_size--;
+}
+void 
+vector_erase( vector *vec, int pos){
+    VALIDATE_POINTER;
+
+    if ( pos >= vec->cur_size ) return;
+    (vec->_destroy)(vec->elem[pos]);
+    memmove ( &(vec->elem[pos]),
+	      &vec->elem[pos + 1 ],
+	      (vec->cur_size - pos ) * sizeof ( void * ) );
+    vec->cur_size--;
+}
+void 
+vector_resize ( vector *vec, int new_size ) {
+    VALIDATE_POINTER;
+
+    if ( vec->capacity == new_size ) return;
+    if ( vec->capacity > new_size ) return;
+
+    vec->elem = ( void **) realloc ( vec->elem, new_size * sizeof ( void * ));
+    vec->capacity = new_size;
+}

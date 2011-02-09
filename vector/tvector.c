@@ -3,64 +3,121 @@
 #include <stdlib.h>
 #include "vector.h"
 
-typedef struct _test_data_vector {
-    char *api;
-    char **input;
-    char **output;
-}vector_test_data;
-
-vector_test_data data[] = {
-    {
-	"vector_push_back",
-	(char*[]){"1","2","3","4","5","6","7","8","9","10",""},
-	(char*[]){"1","2","3","4","5","6","7","8","9","10",""}
-    },
-    {
-	"vector_push_back",
-	(char*[]){"10","20","30","40","50","60","70","80","90","100",""},
-	(char*[]){"10","20","30","40","50","60","70","80","90","100",""}
-    },
-    {
-	"vector_push_back",
-	(char*[]){"100","200","300","400","500","600",
-	                                         "700","800","900","1000",""},
-	(char*[]){"100","200","300","400","500","600",
-	                                        "700","800","900","1000",""}
-    }
-};
-void 
-free_elem ( void *e ) {
-    if ( (char*)e ) free ( (char*)e ) ;
-}
 void
-perform_vector_push_back_test(int index){
-    printf ( "Test case - vector_push_back " );
-    vector *p = vector_new ( 5, free_elem );
-    if ( !p ) { 
-	printf ( "FAIL\n" ); 
-	return;
+free_elem ( void *ptr ) {
+    char *t = ( char*) ptr;
+    if ( t ) {
+	free ( t );
     }
-    int i = 0;
-    while ( data[index].input[i] != "" ) {
-        vector_push_back( p,strdup ( data[index].input[i++]));
-    }
-    i = 0;
-    while ( data[index].output[i] != "" ) {
-	char *v = ( char *) vector_element_at ( p , i );
-	if ( 0 != strcmp ( v, data[index].output[i++] )) {
-	    printf ( "FAIL\n" );
-	    abort();
-	}
-    }
-    printf ( "PASS\n");
 }
-int main() {
+#define PERFORM_SIZE_CHECK(X) \
+    if ( vector_size ( vec ) != (X) ) { \
+	printf ( "Test [vector_size] Failed at %s:%d\n", __FILE__,__LINE__); \
+	abort();\
+    }
+
+void
+print_vector( vector *vec ) {
     int i = 0;
-    int num_tc = sizeof (data) / (sizeof(data[0]));
-    for ( i = 0; i < num_tc ; i++) {
-	if ( 0 == strcmp ( data[i].api, "vector_push_back" )) {
-	    perform_vector_push_back_test(i);
+    for ( i = 0; i < vec->cur_size; i++ ) {
+	char *v = (char*)vector_element_at ( vec, i );
+	if ( v )  {
+	    printf ( "[%d]-[%s]\n", i,v );
+	} else {
+	    printf ( "[%d]-[NULL]\n", i );
 	}
     }
+    printf ( "\n" );
+}
+char *input[] = {"A","B","C","D","E", "F","G","H","I","J","K", "L","M", "N",
+    "O","P","Q", "R","S","T","U","V","W", "X","Y","Z",""};
+int 
+main( int argc, char**argv ) {
+    int i = 0;
+    vector *vec = vector_new ( 5, free_elem );
+    if ( !vector_empty(vec) )  {
+	printf ( "Test [vector_empty] Failed at %s:%d\n", __FILE__,__LINE__);
+    }
+    while ( input[i] != "" ) {
+	vector_push_back ( vec, strdup ( input[i++] ));
+    }
+    for ( i = 0; i < vec->cur_size; i++ ) {
+	char *v = ( char*) vector_element_at ( vec, i );
+	if ( 0 != strcmp (v,input[i++])) {
+	    printf ( "Test [vector_element_at] Failed at %s:%d\n",
+	                                          __FILE__,__LINE__);
+	}
+    }
+    PERFORM_SIZE_CHECK(26);
+
+    if ( 0 != strcmp ("A", (char*)vector_front(vec)) ){
+	printf ( "Test [vector_front] Failed at %s:%d\n", __FILE__,__LINE__);
+    }
+    if ( 0 != strcmp ("Z", (char*)vector_back(vec)) ){
+	printf ( "Test [vector_back] Failed at %s:%d\n", __FILE__,__LINE__);
+    }
+
+    /* insert at start */
+    vector_insert ( vec, 0, strdup("a"));
+    PERFORM_SIZE_CHECK(27);
+    if ( 0 != strcmp ("a", (char*)vector_front(vec)) ){
+	printf ( "Test [vector_front] Failed at %s:%d\n", __FILE__,__LINE__);
+    }
+
+    /* insert at last */
+    vector_insert ( vec,27, strdup("z"));
+    PERFORM_SIZE_CHECK(28);
+    if ( 0 != strcmp ("z", (char*)vector_back(vec)) ){
+	printf ( "Test [vector_back] Failed at %s:%d\n", __FILE__,__LINE__);
+    }
+    /* insert in middle */
+    vector_insert ( vec,4 ,strdup("d"));
+    PERFORM_SIZE_CHECK(29);
+    if ( 0 != strcmp ("d", (char*)vector_element_at(vec,4)) ){
+	printf ( "Test [vector_element_at] Failed at %s:%d\n", 
+	                                                __FILE__,__LINE__);
+    }
+    /* insert after+10 position */
+    char *v = strdup ( "VERY_FAR_AWAY");
+    vector_insert ( vec,39,v);
+    PERFORM_SIZE_CHECK(39+1);
+    if ( 0 != strcmp ("VERY_FAR_AWAY", (char*)vector_element_at(vec,39)) ){
+	printf ( "Test [vector_element_at] Failed at %s:%d\n", 
+	                                                 __FILE__,__LINE__);
+    }
+    /* test vector_pop_back */
+    vector_pop_back(vec);
+    PERFORM_SIZE_CHECK(39);
+    /* vector_erase test middle */
+    vector_erase ( vec,10 );
+    PERFORM_SIZE_CHECK(38);
+    if ( 0 != strcmp ("J", (char*)vector_element_at(vec,10)) ){
+	printf ( "Test [vector_element_at] Failed at %s:%d\n", 
+	                                                  __FILE__,__LINE__);
+    }
+    /* vector_erase first */
+    vector_erase ( vec,0 );
+    PERFORM_SIZE_CHECK(37);
+    if ( 0 != strcmp ("A", (char*)vector_element_at(vec,0)) ){
+	printf ( "Test [vector_element_at] Failed at %s:%d\n", 
+	                                                 __FILE__,__LINE__);
+    }
+
+    vector_push_back ( vec, strdup ( "XX"));
+    PERFORM_SIZE_CHECK(38);
+
+    vector_push_back ( vec, strdup ( "XXX"));
+    PERFORM_SIZE_CHECK(39);
+
+    vector_erase ( vec, 39  - 1);
+    PERFORM_SIZE_CHECK(38);
+
+    vector_resize ( vec, 100 );
+    if ( 100 != vector_capacity(vec) ) {
+	printf ( "Test [vector_element_at] Failed at %s:%d\n", 
+	                                                 __FILE__,__LINE__);
+    }
+    printf ( "All Tests Passed\n");
+    vector_clear ( vec );
     return 0;
 }
