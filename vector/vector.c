@@ -142,3 +142,52 @@ vector_resize ( vector *vec, int new_size ) {
     vec->elem = ( void **) realloc ( vec->elem, new_size * sizeof ( void * ));
     vec->capacity = new_size;
 }
+iterator *
+vector_new_iterator( vector *vec) {
+    VALIDATE_POINTER;
+
+    iterator *itr = ( iterator *) malloc ( sizeof ( iterator ));
+    itr->ptr_to_container  = ( void *) vec;
+    itr->end               = vector_itr_end;
+    itr->next              = vector_itr_next;
+    itr->value             = vector_itr_get_value;
+
+    vec->iter_current_pos  = 0;
+    vec->iter_end_pos      = vec->cur_size; 
+    return itr;
+}
+void 
+vector_delete_iterator( vector *vec ) {
+    VALIDATE_POINTER;
+    iterator *itr = ( iterator *) malloc ( sizeof ( iterator ));
+    if ( itr ) {
+	free ( itr );
+    }
+    vec->iter_current_pos = 0;
+}
+int 
+vector_itr_end( void *v ) 
+{
+    vector *vec = ( vector *) v;
+    VALIDATE_POINTER;
+
+    if ( vec->iter_current_pos >= vec->iter_end_pos ) {
+	return 1;
+    }
+    return 0;
+}
+void
+vector_itr_next ( void *v ) {
+    vector *vec = ( vector *) v;
+    VALIDATE_POINTER;
+    vec->iter_current_pos++;
+}
+
+void *
+vector_itr_get_value ( void *v ) {
+    vector *vec = ( vector *) v;
+    VALIDATE_POINTER;
+
+    return  (void*) vector_element_at ( vec, vec->iter_current_pos );
+    return NULL;
+}
