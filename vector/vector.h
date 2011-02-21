@@ -1,44 +1,29 @@
-#ifndef _VECTOR_H_
-#define _VECTOR_H_
+#ifndef __VECTOR_H_
+#define __VECTOR_H_
 
 #include "../iterator/iterator.h"
 
-
-typedef void (*pfnDestruct) ( void *);
+typedef void (*destroy)(void*);
 
 typedef struct __vector {
-    void **elem     ; /* opeque pointer array */
-    int    capacity ; /* Current capacity */
-    int    cur_size ; /* number of elements in the vector */
-    pfnDestruct _destroy;
-
-    int (*container_end) ( struct __vector *);
-
-    int iter_current_pos;
-    int iter_end_pos;
+    int size;
+    int capacity;
+    void **elements;
+    destroy _elem_delete;
 }vector;
 
-vector * vector_new         ( int, pfnDestruct); 
-void     vector_push_back   ( vector *, void*);
-void   * vector_element_at  ( vector *, int );
-int      vector_size        ( vector *);
-int      vector_empty       ( vector *);
-int      vector_capacity    ( vector *);
-void   * vector_front       ( vector *);
-void   * vector_back        ( vector *);
-void     vector_insert      ( vector *,int,void*);
-void     vector_clear       ( vector *);
-void     vector_pop_back    ( vector *);
-void     vector_erase       ( vector *, int);
-void     vector_resize      ( vector *, int);
+#define VECTOR_NULL (vector*)0
 
-/* Iterator function */
-iterator * vector_new_iterator( vector *);
-int        vector_itr_end( void *);
-void       vector_itr_next (void *);
-void *     vector_itr_get_value ( void *);
-void       vector_delete_iterator( vector *);
+vector *vector_new(int, destroy);
+void vector_clear ( vector *);
 
+void vector_push_back ( vector *, void *);
+void *vector_element_at ( vector *, int );
+int vector_size(vector*);
 
-#endif
+iterator vector_next(iterator );
+iterator vector_prev(iterator );
+iterator vector_begin( vector *);
+iterator vector_end( vector *);
 
+#endif /* __VECTOR_H_ */
