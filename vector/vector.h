@@ -1,7 +1,8 @@
 #ifndef __VECTOR_H_
 #define __VECTOR_H_
 
-#include "../iterator/iterator.h"
+#include "iterator.h"
+
 
 typedef void (*destroy)(void*);
 
@@ -25,5 +26,6 @@ iterator vector_next(iterator );
 iterator vector_prev(iterator );
 iterator vector_begin( vector *);
 iterator vector_end( vector *);
+int vector_equals ( iterator , iterator );
 
 #endif /* __VECTOR_H_ */

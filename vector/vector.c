@@ -51,7 +51,8 @@ vector_size ( vector *vec )  {
 /* Vector Iterator implementation */
 static iterator_ft vector_iterator_ft = {
     vector_next,
-    vector_prev
+    vector_prev,
+    vector_equals
 };
 
 iterator 
@@ -85,5 +86,9 @@ vector_prev(iterator cur ) {
     itr._l = pn;
     itr.ptr_ft = &vector_iterator_ft;
     return itr;
+}
+int 
+vector_equals ( iterator left, iterator right ) {
+    return (left._l == right._l && left.ptr_ft == right.ptr_ft );
 }
 
