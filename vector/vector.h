@@ -4,18 +4,18 @@
 #include "iterator.h"
 
 
-typedef void (*destroy)(void*);
+typedef void (*DESTROY)(void*);
 
 typedef struct __vector {
     int size;
     int capacity;
     void **elements;
-    destroy _elem_delete;
+    DESTROY _elem_delete;
 }vector;
 
 #define VECTOR_NULL (vector*)0
 
-vector *vector_new(int, destroy);
+vector *vector_new(int, DESTROY);
 void vector_clear ( vector *);
 
 void vector_push_back ( vector *, void *);

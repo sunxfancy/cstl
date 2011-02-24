@@ -2,7 +2,7 @@
 #include <malloc.h>
 
 vector *
-vector_new(int s, destroy fn) {
+vector_new(int s, DESTROY fn) {
     int size = s < 8 ? 8 : s;
     vector *t   = (vector*) malloc ( sizeof ( vector ));
     if ( ! t ) return VECTOR_NULL;
@@ -91,4 +91,3 @@ int
 vector_equals ( iterator left, iterator right ) {
     return (left._l == right._l && left.ptr_ft == right.ptr_ft );
 }
-
