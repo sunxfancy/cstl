@@ -123,6 +123,7 @@ int main ( int argc, char **argv ) {
     test_algorithms_count();
     test_algorithms_count_if();
     test_algorithms_min_max();
+    printf ( "Test Finished\n");
     return 0;
 }
 
