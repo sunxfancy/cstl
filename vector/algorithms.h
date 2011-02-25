@@ -32,6 +32,8 @@ iterator max_element (iterator , iterator , COMP_FUNCTION );
  */
 iterator find_if (iterator, iterator, UNARY_PREDICATE ); 
 
+/*assigns newValue to each element in the range [beg,end). */
+void fill (iterator , iterator , void*);
 
 #endif /* _ALGORITHMS_H_ */
 

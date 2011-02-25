@@ -1,10 +1,14 @@
 #ifndef __ITERATOR_H_
 #define __ITERATOR_H_
 
+#define ITERATOR struct __iterator
+
 typedef struct __iterator_ft {
-    struct __iterator (*next)(struct __iterator );
-    struct __iterator (*prev)(struct __iterator );
-    int (*equals)(struct __iterator, struct __iterator);
+    ITERATOR (*next)         (ITERATOR * );
+    ITERATOR (*prev)         (ITERATOR * );
+    void *   (*value)        (ITERATOR * );
+    int      (*equals)       (ITERATOR *, ITERATOR *);
+    void     (*value_assign) (ITERATOR *, void *);
 }iterator_ft;
 
 typedef struct __iterator {
@@ -15,9 +19,10 @@ typedef struct __iterator {
 #define ITERATOR_NULL (iterator*)0
 void *iterator_value(iterator );
 
-#define ITR_VALUE(I) *(void**)(I)._l 
-#define ITR_NEXT(I)  (I).ptr_ft->next((I))
-#define ITR_EQUALS(I,J)  (I).ptr_ft->equals((I),(J))
+#define ITR_VALUE(I)          (I).ptr_ft->value(&(I))
+#define ITR_NEXT(I)           (I).ptr_ft->next(&(I))
+#define ITR_EQUALS(I,J)       (I).ptr_ft->equals(&(I),&(J))
+#define ITR_VALUE_ASSIGN(I,J) (I).ptr_ft->value_assign(&(I),(J))
 
 #endif  /* __ITERATOR_H_ */
 

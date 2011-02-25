@@ -22,10 +22,7 @@ void vector_push_back ( vector *, void *);
 void *vector_element_at ( vector *, int );
 int vector_size(vector*);
 
-iterator vector_next(iterator );
-iterator vector_prev(iterator );
-iterator vector_begin( vector *);
-iterator vector_end( vector *);
-int vector_equals ( iterator , iterator );
+iterator vector_iterator_begin( vector *);
+iterator vector_iterator_end( vector *);
 
 #endif /* __VECTOR_H_ */
