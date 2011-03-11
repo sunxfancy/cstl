@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "tree.h"
+#include "c_tree.h"
 
 void printKey(void *in)
 {
@@ -18,7 +18,7 @@ int comp(void *a, void *b)
   return 2;
 }
 
-int main()
+void test_c_tree()
 {
   int a[] = {1,2,3,9,5,6,7,8};
   int ad[] = {10,20,30,90,50,60,70,80};
@@ -34,21 +34,23 @@ int main()
     
   Inorder(t); 
   printf("\n");
-  int data = (int )Search(t, a[3]);
+  int *data = (int *)Search(t, &a[3]);
   if(!data)
     printf("not found\n");
   else
-    printf("the data is %d", data);
+    printf("the data is %d", *data);
 
   //now remove 
-  Remove(t, 9);
+  i = 9;
+  Remove(t, &i);
   printf("\n");
   Inorder(t);
   printf("\n");
-  Remove(t, 1);
+  i = 1;
+  Remove(t, &i);
   Inorder(t);
   printf("\n");
-  Remove(t, 5);
+  i = 5;
+  Remove(t, &i);
   Inorder(t);
-  return(0);
 }

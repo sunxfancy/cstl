@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "bsttree.h"
+#include "c_priv_bsttree.h"
 int traverseInorder(BSTtreeNode *root, f_printKey printKey)
 {
   if(root->left)

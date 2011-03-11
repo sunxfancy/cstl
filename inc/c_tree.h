@@ -1,7 +1,7 @@
 #ifndef _TREE_H_
 #define _TREE_H_
 #ifdef bst
-  #include "bsttree.h"
+  #include "c_priv_bsttree.h"
   #define tree BSTtree
   #define treeNode BSTtreeNode
   #define newTree NewBSTtree
@@ -10,14 +10,14 @@
   #define Inorder BSTInorder
 #else
   #ifdef avl
-    #include "avltree.h"
+    #include "c_priv_avltree.h"
     #define tree AVLtree
     #define newTree NewAVLtree
     #define Insert AVLtreeInsert
     #define Remove AVLtreeRemove
     #define Inorder AVLInorder
   #else   
-    #include "rbtree.h"
+    #include "c_priv_rbtree.h"
     #define tree RBTree
     #define newTree NewRBtree
     #define Insert RBtreeInsert
