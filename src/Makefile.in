@@ -71,7 +71,7 @@ am__base_list = \
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libstl_la_LIBADD =
-am_libstl_la_OBJECTS = c_array.lo c_bsttree.lo c_deque.lo
+am_libstl_la_OBJECTS = c_array.lo c_bst.lo c_deque.lo c_util.lo
 libstl_la_OBJECTS = $(am_libstl_la_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
@@ -205,8 +205,9 @@ top_srcdir = @top_srcdir@
 AM_CPPFLAGS = -I$(srcdir)/../inc 
 lib_LTLIBRARIES = libstl.la
 libstl_la_SOURCES = c_array.c  \
-			c_bsttree.c \
-			c_deque.c
+			c_bst.c \
+			c_deque.c \
+			c_util.c
 
 all: all-am
 
@@ -283,8 +284,9 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/c_array.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/c_bsttree.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/c_bst.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/c_deque.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/c_util.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

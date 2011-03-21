@@ -51,7 +51,7 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_teststl_OBJECTS = t_c_array.$(OBJEXT) t_c_deque.$(OBJEXT) \
-	test_clib.$(OBJEXT) t_tree.$(OBJEXT)
+	test_clib.$(OBJEXT) t_c_bst.$(OBJEXT)
 teststl_OBJECTS = $(am_teststl_OBJECTS)
 teststl_DEPENDENCIES = ../src/libstl.la
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
@@ -187,7 +187,7 @@ AM_CPPFLAGS = -I$(srcdir)/../inc -Dbst
 teststl_SOURCES = t_c_array.c  \
 			t_c_deque.c  \
 			test_clib.c  \
-			t_tree.c
+			t_c_bst.c 
 
 teststl_LDADD = ../src/libstl.la
 all: all-am
@@ -278,8 +278,8 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t_c_array.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t_c_bst.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t_c_deque.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t_tree.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_clib.Po@am__quote@
 
 .c.o:
