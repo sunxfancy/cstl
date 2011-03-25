@@ -3,114 +3,102 @@
 #include <string.h>
 #include <stdio.h>
 
-static void
-resize_deque(c_deque *_DQ)
-{
-	int new_size        = _DQ->_size * 2;
-	void **new_deque    = (void **) calloc ( new_size, sizeof ( void *));
-
-	memmove ( &(new_deque[5]),&(_DQ->_EL[_DQ->_F_I]), _DQ->_size);
-	_DQ->_size = new_size;
-	free ( _DQ->_EL );
-	_DQ->_EL = new_deque;
-}
-
-c_deque * 
+DEQUE_PTR  
 new_c_deque(int size , destroy fn_destroy, compare fn_compare) {
 
-	c_deque* _DQ       = ( c_deque *) malloc ( sizeof ( c_deque ));
-	_DQ->_size         = size < 8 ? 8 : size;
-	_DQ->_fn_compare   = fn_compare;
-	_DQ->_fn_destroy   = fn_destroy;
-	_DQ->_F_I          = (int)size / 2;
-	_DQ->_B_I          = _DQ->_F_I + 1;
-	_DQ->_current_size = 0;
-	_DQ->_EL         = ( void **) calloc ( _DQ->_size, sizeof ( void *));
+    DEQUE_PTR   deq       = ( DEQUE_PTR ) malloc ( sizeof ( c_deque ));
+    deq->_size         = size < 8 ? 8 : size;
+    deq->_fn_compare   = fn_compare;
+    deq->_fn_destroy   = fn_destroy;
+    deq->_front_index          = (int)size / 2;
+    deq->_back_index          = deq->_front_index + 1;
+    deq->_current_size = 0;
+    deq->_elements         = ( TYPE*) calloc ( deq->_size, sizeof ( TYPE));
 
-	return _DQ;
+    return deq;
 }
 void 
-delete_c_deque ( c_deque *_DQ ) {
-	int i  = 0 ;
-	for ( i = 0; i < _DQ->_size; i++ ) {
-		if ( _DQ->_EL[i] ) {
-			(_DQ->_fn_destroy)(_DQ->_EL[i]);
-		}
+delete_c_deque ( DEQUE_PTR deq ) {
+    int i  = 0 ;
+    for ( i = 0; i < deq->_size; i++ ) {
+	if ( deq->_elements[i] ) {
+	    (deq->_fn_destroy)(deq->_elements[i]);
 	}
-	free ( _DQ );
+    }
+    free ( deq );
 }
 int 
-size_c_deque( c_deque *_DQ ) {
-	return _DQ->_size;
+size_c_deque( DEQUE_PTR deq ) {
+    return deq->_size;
 }
 int 
-empty_c_deque( c_deque *_DQ){
-	return _DQ->_size == 0;
+empty_c_deque( DEQUE_PTR deq){
+    return deq->_size == 0;
 }
-void *
-front_c_deque ( c_deque* _DQ) {
-	return _DQ->_EL[_DQ->_F_I + 1];
+TYPE
+front_c_deque ( DEQUE_PTR   deq) {
+    return deq->_elements[deq->_front_index + 1];
 }
-void *
-back_c_deque ( c_deque* _DQ) {
-	return _DQ->_EL[_DQ->_B_I - 1];
-}
-void 
-push_back_c_deque(c_deque* _DQ, void* value) {
-	if ( _DQ->_B_I == _DQ->_size ){
-		_DQ->_size = _DQ->_size * 2;
-		_DQ->_EL = ( void **) realloc ( _DQ->_EL, 
-		                                _DQ->_size * sizeof ( void *));
-	}
-	_DQ->_EL[_DQ->_B_I++] = value;
-	_DQ->_current_size++;
+TYPE
+back_c_deque ( DEQUE_PTR   deq) {
+    return deq->_elements[deq->_back_index - 1];
 }
 void 
-push_front_c_deque(c_deque* _DQ, void* value) {
-	int _TO    = 0;
-	int _FROM  = 0;
-	int _COUNT = 0;
-	if ( _DQ->_F_I == 0 ) {
-		int new_size = _DQ->_size * 2;
-		_DQ->_EL   = ( void **) realloc ( _DQ->_EL, 
-			                          new_size * sizeof ( void *));
+push_back_c_deque(DEQUE_PTR   deq, void* value) {
+    if ( deq->_back_index == deq->_size ){
+	deq->_size = deq->_size * 2;
+	deq->_elements = ( TYPE*) realloc ( deq->_elements, 
+					    deq->_size * sizeof ( TYPE));
+    }
+    deq->_elements[deq->_back_index++] = value;
+    deq->_current_size++;
+}
+void 
+push_front_c_deque(DEQUE_PTR   deq, void* value) {
+    int _TO    = 0;
+    int _FROM  = 0;
+    int _COUNT = 0;
+    if ( deq->_front_index == 0 ) {
+	int new_size = deq->_size * 2;
+	deq->_elements   = ( TYPE*) realloc ( deq->_elements, 
+					      new_size * sizeof ( TYPE));
 
-		_TO    = (int)(new_size - _DQ->_current_size)/2;
-		_FROM  = _DQ->_F_I + 1;
-		_COUNT = _DQ->_B_I - _FROM + 1;
+	_TO    = (int)(new_size - deq->_current_size)/2;
+	_FROM  = deq->_front_index + 1;
+	_COUNT = deq->_back_index - _FROM + 1;
 
-		memmove (&(_DQ->_EL[_TO]), 
-				 &(_DQ->_EL[_FROM]), 
-				 _COUNT * sizeof (void *));
+	memmove (&(deq->_elements[_TO]), 
+		 &(deq->_elements[_FROM]), 
+		 _COUNT * sizeof (TYPE));
 
-		_DQ->_size        = new_size;
-		_DQ->_F_I = _TO - 1;
-		_DQ->_B_I  = _DQ->_F_I + _COUNT;
-	}
-	_DQ->_EL[_DQ->_F_I--] = value;
-	_DQ->_current_size++;
+	deq->_size        = new_size;
+	deq->_front_index = _TO - 1;
+	deq->_back_index  = deq->_front_index + _COUNT;
+    }
+    deq->_elements[deq->_front_index--] = value;
+    deq->_current_size++;
 }
 void
-pop_back_c_deque ( c_deque* _DQ ) {
-	void *elem = back_c_deque( _DQ );
-	(_DQ->_fn_destroy)(elem);
-	_DQ->_B_I--;
-	_DQ->_current_size--;
+pop_back_c_deque ( DEQUE_PTR   deq ) {
+    TYPE elem = back_c_deque( deq );
+    (deq->_fn_destroy)(elem);
+    deq->_back_index--;
+    deq->_current_size--;
 }
 void
-pop_front_c_deque ( c_deque* _DQ ) {
-	void *elem = front_c_deque ( _DQ );
-	(_DQ->_fn_destroy)(elem);
-	_DQ->_F_I++;
-	_DQ->_current_size--;
+pop_front_c_deque ( DEQUE_PTR   deq ) {
+    TYPE elem = front_c_deque ( deq );
+    (deq->_fn_destroy)(elem);
+    deq->_front_index++;
+    deq->_current_size--;
 }
 void 
-for_each_c_deque(c_deque* _DQ, void (*fn)(void*)) {
-	int i  = 0 ;
-	for ( i = _DQ->_F_I + 1; i < _DQ->_B_I; i++ ) {
-		if ( _DQ->_EL[i] ) {
-			(fn)(_DQ->_EL[i]);
-		}
+for_each_c_deque(DEQUE_PTR   deq, void (*fn)(void*)) {
+    int i  = 0 ;
+    for ( i = deq->_front_index + 1; i < deq->_back_index; i++ ) {
+	if ( deq->_elements[i] ) {
+	    (fn)(deq->_elements[i]);
 	}
+    }
 }
 

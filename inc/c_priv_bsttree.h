@@ -9,22 +9,22 @@ typedef void (* f_printData)(void *);
 
 typedef struct bsttreeNode
 {
-  struct bsttreeNode *left;
-  struct bsttreeNode *right;
-  struct bsttreeNode *parent;
-  int removed;
-  void *key;
-  void *data;
+    struct bsttreeNode *left;
+    struct bsttreeNode *right;
+    struct bsttreeNode *parent;
+    int removed;
+    void *key;
+    void *data;
 }BSTtreeNode;
 
 typedef struct bsttree
 {
-  struct bsttreeNode *root;
-  f_comparator comparator;
-  f_deleteKey deleteKey;
-  f_deleteData deleteData;
-  f_printKey printKey;
-  f_printData printData;
+    struct bsttreeNode *root;
+    f_comparator comparator;
+    f_deleteKey deleteKey;
+    f_deleteData deleteData;
+    f_printKey printKey;
+    f_printData printData;
 }BSTtree;
 
 BSTtree *NewBSTtree(f_comparator, f_deleteKey, f_deleteData, f_printKey, f_printData);

@@ -191,6 +191,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\test\t_c_rb.c"
+				>
+			</File>
+			<File
+				RelativePath="..\test\t_c_set.c"
+				>
+			</File>
+			<File
 				RelativePath="..\test\test_clib.c"
 				>
 			</File>

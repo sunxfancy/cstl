@@ -176,6 +176,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\c_rb.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\c_set.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\c_util.c"
 				>
 			</File>
@@ -195,6 +203,14 @@
 			</File>
 			<File
 				RelativePath="..\inc\c_deque.h"
+				>
+			</File>
+			<File
+				RelativePath="..\inc\c_rb.h"
+				>
+			</File>
+			<File
+				RelativePath="..\inc\c_set.h"
 				>
 			</File>
 			<File
