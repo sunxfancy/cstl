@@ -199,7 +199,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\test\test_clib.c"
+				RelativePath="..\test\t_clib.c"
 				>
 			</File>
 		</Filter>

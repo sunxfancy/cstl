@@ -5,6 +5,7 @@ default: all
 all \
 release \
 clean \
+test \
 debug: 
 	@for subdir in ${SUBDIRS} ; \
 	do \

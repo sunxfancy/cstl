@@ -18,4 +18,5 @@ clean:
 		@- $(RM) $(P_NAME)
 		@- $(RM) $(P_C_OBJS)
 		@- $(RM) core*
+		@- $(RM) tags
 

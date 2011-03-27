@@ -1,4 +1,4 @@
-#include "c_rb.h"
+#include "c_datastructure.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,30 +9,30 @@
 
 #define RB_SENTINEL &tree->_sentinel 
 
-static TYPE
-get_key ( RB_PTR tree, RB_NODE_PTR node) {
+static CLIB_TYPE
+get_key ( CLIB_RB_PTR tree, CLIB_RB_NODE_PTR node) {
     if ( node ) 
 	return node->value._key;
     return CLIB_NULL;
 }
 
-static RB_NODE_PTR
-get_left (RB_PTR tree, RB_NODE_PTR node ) {
-    if ( node->left != RB_SENTINEL && node->left != RB_NODE_NULL)
+static CLIB_RB_NODE_PTR
+get_left (CLIB_RB_PTR tree, CLIB_RB_NODE_PTR node ) {
+    if ( node->left != RB_SENTINEL && node->left != CLIB_RB_NODE_NULL)
 	return node->left;
-    return RB_NODE_NULL;
+    return CLIB_RB_NODE_NULL;
 }
-static RB_NODE_PTR
-get_right (RB_PTR tree, RB_NODE_PTR node ){
-    if ( node->right != RB_SENTINEL && node->right != RB_NODE_NULL)
+static CLIB_RB_NODE_PTR
+get_right (CLIB_RB_PTR tree, CLIB_RB_NODE_PTR node ){
+    if ( node->right != RB_SENTINEL && node->right != CLIB_RB_NODE_NULL)
 	return node->right;
-    return RB_NODE_NULL;
+    return CLIB_RB_NODE_NULL;
 }
-static RB_NODE_PTR
-get_parent ( RB_PTR tree,RB_NODE_PTR node ) {
-    if ( node->parent != RB_SENTINEL && node->parent != RB_NODE_NULL)
+static CLIB_RB_NODE_PTR
+get_parent ( CLIB_RB_PTR tree,CLIB_RB_NODE_PTR node ) {
+    if ( node->parent != RB_SENTINEL && node->parent != CLIB_RB_NODE_NULL)
 	return node->parent;
-    return RB_NODE_NULL;
+    return CLIB_RB_NODE_NULL;
 }
 
 int 
@@ -65,12 +65,12 @@ typedef struct test_data_tree {
 } TS;
 
 
-static RB_NODE_PTR
-__find_c_rb ( RB_PTR tree, compare fn_c, TYPE key ) {
-    RB_NODE_PTR node = tree->_root;
+static CLIB_RB_NODE_PTR
+__find_c_rb ( CLIB_RB_PTR tree, CLIB_COMPARE fn_c, CLIB_TYPE key ) {
+    CLIB_RB_NODE_PTR node = tree->_root;
     int compare_result = (fn_c)(key, node->value._key);
     while ((node != RB_SENTINEL) && 
-	             (compare_result = (fn_c)(key, node->value._key)) != 0 ){
+	   (compare_result = (fn_c)(key, node->value._key)) != 0 ){
 	if ( compare_result < 0 ) {
 	    node = node->left;
 	} else {
@@ -79,14 +79,14 @@ __find_c_rb ( RB_PTR tree, compare fn_c, TYPE key ) {
     } /* while loop ends here */
     return node;
 }
-RB_NODE_PTR
-find(RB_PTR tree, TYPE key ) {
+CLIB_RB_NODE_PTR
+find(CLIB_RB_PTR tree, CLIB_TYPE key ) {
     return __find_c_rb ( tree, tree->compare_fn, key );
 }
 
-static void update_values ( TYPE v, int *l, int *r, int *p , int *e, 
-                                                        RB_PTR tree ) {
-    RB_NODE_PTR x;
+static void update_values ( CLIB_TYPE v, int *l, int *r, int *p , int *e, 
+			    CLIB_RB_PTR tree ) {
+    CLIB_RB_NODE_PTR x;
     if ( get_key(tree,v)) 
 	*e = *(int*)get_key (tree,v);
     x = get_left(tree,v);
@@ -100,8 +100,8 @@ static void update_values ( TYPE v, int *l, int *r, int *p , int *e,
 	*p = *(int*)get_key(tree,x);
 }
 static void 
-test_each_elements(int l,int r, int p, int e,TYPE v, TS ts[], int i, 
-                                                          RB_PTR tree) {
+test_each_elements(int l,int r, int p, int e,CLIB_TYPE v, TS ts[], int i, 
+		   CLIB_RB_PTR tree) {
     assert ( ts[i].element == e);
     if (ts[i].left != 0 ) 
 	assert ( ts[i].left == l);
@@ -117,10 +117,10 @@ test_each_elements(int l,int r, int p, int e,TYPE v, TS ts[], int i,
 	assert ((void*)0 == (void*)get_key(tree,get_parent(tree,v)));
 }
 static void
-test_all_elements(RB_PTR tree, TS ts[], int size) {
+test_all_elements(CLIB_RB_PTR tree, TS ts[], int size) {
     int i = 0;
     for ( i = 0; i < size; i++) {
-	TYPE v = CLIB_NULL;
+	CLIB_TYPE v = CLIB_NULL;
 	int l,r,p,e;
 	v = find ( tree, &ts[i].element);
 	update_values( v, &l,&r,&p,&e, tree);
@@ -128,14 +128,14 @@ test_all_elements(RB_PTR tree, TS ts[], int size) {
     }
 }
 
-static RB_PTR 
+static CLIB_RB_PTR 
 create_tree(TS ts[], int size) {
     int i = 0;
-    RB_PTR tree = new_c_rb( free_rb_e, compare_rb_e, 0);
+    CLIB_RB_PTR tree = new_c_rb( free_rb_e, compare_rb_e, 0);
     for ( i = 0; i < size; i++) {
 	int *v = ( int *) malloc ( sizeof ( int ));
 	memcpy ( v, &(ts[i].element), sizeof ( int ));
-	insert_c_rb( tree, v ,NULL);
+	insert_c_rb( tree, v ,NULL, CLIB_RB_VALUE_COPY);
     }
     return tree;
 }
@@ -145,7 +145,8 @@ test_c_rb() {
     int size;
     int size_after_delete;
     int i = 0;
-    RB_PTR tree;
+    CLIB_RB_PTR tree;
+    CLIB_RB_NODE_PTR node;
 
     TS ts[] = {
 	{15,6,18,0,BLACK},{6,3,9,15,RED},{18,17,20,15,BLACK},
@@ -184,24 +185,27 @@ test_c_rb() {
     i = 13;	
     size = (sizeof(ts)/sizeof(TS));
     size_after_delete = (sizeof(ts_delete_leaf_13)/sizeof(TS));
-    remove_c_rb( tree, &i);
+    node = remove_c_rb( tree, &i);
+    if ( node->value._key ) free ( node->value._key);
     test_all_elements(tree, ts_delete_leaf_13, size_after_delete);
 
     i = 9;	
     size_after_delete = (sizeof(ts_delete_9)/sizeof(TS));
-    remove_c_rb( tree, &i);
+    node = remove_c_rb( tree, &i);
+    if ( node->value._key ) free ( node->value._key);
     test_all_elements(tree, ts_delete_9, size_after_delete);
 
     i = 15;	
     size_after_delete = (sizeof(ts_delete_15)/sizeof(TS));
-    remove_c_rb( tree, &i);
+    node = remove_c_rb( tree, &i);
+    if ( node->value._key ) free ( node->value._key);
     test_all_elements(tree, ts_delete_15, size_after_delete);
 
     {
 	int i = 1;
 	int *v = ( int *) malloc ( sizeof ( int ));
 	memcpy ( v, &i, sizeof ( int ));
-	insert_c_rb( tree, v, NULL );
+	insert_c_rb( tree, v, NULL , CLIB_RB_VALUE_COPY);
 	size_after_delete = (sizeof(ts_insert_1)/sizeof(TS));
 	test_all_elements(tree, ts_insert_1, size_after_delete);
     }

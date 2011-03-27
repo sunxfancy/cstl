@@ -1,4 +1,4 @@
-#include "c_deque.h"
+#include "c_datastructure.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

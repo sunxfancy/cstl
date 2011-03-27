@@ -1,10 +1,10 @@
-#include "c_array.h"
+#include "c_datastructure.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
-ARRAY_PTR  test_array;
-ARRAY_PTR  test_array1;
+CLIB_ARRAY_PTR  test_array;
+CLIB_ARRAY_PTR  test_array1;
 int i = 0;
 
 static void 

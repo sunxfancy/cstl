@@ -1,4 +1,4 @@
-#include "c_bst.h"
+#include "c_datastructure.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,33 +26,33 @@ typedef struct test_data_tree {
     int right;
     int parent;
 } TS;
-static TYPE
-get_key (  BST_NODE_PTR node) {
+static CLIB_TYPE
+get_key (  CLIB_BST_NODE_PTR node) {
     if ( node ) 
 	return node->_key;
     return CLIB_NULL;
 }
 
-static BST_NODE_PTR
-get_left (BST_NODE_PTR node ) {
-    if ( node->left != BST_NODE_NULL)
+static CLIB_BST_NODE_PTR
+get_left (CLIB_BST_NODE_PTR node ) {
+    if ( node->left != CLIB_BST_NODE_NULL)
 	return node->left;
-    return BST_NODE_NULL;
+    return CLIB_BST_NODE_NULL;
 }
-static BST_NODE_PTR
-get_right (BST_NODE_PTR node ){
-    if ( node->right != BST_NODE_NULL)
+static CLIB_BST_NODE_PTR
+get_right (CLIB_BST_NODE_PTR node ){
+    if ( node->right != CLIB_BST_NODE_NULL)
 	return node->right;
-    return BST_NODE_NULL;
+    return CLIB_BST_NODE_NULL;
 }
-static BST_NODE_PTR
-get_parent (BST_NODE_PTR node ) {
-    if ( node->parent != BST_NODE_NULL)
+static CLIB_BST_NODE_PTR
+get_parent (CLIB_BST_NODE_PTR node ) {
+    if ( node->parent != CLIB_BST_NODE_NULL)
 	return node->parent;
-    return BST_NODE_NULL;
+    return CLIB_BST_NODE_NULL;
 }
 
-static void update_values ( BST_NODE_PTR v, int *l, int *r, int *p , int *e ) {
+static void update_values ( CLIB_BST_NODE_PTR v, int *l, int *r, int *p , int *e ) {
 
     if ( get_key(v) ) 
 	*e = *(int*)get_key (v);
@@ -65,7 +65,7 @@ static void update_values ( BST_NODE_PTR v, int *l, int *r, int *p , int *e ) {
 }
 
 static void 
-test_each_elements(int l,int r, int p, int e,BST_NODE_PTR v, TS ts[], int i) {
+test_each_elements(int l,int r, int p, int e,CLIB_BST_NODE_PTR v, TS ts[], int i) {
     assert ( ts[i].element == e);
     if (ts[i].left != 0 ) 
 	assert ( ts[i].left == l);
@@ -81,10 +81,10 @@ test_each_elements(int l,int r, int p, int e,BST_NODE_PTR v, TS ts[], int i) {
 	assert ((void*)0 == (void*)get_key(get_parent(v)));
 }
 static void
-test_all_elements(BST_PTR tree, TS ts[], int size) {
+test_all_elements(CLIB_BST_PTR tree, TS ts[], int size) {
     int i = 0;
     for ( i = 0; i < size; i++) {
-	BST_NODE_PTR v = BST_NODE_NULL;
+	CLIB_BST_NODE_PTR v = CLIB_BST_NODE_NULL;
 	int l,r,p,e;
 	v = find_c_bst ( tree, &ts[i].element);
 	update_values( v, &l,&r,&p,&e);
@@ -92,10 +92,10 @@ test_all_elements(BST_PTR tree, TS ts[], int size) {
     }
 }
 
-static BST_PTR 
+static CLIB_BST_PTR 
 create_tree(TS ts[], int size) {
     int i = 0;
-    BST_PTR tree = new_c_bst( free_e, compare_e, traversal_e);
+    CLIB_BST_PTR tree = new_c_bst( free_e, compare_e, traversal_e);
     for ( i = 0; i < size; i++) {
 	int *v = ( int *) malloc ( sizeof ( int ));
 	memcpy ( v, &(ts[i].element), sizeof ( int ));
@@ -114,7 +114,7 @@ test_c_bst() {
 	};
 	int size = (sizeof(ts)/sizeof(TS));
 
-	BST_PTR tree = create_tree(ts,size);
+	CLIB_BST_PTR tree = create_tree(ts,size);
 	test_all_elements(tree, ts, size); 
     }
     { 
@@ -141,7 +141,7 @@ test_c_bst() {
 	int size = (sizeof(ts)/sizeof(TS));
 	int size_after_delete = (sizeof(ts_delete_leaf_13)/sizeof(TS));
 
-	BST_PTR tree = create_tree(ts,size);
+	CLIB_BST_PTR tree = create_tree(ts,size);
 	test_all_elements(tree, ts, size);
 
 	/* Test case 2 */
@@ -162,11 +162,11 @@ test_c_bst() {
 
 	/* Test Case 5 */
 	printf ( "INORDER -> :\n");
-	walk_c_bst_r(tree,BST_INORDER);
+	walk_c_bst_r(tree,CLIB_INORDER);
 	printf ( "\nPOSTORDER -> :\n");
-	walk_c_bst_r(tree,BST_POSTORDER);
+	walk_c_bst_r(tree,CLIB_POSTORDER);
 	printf ( "\nPREORDER -> :\n");
-	walk_c_bst_r(tree,BST_PREORDER);
+	walk_c_bst_r(tree,CLIB_PREORDER);
 	printf("\n");
 
 	destroy_c_bst(tree);
