@@ -6,7 +6,7 @@
 CLIB_DEQUE_PTR  
 new_c_deque(int size , CLIB_DESTROY fn_destroy, CLIB_COMPARE fn_compare) {
 
-    CLIB_DEQUE_PTR   deq       = ( CLIB_DEQUE_PTR ) malloc ( sizeof ( c_deque ));
+    CLIB_DEQUE_PTR   deq       = ( CLIB_DEQUE_PTR ) clib_malloc ( sizeof ( c_deque ));
     deq->_size         = size < 8 ? 8 : size;
     deq->_fn_compare   = fn_compare;
     deq->_fn_destroy   = fn_destroy;

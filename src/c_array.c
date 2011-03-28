@@ -8,7 +8,7 @@ new_c_array( int size, CLIB_DESTROY fn_destroy, CLIB_COMPARE fn_compare) {
     CLIB_ARRAY_PTR array;
 
     s = size < 8 ? 8 : size;
-    array  = ( CLIB_ARRAY_PTR ) malloc (sizeof ( CLIB_ARRAY ));
+    array  = ( CLIB_ARRAY_PTR ) clib_malloc (sizeof ( CLIB_ARRAY ));
     array->capacity    = s;
     array->compare_fn  = fn_compare;
     array->destruct_fn = fn_destroy;

@@ -2,20 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include <malloc.h>
 
-#ifdef _VERIFY_TREE
-static CLIB_RB_NODE_PTR debug_grandparent(CLIB_RB_PTR,CLIB_RB_NODE_PTR);
-static CLIB_RB_NODE_PTR debug_sibling(CLIB_RB_PTR,CLIB_RB_NODE_PTR);
-static CLIB_RB_NODE_PTR debug_uncle(CLIB_RB_PTR,CLIB_RB_NODE_PTR);
-static void debug_verify_properties(CLIB_RB_PTR);
-static void debug_verify_property_1(CLIB_RB_PTR,CLIB_RB_NODE_PTR);
-static void debug_verify_property_2(CLIB_RB_PTR,CLIB_RB_NODE_PTR);
-static int debug_node_color(CLIB_RB_PTR,CLIB_RB_NODE_PTR n);
-static void debug_verify_property_4(CLIB_RB_PTR,CLIB_RB_NODE_PTR);
-static void debug_verify_property_5(CLIB_RB_PTR,CLIB_RB_NODE_PTR);
-static void debug_verify_property_5_helper(CLIB_RB_PTR,CLIB_RB_NODE_PTR,int,int*);
-#endif
 
 #define RB_SENTINEL &tree->_sentinel
 
@@ -190,9 +177,6 @@ insert_c_rb(CLIB_RB_PTR tree, CLIB_TYPE key , CLIB_TYPE value, int reference) {
 	tree->_root = x;
     __rb_insert_fixup (tree, x);
 
-#ifdef _VERIFY_TREE
-    debug_verify_properties( tree);
-#endif
     return rc;
 }
 static void
@@ -307,14 +291,9 @@ remove_c_rb ( CLIB_RB_PTR tree, CLIB_TYPE key ) {
 		z->left : z->right;
     }
     if (z == RB_SENTINEL)
-	return CLIB_RB_NODE_NULL;
+		return CLIB_RB_NODE_NULL;
     return ( __remove_c_rb(tree, z ));
 
-#ifdef _VERIFY_TREE
-    debug_verify_properties( tree);
-#endif
-
-    return CLIB_SUCCESS;
 }
 
 void  
@@ -403,81 +382,3 @@ print_c_rb(CLIB_RB_PTR tree,  CLIB_TRAVERSAL fn_t) {
 
 }
 
-#ifdef _VERIFY_TREE
-CLIB_RB_NODE_PTR debug_grandparent(CLIB_RB_PTR tree,CLIB_RB_NODE_PTR n) {
-    assert (n != RB_SENTINEL);
-    assert (n->parent != RB_SENTINEL); /* Not the _root CLIB_RB_NODE_PTR */
-    assert (n->parent->parent != RB_SENTINEL); /* Not child of _root */
-    return n->parent->parent;
-}
-
-CLIB_RB_NODE_PTR debug_sibling(CLIB_RB_PTR tree,CLIB_RB_NODE_PTR n) {
-    assert (n != RB_SENTINEL);
-    assert (n->parent != RB_SENTINEL); /* Root CLIB_RB_NODE_PTR has no sibling */
-    if (n == n->parent->left)
-	return n->parent->right;
-    else
-	return n->parent->left;
-}
-
-CLIB_RB_NODE_PTR debug_uncle(CLIB_RB_PTR tree,CLIB_RB_NODE_PTR n) {
-    assert (n != RB_SENTINEL);
-    assert (n->parent != RB_SENTINEL); /* Root CLIB_RB_NODE_PTR has no uncle */
-    assert (n->parent->parent != RB_SENTINEL); /* Children of _root have no uncle */
-    return debug_sibling(tree,n->parent);
-}
-
-void debug_verify_properties(CLIB_RB_PTR t) {
-    debug_verify_property_1(t,t->_root);
-    debug_verify_property_2(t,t->_root);
-    debug_verify_property_4(t,t->_root);
-    debug_verify_property_5(t,t->_root);
-}
-
-void debug_verify_property_1(CLIB_RB_PTR tree,CLIB_RB_NODE_PTR n) {
-    assert(debug_node_color(tree,n) == CLIB_RED || debug_node_color(tree,n) == CLIB_BLACK);
-    if (n == RB_SENTINEL) return;
-    debug_verify_property_1(tree,n->left);
-    debug_verify_property_1(tree,n->right);
-}
-
-void debug_verify_property_2(CLIB_RB_PTR tree,CLIB_RB_NODE_PTR _root) {
-    assert(debug_node_color(tree,_root) == CLIB_BLACK);
-}
-
-int debug_node_color(CLIB_RB_PTR tree,CLIB_RB_NODE_PTR n) {
-    return n == RB_SENTINEL ? CLIB_BLACK : n->color;
-}
-
-void debug_verify_property_4(CLIB_RB_PTR tree,CLIB_RB_NODE_PTR n) {
-    if (debug_node_color(tree,n) == CLIB_RED) {
-	assert (debug_node_color(tree,n->left)   == CLIB_BLACK);
-	assert (debug_node_color(tree,n->right)  == CLIB_BLACK);
-	assert (debug_node_color(tree,n->parent) == CLIB_BLACK);
-    }
-    if (n == RB_SENTINEL) return;
-    debug_verify_property_4(tree,n->left);
-    debug_verify_property_4(tree,n->right);
-}
-
-void debug_verify_property_5(CLIB_RB_PTR tree,CLIB_RB_NODE_PTR _root) {
-    int black_count_path = -1;
-    debug_verify_property_5_helper(tree,_root, 0, &black_count_path);
-}
-
-void debug_verify_property_5_helper(CLIB_RB_PTR tree,CLIB_RB_NODE_PTR n, int black_count, int* path_black_count) {
-    if (debug_node_color(tree,n) == CLIB_BLACK) {
-	black_count++;
-    }
-    if (n == RB_SENTINEL) {
-	if (*path_black_count == -1) {
-	    *path_black_count = black_count;
-	} else {
-	    assert (black_count == *path_black_count);
-	}
-	return;
-    }
-    debug_verify_property_5_helper(tree,n->left,  black_count, path_black_count);
-    debug_verify_property_5_helper(tree,n->right, black_count, path_black_count);
-}
-#endif
