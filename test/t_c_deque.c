@@ -36,7 +36,7 @@ test_c_deque(int value) {
 	if ( flip ) {
 	    push_back_c_deque ( test_deq, v );
 	    flip = 0;
-	}else{
+	} else {
 	    push_front_c_deque ( test_deq, v );
 	    flip = 1;
 	}
@@ -56,5 +56,5 @@ test_c_deque(int value) {
     elem = front_c_deque ( test_deq );
     printf ( "After Removal Front Element = %d\n", *(int*)elem);
 
-
+    delete_c_deque ( test_deq );
 }

@@ -183,11 +183,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\test\t_c_bst.c"
+				RelativePath="..\test\t_c_deque.c"
 				>
 			</File>
 			<File
-				RelativePath="..\test\t_c_deque.c"
+				RelativePath="..\test\t_c_map.c"
 				>
 			</File>
 			<File

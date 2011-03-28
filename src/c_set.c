@@ -1,72 +1,57 @@
 #include "c_datastructure.h"
 #include <stdio.h>
 
-#define VALIDATE_SET_PTR if ( x == CLIB_SET_NULL ) return 0;
-#define VALIDATE_KEY_PTR if ( !k ) return 0;	
-
 CLIB_SET_PTR 
 new_c_set( CLIB_DESTROY fn_d, CLIB_COMPARE fn_c) {
 
     CLIB_SET_PTR x  =  (CLIB_SET_PTR ) clib_malloc ( sizeof ( CLIB_SET ));
-
-    x->fn_destroy =  fn_d;
-    x->fn_compare =  fn_c;
-
-    x->root  = new_c_rb ( fn_d, fn_c, 1);
+    x->root  = new_c_rb ( fn_d, CLIB_NULL, fn_c, CLIB_SET_TYPE);
     return x;
 }
-CLIB_ERROR    
+void    
 delete_c_set ( CLIB_SET_PTR x) {
-    CLIB_ERROR rc =  CLIB_SUCCESS;
-    VALIDATE_SET_PTR;
-
-    delete_c_rb ( x->root );
-    clib_free ( x );
-
-    return rc;
+    if ( x != CLIB_SET_NULL ){
+	delete_c_rb ( x->root );
+	clib_free ( x );
+    }
 }
-CLIB_ERROR 
+void
 insert_c_set ( CLIB_SET_PTR x, CLIB_TYPE k, int reference) {
-    CLIB_ERROR rc =  CLIB_SUCCESS;
-    VALIDATE_SET_PTR;
-    VALIDATE_KEY_PTR;
-
-    rc = insert_c_rb ( x->root, k, CLIB_NULL, reference );
-
-    return rc;
+    if ( x != CLIB_SET_NULL && k ){
+	insert_c_rb ( x->root, k, CLIB_NULL, reference );
+    }
 }
-CLIB_TYPE
+void
 remove_c_set ( CLIB_SET_PTR x, CLIB_TYPE k ) {
     CLIB_RB_NODE_PTR t_node;
     CLIB_TYPE key;
 
-    VALIDATE_SET_PTR;
-    VALIDATE_KEY_PTR;
-
-    t_node = remove_c_rb ( x->root, k );
-    if ( !t_node ) {
-	return CLIB_NULL;
+    if ( x != CLIB_SET_NULL && k ){
+	t_node = remove_c_rb ( x->root, k );
+	if ( !t_node ) {
+	    return;
+	}
+	key = t_node->value._key;
+	clib_free ( key );
+	clib_free ( t_node );
     }
-    key = t_node->value._key;
-    clib_free ( t_node );
-    return key;
 }
+
 CLIB_BOOL
 exists_c_set( CLIB_SET_PTR x, CLIB_TYPE k ) {
-    CLIB_TYPE y ;
-    VALIDATE_SET_PTR;
-    VALIDATE_KEY_PTR;
-
-    y = find_c_rb ( x->root, k );
-
-    if ( y == CLIB_NULL )
-	return CLIB_FALSE;	
-    return CLIB_TRUE;
+    if ( x != CLIB_SET_NULL && k ){
+	return ( find_c_rb ( x->root, k ) == CLIB_NULL ) ?
+	    CLIB_FALSE : CLIB_TRUE;
+    }
+    return CLIB_FALSE;
 }
 CLIB_BOOL
 empty_c_set ( CLIB_SET_PTR x ) {
-    VALIDATE_SET_PTR;
-    return empty_c_rb(x->root);
+
+    if ( x != CLIB_SET_NULL ) {
+	return empty_c_rb(x->root);
+    }
+    return CLIB_FALSE;
 }
 
 CLIB_ERROR
@@ -77,7 +62,8 @@ union_c_set(CLIB_SET_PTR t,CLIB_SET_PTR s, CLIB_SET_PTR *rs) {
     /* Both the operand set should be of the same type
      * We check for the destroy and compare funciton 
      */
-    if ((t->fn_compare != s->fn_compare) || (t->fn_destroy != s->fn_destroy))
+    if ((t->root->compare_key_fn != s->root->compare_key_fn) || 
+	(t->root->destroy_key_fn != s->root->destroy_key_fn))
 	return CLIB_SET_INVALID_INPUT;
     /* Add all the elements from first set to this
      * new lement 
@@ -107,7 +93,9 @@ intersection_c_set(CLIB_SET_PTR t,CLIB_SET_PTR s, CLIB_SET_PTR *rs) {
     CLIB_RB_NODE_PTR current = CLIB_RB_NODE_NULL;
     CLIB_TYPE cur_elem       = CLIB_NULL;
 
-    if ((t->fn_compare != s->fn_compare) || (t->fn_destroy != s->fn_destroy))
+    if ((t->root->compare_key_fn != s->root->compare_key_fn) || 
+	(t->root->destroy_key_fn != s->root->destroy_key_fn))
+
 	return CLIB_SET_INVALID_INPUT;
 
     current = t->root->_root;
@@ -125,7 +113,9 @@ difference_c_set(CLIB_SET_PTR t,CLIB_SET_PTR s, CLIB_SET_PTR *rs) {
     CLIB_RB_NODE_PTR current = CLIB_RB_NODE_NULL;
     CLIB_TYPE cur_elem       = CLIB_NULL;
 
-    if ((t->fn_compare != s->fn_compare) || (t->fn_destroy != s->fn_destroy))
+    if ((t->root->compare_key_fn != s->root->compare_key_fn) || 
+	(t->root->destroy_key_fn != s->root->destroy_key_fn))
+
 	return CLIB_SET_INVALID_INPUT;
 
     current = t->root->_root;
@@ -157,8 +147,4 @@ subset_c_set(CLIB_SET_PTR t,CLIB_SET_PTR s) {
     return result;
 }
 
-extern void       
-print_c_set(CLIB_SET_PTR x, CLIB_TRAVERSAL fn_t) {	
-    print_c_rb( x->root, fn_t);
-}
 

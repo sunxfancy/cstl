@@ -81,7 +81,7 @@ __find_c_rb ( CLIB_RB_PTR tree, CLIB_COMPARE fn_c, CLIB_TYPE key ) {
 }
 CLIB_RB_NODE_PTR
 find(CLIB_RB_PTR tree, CLIB_TYPE key ) {
-    return __find_c_rb ( tree, tree->compare_fn, key );
+    return __find_c_rb ( tree, tree->compare_key_fn, key );
 }
 
 static void update_values ( CLIB_TYPE v, int *l, int *r, int *p , int *e, 
@@ -131,7 +131,7 @@ test_all_elements(CLIB_RB_PTR tree, TS ts[], int size) {
 static CLIB_RB_PTR 
 create_tree(TS ts[], int size) {
     int i = 0;
-    CLIB_RB_PTR tree = new_c_rb( free_rb_e, compare_rb_e, 0);
+    CLIB_RB_PTR tree = new_c_rb( free_rb_e, CLIB_NULL, compare_rb_e, 0);
     for ( i = 0; i < size; i++) {
 	int *v = ( int *) malloc ( sizeof ( int ));
 	memcpy ( v, &(ts[i].element), sizeof ( int ));
@@ -186,19 +186,29 @@ test_c_rb() {
     size = (sizeof(ts)/sizeof(TS));
     size_after_delete = (sizeof(ts_delete_leaf_13)/sizeof(TS));
     node = remove_c_rb( tree, &i);
-    if ( node->value._key ) free ( node->value._key);
+    if ( node->value._key )  {
+	free ( node->value._key);
+	free ( node );
+    }
+
     test_all_elements(tree, ts_delete_leaf_13, size_after_delete);
 
     i = 9;	
     size_after_delete = (sizeof(ts_delete_9)/sizeof(TS));
     node = remove_c_rb( tree, &i);
-    if ( node->value._key ) free ( node->value._key);
+    if ( node->value._key )  {
+	free ( node->value._key);
+	free ( node );
+    }
     test_all_elements(tree, ts_delete_9, size_after_delete);
 
     i = 15;	
     size_after_delete = (sizeof(ts_delete_15)/sizeof(TS));
     node = remove_c_rb( tree, &i);
-    if ( node->value._key ) free ( node->value._key);
+    if ( node->value._key )  {
+	free ( node->value._key);
+	free ( node );
+    }
     test_all_elements(tree, ts_delete_15, size_after_delete);
 
     {
@@ -208,6 +218,6 @@ test_c_rb() {
 	insert_c_rb( tree, v, NULL , CLIB_RB_VALUE_COPY);
 	size_after_delete = (sizeof(ts_insert_1)/sizeof(TS));
 	test_all_elements(tree, ts_insert_1, size_after_delete);
-    }
+    } 
     delete_c_rb(tree);
 }

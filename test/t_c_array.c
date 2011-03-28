@@ -8,10 +8,10 @@ CLIB_ARRAY_PTR  test_array1;
 int i = 0;
 
 static void 
-free_element ( void *ptr ) {
-    if ( ptr )
-	free ( ptr);
-}
+    free_element ( void *ptr ) {
+        if ( ptr )
+            free ( ptr);
+    }
 static int 
 compare_element ( void *left, void *right ) {
     int *l = (int*) left;
@@ -76,13 +76,13 @@ for ( i = (x); i <= (y); i ++ ) { \
 
 #define PRINT_ELEMENT \
     for ( i = 0; i < size_c_array( test_array ); i++) { \
-	printf ( "%d\n", *((int*)element_at_c_array ( test_array, i ))); \
+        printf ( "%d\n", *((int*)element_at_c_array ( test_array, i ))); \
     }
 #define TEST_VALUE( RESULT, EXPECTED_VALUE) \
     if ( (RESULT) == (EXPECTED_VALUE)) { \
-	printf ( "PASS \n"); \
+        printf ( "PASS \n"); \
     }else {\
-	printf ( "FAIL \n");\
+        printf ( "FAIL \n");\
     }
 #define PRINT_TEST_CASE(x) \
     printf ( "Testing  %-20s .....   ", (x));
@@ -184,10 +184,10 @@ t_element_at_c_array() {
     TEST_VALUE(result, 9 );
 
     for ( i = 0; i < size_c_array ( test_array ); i++) {
-	elem = (void*)element_at_c_array(test_array, i );
-	result = *(int*)(elem);
-	PRINT_TEST_CASE("element_at_c_array");
-	TEST_VALUE(result, i );
+        elem = (void*)element_at_c_array(test_array, i );
+        result = *(int*)(elem);
+        PRINT_TEST_CASE("element_at_c_array");
+        TEST_VALUE(result, i );
     }
 
     DELETE_ARRAY;

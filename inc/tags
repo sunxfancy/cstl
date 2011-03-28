@@ -4,112 +4,89 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
-CLIB_ARRAY	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_array      CLIB_ARRAY;$/;"	t
-CLIB_ARRAY_NULL	/home/avinash/mywork/cstl/inc/c_datastructure.h	45;"	d
-CLIB_ARRAY_PTR	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_array*     CLIB_ARRAY_PTR;$/;"	t
-CLIB_BLACK	/home/avinash/mywork/cstl/inc/c_datastructure.h	15;"	d
-CLIB_BOOL	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef int   CLIB_BOOL;$/;"	t
-CLIB_BST	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_bst           CLIB_BST;$/;"	t
-CLIB_BST_NODE	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_bst_node   CLIB_BST_NODE;$/;"	t
-CLIB_BST_NODE_NULL	/home/avinash/mywork/cstl/inc/c_datastructure.h	103;"	d
-CLIB_BST_NODE_PTR	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_bst_node*  CLIB_BST_NODE_PTR;$/;"	t
-CLIB_BST_NULL	/home/avinash/mywork/cstl/inc/c_datastructure.h	115;"	d
-CLIB_BST_PTR	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_bst*          CLIB_BST_PTR;$/;"	t
-CLIB_COMPARE	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef int   (*CLIB_COMPARE)(CLIB_TYPE,CLIB_TYPE);$/;"	t
-CLIB_DEQUE	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_deque          CLIB_DEQUE;$/;"	t
-CLIB_DEQUE_NULL	/home/avinash/mywork/cstl/inc/c_datastructure.h	77;"	d
-CLIB_DEQUE_PTR	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_deque*         CLIB_DEQUE_PTR;$/;"	t
-CLIB_DESTROY	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef void  (*CLIB_DESTROY)(CLIB_TYPE);$/;"	t
-CLIB_ERROR	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef int   CLIB_ERROR;$/;"	t
-CLIB_FALSE	/home/avinash/mywork/cstl/inc/c_datastructure.h	22;"	d
-CLIB_INORDER	/home/avinash/mywork/cstl/inc/c_datastructure.h	24;"	d
-CLIB_MAP_TYPE	/home/avinash/mywork/cstl/inc/c_datastructure.h	17;"	d
-CLIB_MULTI_MAP_TYPE	/home/avinash/mywork/cstl/inc/c_datastructure.h	18;"	d
-CLIB_MULTI_SET	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_multi_set  CLIB_MULTI_SET;$/;"	t
-CLIB_MULTI_SET_NULL	/home/avinash/mywork/cstl/inc/c_datastructure.h	217;"	d
-CLIB_MULTI_SET_PTR	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_multi_set* CLIB_MULTI_SET_PTR;$/;"	t
-CLIB_MULTI_SET_TYPE	/home/avinash/mywork/cstl/inc/c_datastructure.h	20;"	d
-CLIB_NULL	/home/avinash/mywork/cstl/inc/c_datastructure.h	23;"	d
-CLIB_PAIR	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_pair         CLIB_PAIR;$/;"	t
-CLIB_PAIR_NULL	/home/avinash/mywork/cstl/inc/c_datastructure.h	133;"	d
-CLIB_PAIR_PTR	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_pair*        CLIB_PAIR_PTR;$/;"	t
-CLIB_POSTORDER	/home/avinash/mywork/cstl/inc/c_datastructure.h	26;"	d
-CLIB_PREORDER	/home/avinash/mywork/cstl/inc/c_datastructure.h	25;"	d
-CLIB_RB	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_rb         CLIB_RB;$/;"	t
-CLIB_RBTREE_KEY_DUPLICATE	/home/avinash/mywork/cstl/inc/c_datastructure.h	151;"	d
-CLIB_RBTREE_KEY_NOT_FOUND	/home/avinash/mywork/cstl/inc/c_datastructure.h	152;"	d
-CLIB_RB_NODE	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_rb_node          CLIB_RB_NODE;$/;"	t
-CLIB_RB_NODE_NULL	/home/avinash/mywork/cstl/inc/c_datastructure.h	149;"	d
-CLIB_RB_NODE_PTR	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_rb_node*         CLIB_RB_NODE_PTR;$/;"	t
-CLIB_RB_NULL	/home/avinash/mywork/cstl/inc/c_datastructure.h	169;"	d
-CLIB_RB_PTR	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_rb*        CLIB_RB_PTR;$/;"	t
-CLIB_RB_REFER_COPY	/home/avinash/mywork/cstl/inc/c_datastructure.h	28;"	d
-CLIB_RB_VALUE_COPY	/home/avinash/mywork/cstl/inc/c_datastructure.h	27;"	d
-CLIB_RED	/home/avinash/mywork/cstl/inc/c_datastructure.h	16;"	d
-CLIB_SET	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_set        CLIB_SET;$/;"	t
-CLIB_SET_INVALID_INPUT	/home/avinash/mywork/cstl/inc/c_datastructure.h	193;"	d
-CLIB_SET_NULL	/home/avinash/mywork/cstl/inc/c_datastructure.h	191;"	d
-CLIB_SET_PTR	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef c_set*       CLIB_SET_PTR;$/;"	t
-CLIB_SET_TYPE	/home/avinash/mywork/cstl/inc/c_datastructure.h	19;"	d
-CLIB_SUCCESS	/home/avinash/mywork/cstl/inc/c_datastructure.h	30;"	d
-CLIB_TRAVERSAL	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef void  (*CLIB_TRAVERSAL)( CLIB_TYPE);$/;"	t
-CLIB_TRUE	/home/avinash/mywork/cstl/inc/c_datastructure.h	21;"	d
-CLIB_TYPE	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef void* CLIB_TYPE;$/;"	t
-_C_DATASTRUCTURE_H_	/home/avinash/mywork/cstl/inc/c_datastructure.h	2;"	d
-__c_array	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef struct __c_array {$/;"	s
-__c_bst	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef struct __c_bst {$/;"	s
-__c_bst_node	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef struct __c_bst_node {$/;"	s
-__c_deque	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef struct __c_deque {$/;"	s
-__c_multi_set	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef struct __c_multi_set {$/;"	s
-__c_pair	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef struct __c_pair {$/;"	s
-__c_rb	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef struct __c_rb {$/;"	s
-__c_rb_node	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef struct __c_rb_node {$/;"	s
-__c_set	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^typedef struct __c_set {$/;"	s
-_back_index	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    int _back_index;$/;"	m	struct:__c_deque
-_current_size	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    int _current_size;$/;"	m	struct:__c_deque
-_elem	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_TYPE *_elem;$/;"	m	struct:__c_array
-_elements	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_TYPE* _elements;$/;"	m	struct:__c_deque
-_fn_compare	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_COMPARE _fn_compare;$/;"	m	struct:__c_deque
-_fn_destroy	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_DESTROY _fn_destroy;$/;"	m	struct:__c_deque
-_front_index	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    int _front_index;$/;"	m	struct:__c_deque
-_key	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_TYPE _key;$/;"	m	struct:__c_bst_node
-_key	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_TYPE _key;$/;"	m	struct:__c_pair
-_root	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    c_bst_node *_root;$/;"	m	struct:__c_bst
-_root	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    c_rb_node *_root;$/;"	m	struct:__c_rb
-_sentinel	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    c_rb_node _sentinel;$/;"	m	struct:__c_rb
-_size	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    int _size;$/;"	m	struct:__c_deque
-_type	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    int _type ;$/;"	m	struct:__c_rb
-_value	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_TYPE _value;$/;"	m	struct:__c_pair
-c_array	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^}c_array;$/;"	t	typeref:struct:__c_array
-c_bst	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^}c_bst;$/;"	t	typeref:struct:__c_bst
-c_bst_node	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^}c_bst_node;$/;"	t	typeref:struct:__c_bst_node
-c_deque	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^}c_deque;$/;"	t	typeref:struct:__c_deque
-c_multi_set	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^}c_multi_set;$/;"	t	typeref:struct:__c_multi_set
-c_pair	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^}c_pair;$/;"	t	typeref:struct:__c_pair
-c_rb	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^}c_rb;$/;"	t	typeref:struct:__c_rb
-c_rb_node	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^}c_rb_node;$/;"	t	typeref:struct:__c_rb_node
-c_set	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^}c_set;$/;"	t	typeref:struct:__c_set
-capacity	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    int  capacity;$/;"	m	struct:__c_array
-color	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    int color; $/;"	m	struct:__c_rb_node
-compare_fn	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_COMPARE compare_fn;$/;"	m	struct:__c_array
-compare_fn	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_COMPARE compare_fn;$/;"	m	struct:__c_bst
-compare_fn	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_COMPARE compare_fn;$/;"	m	struct:__c_rb
-cur_size	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    int  cur_size;$/;"	m	struct:__c_array
-destroy_fn	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_DESTROY destroy_fn;$/;"	m	struct:__c_bst
-destroy_fn	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_DESTROY destroy_fn;$/;"	m	struct:__c_rb
-destruct_fn	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_DESTROY destruct_fn;$/;"	m	struct:__c_array
-fn_compare	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_COMPARE fn_compare;$/;"	m	struct:__c_multi_set
-fn_compare	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_COMPARE fn_compare;$/;"	m	struct:__c_set
-fn_destroy	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_DESTROY fn_destroy;$/;"	m	struct:__c_multi_set
-fn_destroy	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_DESTROY fn_destroy;$/;"	m	struct:__c_set
-left	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    struct __c_bst_node *left;$/;"	m	struct:__c_bst_node	typeref:struct:__c_bst_node::__c_bst_node
-left	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    struct __c_rb_node *left;$/;"	m	struct:__c_rb_node	typeref:struct:__c_rb_node::__c_rb_node
-parent	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    struct __c_bst_node *parent;$/;"	m	struct:__c_bst_node	typeref:struct:__c_bst_node::__c_bst_node
-parent	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    struct __c_rb_node *parent;$/;"	m	struct:__c_rb_node	typeref:struct:__c_rb_node::__c_rb_node
-reference	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    int reference;$/;"	m	struct:__c_rb_node
-right	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    struct __c_bst_node *right;$/;"	m	struct:__c_bst_node	typeref:struct:__c_bst_node::__c_bst_node
-right	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    struct __c_rb_node *right;$/;"	m	struct:__c_rb_node	typeref:struct:__c_rb_node::__c_rb_node
-root	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    c_rb* root;$/;"	m	struct:__c_multi_set
-root	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    c_rb* root;$/;"	m	struct:__c_set
-traversal_fn	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    CLIB_TRAVERSAL traversal_fn;$/;"	m	struct:__c_bst
-value	/home/avinash/mywork/cstl/inc/c_datastructure.h	/^    c_pair value;$/;"	m	struct:__c_rb_node
+CLIB_ARRAY	c_datastructure.h	/^typedef c_array      CLIB_ARRAY;$/;"	t
+CLIB_ARRAY_NULL	c_datastructure.h	43;"	d
+CLIB_ARRAY_PTR	c_datastructure.h	/^typedef c_array*     CLIB_ARRAY_PTR;$/;"	t
+CLIB_BLACK	c_datastructure.h	15;"	d
+CLIB_BOOL	c_datastructure.h	/^typedef int   CLIB_BOOL;$/;"	t
+CLIB_COMPARE	c_datastructure.h	/^typedef int   (*CLIB_COMPARE)(CLIB_TYPE,CLIB_TYPE);$/;"	t
+CLIB_DEQUE	c_datastructure.h	/^typedef c_deque          CLIB_DEQUE;$/;"	t
+CLIB_DEQUE_NULL	c_datastructure.h	75;"	d
+CLIB_DEQUE_PTR	c_datastructure.h	/^typedef c_deque*         CLIB_DEQUE_PTR;$/;"	t
+CLIB_DESTROY	c_datastructure.h	/^typedef void  (*CLIB_DESTROY)(CLIB_TYPE);$/;"	t
+CLIB_ERROR	c_datastructure.h	/^typedef int   CLIB_ERROR;$/;"	t
+CLIB_FALSE	c_datastructure.h	20;"	d
+CLIB_INORDER	c_datastructure.h	22;"	d
+CLIB_MAP	c_datastructure.h	/^typedef c_map         CLIB_MAP;$/;"	t
+CLIB_MAP_NULL	c_datastructure.h	174;"	d
+CLIB_MAP_PTR	c_datastructure.h	/^typedef c_map*        CLIB_MAP_PTR;$/;"	t
+CLIB_MAP_TYPE	c_datastructure.h	18;"	d
+CLIB_NULL	c_datastructure.h	21;"	d
+CLIB_PAIR	c_datastructure.h	/^typedef c_pair         CLIB_PAIR;$/;"	t
+CLIB_PAIR_NULL	c_datastructure.h	99;"	d
+CLIB_PAIR_PTR	c_datastructure.h	/^typedef c_pair*        CLIB_PAIR_PTR;$/;"	t
+CLIB_POSTORDER	c_datastructure.h	24;"	d
+CLIB_PREORDER	c_datastructure.h	23;"	d
+CLIB_RB	c_datastructure.h	/^typedef c_rb         CLIB_RB;$/;"	t
+CLIB_RBTREE_KEY_DUPLICATE	c_datastructure.h	117;"	d
+CLIB_RBTREE_KEY_NOT_FOUND	c_datastructure.h	118;"	d
+CLIB_RB_NODE	c_datastructure.h	/^typedef c_rb_node          CLIB_RB_NODE;$/;"	t
+CLIB_RB_NODE_NULL	c_datastructure.h	115;"	d
+CLIB_RB_NODE_PTR	c_datastructure.h	/^typedef c_rb_node*         CLIB_RB_NODE_PTR;$/;"	t
+CLIB_RB_NULL	c_datastructure.h	132;"	d
+CLIB_RB_PTR	c_datastructure.h	/^typedef c_rb*        CLIB_RB_PTR;$/;"	t
+CLIB_RB_REFER_COPY	c_datastructure.h	26;"	d
+CLIB_RB_VALUE_COPY	c_datastructure.h	25;"	d
+CLIB_RED	c_datastructure.h	16;"	d
+CLIB_SET	c_datastructure.h	/^typedef c_set        CLIB_SET;$/;"	t
+CLIB_SET_INVALID_INPUT	c_datastructure.h	153;"	d
+CLIB_SET_NULL	c_datastructure.h	151;"	d
+CLIB_SET_PTR	c_datastructure.h	/^typedef c_set*       CLIB_SET_PTR;$/;"	t
+CLIB_SET_TYPE	c_datastructure.h	17;"	d
+CLIB_SUCCESS	c_datastructure.h	28;"	d
+CLIB_TRAVERSAL	c_datastructure.h	/^typedef void  (*CLIB_TRAVERSAL)( CLIB_TYPE);$/;"	t
+CLIB_TRUE	c_datastructure.h	19;"	d
+CLIB_TYPE	c_datastructure.h	/^typedef void* CLIB_TYPE;$/;"	t
+_C_DATASTRUCTURE_H_	c_datastructure.h	2;"	d
+__c_array	c_datastructure.h	/^typedef struct __c_array {$/;"	s
+__c_deque	c_datastructure.h	/^typedef struct __c_deque {$/;"	s
+__c_map	c_datastructure.h	/^typedef struct __c_map {$/;"	s
+__c_pair	c_datastructure.h	/^typedef struct __c_pair {$/;"	s
+__c_rb	c_datastructure.h	/^typedef struct __c_rb {$/;"	s
+__c_rb_node	c_datastructure.h	/^typedef struct __c_rb_node {$/;"	s
+__c_set	c_datastructure.h	/^typedef struct __c_set {$/;"	s
+_back_index	c_datastructure.h	/^    int _back_index;$/;"	m	struct:__c_deque
+_current_size	c_datastructure.h	/^    int _current_size;$/;"	m	struct:__c_deque
+_elem	c_datastructure.h	/^    CLIB_TYPE *_elem;$/;"	m	struct:__c_array
+_elements	c_datastructure.h	/^    CLIB_TYPE* _elements;$/;"	m	struct:__c_deque
+_fn_compare	c_datastructure.h	/^    CLIB_COMPARE _fn_compare;$/;"	m	struct:__c_deque
+_fn_destroy	c_datastructure.h	/^    CLIB_DESTROY _fn_destroy;$/;"	m	struct:__c_deque
+_front_index	c_datastructure.h	/^    int _front_index;$/;"	m	struct:__c_deque
+_key	c_datastructure.h	/^    CLIB_TYPE _key;$/;"	m	struct:__c_pair
+_root	c_datastructure.h	/^    c_rb_node *_root;$/;"	m	struct:__c_rb
+_sentinel	c_datastructure.h	/^    c_rb_node _sentinel;$/;"	m	struct:__c_rb
+_size	c_datastructure.h	/^    int _size;$/;"	m	struct:__c_deque
+_type	c_datastructure.h	/^    int _type ;$/;"	m	struct:__c_rb
+_value	c_datastructure.h	/^    CLIB_TYPE _value;$/;"	m	struct:__c_pair
+c_array	c_datastructure.h	/^}c_array;$/;"	t	typeref:struct:__c_array
+c_deque	c_datastructure.h	/^}c_deque;$/;"	t	typeref:struct:__c_deque
+c_map	c_datastructure.h	/^}c_map;$/;"	t	typeref:struct:__c_map
+c_pair	c_datastructure.h	/^}c_pair;$/;"	t	typeref:struct:__c_pair
+c_rb	c_datastructure.h	/^}c_rb;$/;"	t	typeref:struct:__c_rb
+c_rb_node	c_datastructure.h	/^}c_rb_node;$/;"	t	typeref:struct:__c_rb_node
+c_set	c_datastructure.h	/^}c_set;$/;"	t	typeref:struct:__c_set
+capacity	c_datastructure.h	/^    int  capacity;$/;"	m	struct:__c_array
+color	c_datastructure.h	/^    int color; $/;"	m	struct:__c_rb_node
+compare_key_fn	c_datastructure.h	/^    CLIB_COMPARE compare_key_fn;$/;"	m	struct:__c_array
+compare_key_fn	c_datastructure.h	/^    CLIB_COMPARE compare_key_fn;$/;"	m	struct:__c_rb
+cur_size	c_datastructure.h	/^    int  cur_size;$/;"	m	struct:__c_array
+destroy_key_fn	c_datastructure.h	/^    CLIB_DESTROY destroy_key_fn;$/;"	m	struct:__c_rb
+destroy_val_fn	c_datastructure.h	/^	CLIB_DESTROY destroy_val_fn;$/;"	m	struct:__c_rb
+destruct_fn	c_datastructure.h	/^    CLIB_DESTROY destruct_fn;$/;"	m	struct:__c_array
+left	c_datastructure.h	/^    struct __c_rb_node *left;$/;"	m	struct:__c_rb_node	typeref:struct:__c_rb_node::__c_rb_node
+parent	c_datastructure.h	/^    struct __c_rb_node *parent;$/;"	m	struct:__c_rb_node	typeref:struct:__c_rb_node::__c_rb_node
+reference	c_datastructure.h	/^    int reference;$/;"	m	struct:__c_rb_node
+right	c_datastructure.h	/^    struct __c_rb_node *right;$/;"	m	struct:__c_rb_node	typeref:struct:__c_rb_node::__c_rb_node
+root	c_datastructure.h	/^    c_rb* root;$/;"	m	struct:__c_map
+root	c_datastructure.h	/^    c_rb* root;$/;"	m	struct:__c_set
+value	c_datastructure.h	/^    c_pair value;$/;"	m	struct:__c_rb_node

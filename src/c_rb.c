@@ -49,11 +49,12 @@ __right_rotate(CLIB_RB_PTR tree, CLIB_RB_NODE_PTR x) {
 }
 
 CLIB_RB_PTR
-new_c_rb(CLIB_DESTROY fn_d, CLIB_COMPARE fn_c, int type){
+new_c_rb(CLIB_DESTROY fn_ed, CLIB_DESTROY fn_vd, CLIB_COMPARE fn_c, int type){
 
-    CLIB_RB_PTR tree                  = (CLIB_RB_PTR)clib_malloc(sizeof(c_rb));
-    tree->compare_fn             = fn_c;
-    tree->destroy_fn             = fn_d;
+    CLIB_RB_PTR tree             = (CLIB_RB_PTR)clib_malloc(sizeof(c_rb));
+    tree->compare_key_fn         = fn_c;
+    tree->destroy_key_fn         = fn_ed;
+    tree->destroy_val_fn         = fn_vd;
     tree->_root                  = RB_SENTINEL;
     tree->_sentinel.left         = RB_SENTINEL;
     tree->_sentinel.right        = RB_SENTINEL;
@@ -119,8 +120,10 @@ __find_c_rb ( CLIB_RB_PTR tree, CLIB_TYPE k ) {
     int compare_result;
 
     while (x != RB_SENTINEL) {
-	compare_result = tree->compare_fn (k, x->value._key);
+	compare_result = tree->compare_key_fn (k, x->value._key);
 	if (compare_result == 0) {
+	    if ( tree->_type == CLIB_MAP_TYPE )
+		return x->value._value;
 	    return x->value._key;
 	} else {
 	    x = compare_result < 0 ? x->left : x->right;
@@ -139,7 +142,7 @@ insert_c_rb(CLIB_RB_PTR tree, CLIB_TYPE key , CLIB_TYPE value, int reference) {
     z = CLIB_RB_NODE_NULL;
     while (y != RB_SENTINEL)
     {
-	int c = (tree->compare_fn) ( key, y->value._key);
+	int c = (tree->compare_key_fn) ( key, y->value._key);
 	if (c == 0)
 	    return CLIB_RBTREE_KEY_DUPLICATE;
 	z = y;
@@ -149,13 +152,14 @@ insert_c_rb(CLIB_RB_PTR tree, CLIB_TYPE key , CLIB_TYPE value, int reference) {
 	    y = y->right;
     }
 
-    x = (CLIB_RB_NODE_PTR)clib_malloc (sizeof(c_rb_node));
+    x = (CLIB_RB_NODE_PTR)clib_malloc (sizeof(CLIB_RB_NODE));
     x->parent       = z;
     x->left         = RB_SENTINEL;
     x->right        = RB_SENTINEL;
     x->color        = CLIB_RED;
     x->value._key   = key;
     x->value._value = value;
+
     /* To handle the case when set theory operation are called
      * Since we are dealing with the void* everywhere 
      * we cannot make the copy of those elements
@@ -166,9 +170,8 @@ insert_c_rb(CLIB_RB_PTR tree, CLIB_TYPE key , CLIB_TYPE value, int reference) {
     } else
 	x->reference = 0;
 
-
     if (z) {
-	if (tree->compare_fn(key, z->value._key) < 0)
+	if (tree->compare_key_fn(key, z->value._key) < 0)
 	    z->left = x;
 	else
 	    z->right = x;
@@ -284,14 +287,14 @@ remove_c_rb ( CLIB_RB_PTR tree, CLIB_TYPE key ) {
     z = tree->_root;
     while (z != RB_SENTINEL)
     {
-	if (tree->compare_fn (key, z->value._key) == 0)
+	if (tree->compare_key_fn (key, z->value._key) == 0)
 	    break;
 	else
-	    z = (tree->compare_fn (key, z->value._key) < 0) ?
+	    z = (tree->compare_key_fn (key, z->value._key) < 0) ?
 		z->left : z->right;
     }
     if (z == RB_SENTINEL)
-		return CLIB_RB_NODE_NULL;
+	return CLIB_RB_NODE_NULL;
     return ( __remove_c_rb(tree, z ));
 
 }
@@ -306,26 +309,25 @@ delete_c_rb(CLIB_RB_PTR tree) {
 	    z = z->right;
 	else {
 	    if ( z->reference == 0 ) {
-		if (tree->destroy_fn){
-		    tree->destroy_fn (z->value._key);
-		}
+		if (tree->destroy_key_fn)
+		    tree->destroy_key_fn (z->value._key);
+		if ( tree->_type == CLIB_MAP_TYPE ) 
+		    (tree->destroy_val_fn)( z->value._value);
 	    } else {
 		z->reference--;
 	    }
-
 	    if (z->parent) {
 		z = z->parent;
 		if (z->left != RB_SENTINEL){
 		    clib_free (z->left);
 		    z->left = RB_SENTINEL;
-		}
-		else if (z->right != RB_SENTINEL){
+		}else if (z->right != RB_SENTINEL){
 		    clib_free (z->right);
 		    z->right = RB_SENTINEL;
 		}
 	    } else {
 		clib_free (z);
-		z = RB_SENTINEL;
+		z =	RB_SENTINEL;
 	    }
 	}
     }
@@ -367,18 +369,5 @@ get_next_c_rb(CLIB_RB_PTR tree, CLIB_RB_NODE_PTR *current, CLIB_RB_NODE_PTR *pre
 	} 
     } 
     return CLIB_RB_NODE_NULL;
-}
-static void
-__print_c_rb(CLIB_RB_PTR tree, CLIB_RB_NODE_PTR node, CLIB_TRAVERSAL fn_t ) {
-    if ( node ==  RB_SENTINEL ) return;
-    __print_c_rb ( tree, node->left, fn_t);
-    (fn_t)(node->value._key);
-    __print_c_rb ( tree,node->right, fn_t);
-}
-
-void
-print_c_rb(CLIB_RB_PTR tree,  CLIB_TRAVERSAL fn_t) {
-    __print_c_rb(tree,tree->_root,fn_t);
-
 }
 

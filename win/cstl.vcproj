@@ -168,11 +168,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\c_bst.c"
+				RelativePath="..\src\c_deque.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\c_deque.c"
+				RelativePath="..\src\c_map.c"
 				>
 			</File>
 			<File
