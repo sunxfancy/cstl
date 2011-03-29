@@ -20,9 +20,9 @@ new_c_deque(int size , CLIB_DESTROY fn_destroy, CLIB_COMPARE fn_compare) {
 void 
 delete_c_deque ( CLIB_DEQUE_PTR deq ) {
     int i  = 0 ;
-    for ( i = 0; i < deq->_size; i++ ) {
-	if ( deq->_elements[i] ) 
-	    (deq->_fn_destroy)(deq->_elements[i]);
+    for ( i = deq->_front_index + 1; i < deq->_back_index; i++ )  {
+	    if ( deq->_elements[i] ) 
+	        (deq->_fn_destroy)(deq->_elements[i]);
     }
     clib_free ( deq->_elements);
     clib_free ( deq );
@@ -46,9 +46,8 @@ back_c_deque ( CLIB_DEQUE_PTR   deq) {
 void 
 push_back_c_deque(CLIB_DEQUE_PTR   deq, void* value) {
     if ( deq->_back_index == deq->_size ){
-	deq->_size = deq->_size * 2;
-	deq->_elements = ( CLIB_TYPE*) realloc ( deq->_elements, 
-						 deq->_size * sizeof ( CLIB_TYPE));
+    	deq->_size = deq->_size * 2;
+	    deq->_elements = ( CLIB_TYPE*) realloc ( deq->_elements, deq->_size * sizeof ( CLIB_TYPE));
     }
     deq->_elements[deq->_back_index++] = value;
     deq->_current_size++;
@@ -61,24 +60,15 @@ push_front_c_deque(CLIB_DEQUE_PTR   deq, void* value) {
     int new_size = 0;
 
     if ( deq->_front_index == 0 ) {
-	new_size = deq->_size * 2;
-	CLIB_TYPE *temp_elem  = (CLIB_TYPE*)realloc( deq->_elements, new_size * sizeof (CLIB_TYPE));
-	if ( temp_elem != CLIB_NULL ) {
-	    deq->_elements    = temp_elem;
-	} else {
-	    abort();
-	}
-	_TO    = (int)(new_size - deq->_current_size)/2;
-	_FROM  = deq->_front_index + 1;
-	_COUNT = deq->_back_index - _FROM + 1;
-
-	memmove (&(deq->_elements[_TO]), 
-		 &(deq->_elements[_FROM]), 
-		 _COUNT * sizeof (CLIB_TYPE));
-
-	deq->_size        = new_size;
-	deq->_front_index = _TO - 1;
-	deq->_back_index  = deq->_front_index + _COUNT;
+	    new_size = deq->_size * 2;
+	    deq->_elements  = (CLIB_TYPE*)realloc( deq->_elements, new_size * sizeof ( CLIB_TYPE));
+	    _TO    = (int)(new_size - deq->_current_size)/2;
+	    _FROM  = deq->_front_index + 1;
+	    _COUNT = deq->_back_index - _FROM + 1;
+	    memmove (&(deq->_elements[_TO]), &(deq->_elements[_FROM]), _COUNT * sizeof (CLIB_TYPE));
+    	deq->_size        = new_size;
+	    deq->_front_index = _TO - 1;
+	    deq->_back_index  = deq->_front_index + _COUNT;
     }
     deq->_elements[deq->_front_index--] = value;
     deq->_current_size++;
@@ -101,9 +91,8 @@ void
 for_each_c_deque(CLIB_DEQUE_PTR   deq, void (*fn)(void*)) {
     int i  = 0 ;
     for ( i = deq->_front_index + 1; i < deq->_back_index; i++ ) {
-	if ( deq->_elements[i] ) {
+	if ( deq->_elements[i] )
 	    (fn)(deq->_elements[i]);
-	}
     }
 }
 
