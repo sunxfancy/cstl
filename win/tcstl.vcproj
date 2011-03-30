@@ -187,6 +187,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\test\t_c_graph.c"
+				>
+			</File>
+			<File
 				RelativePath="..\test\t_c_map.c"
 				>
 			</File>
@@ -196,6 +200,10 @@
 			</File>
 			<File
 				RelativePath="..\test\t_c_set.c"
+				>
+			</File>
+			<File
+				RelativePath="..\test\t_c_slist.c"
 				>
 			</File>
 			<File
