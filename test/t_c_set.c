@@ -15,9 +15,9 @@ compare_e ( void *left, void *right ) {
 static void add_element_to_set ( CLIB_SET_PTR s, int x, int y ) {
     int i = 0;
     for ( i = x; i <= y; i++ ) { 
-	char *e = ( char*) malloc ( 10 * sizeof ( char ));
-	sprintf ( e, "KEY_%d", i );
-	insert_c_set ( s, e ,CLIB_RB_VALUE_COPY);
+	    char *e = ( char*) malloc ( 10 * sizeof ( char ));
+	    sprintf ( e, "KEY_%d", i );
+	    insert_c_set ( s, e ,CLIB_RB_VALUE_COPY);
     }
 }
 
