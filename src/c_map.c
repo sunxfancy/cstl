@@ -1,5 +1,5 @@
 #include "c_datastructure.h"
-
+#ifdef ABC
 CLIB_MAP_PTR 
 new_c_map ( CLIB_DESTROY fn_ed, CLIB_DESTROY fn_vd, CLIB_COMPARE fn_c) {
     CLIB_MAP_PTR x  =  (CLIB_MAP_PTR ) clib_malloc ( sizeof ( CLIB_SET ));
@@ -49,4 +49,4 @@ find_c_map( CLIB_MAP_PTR x, CLIB_TYPE k) {
 	y = find_c_rb ( x->root, k );
 	return y;
 }
-
+#endif

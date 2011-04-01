@@ -1,6 +1,6 @@
 #include "c_datastructure.h"
 #include <stdio.h>
-
+#ifdef ABC
 CLIB_SET_PTR 
 new_c_set( CLIB_DESTROY fn_d, CLIB_COMPARE fn_c) {
 
@@ -146,5 +146,4 @@ subset_c_set(CLIB_SET_PTR t,CLIB_SET_PTR s) {
     }
     return result;
 }
-
-
+#endif

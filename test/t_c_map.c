@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <assert.h>
 
+/*
 
 static void 
 delete_e ( void *ptr ) {
@@ -45,9 +46,10 @@ verify_all_element ( CLIB_MAP_PTR s, int x , int y) {
 	free ( v );
     }
 }
+*/
 void
 test_c_map() {
-    int i = 11;
+    /*int i = 11;
     char *val;
     char *k;
 
@@ -63,6 +65,6 @@ test_c_map() {
     assert ( val == CLIB_NULL );
     free ( k );
 
-    delete_c_map ( map );
+    delete_c_map ( map );*/
 
 }

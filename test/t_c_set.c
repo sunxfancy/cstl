@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 
-static void 
+/*static void 
 delete_e ( void *ptr ) {
     if ( ptr ) 
 	free ( ptr );
@@ -20,10 +20,10 @@ static void add_element_to_set ( CLIB_SET_PTR s, int x, int y ) {
 	    insert_c_set ( s, e ,CLIB_RB_VALUE_COPY);
     }
 }
-
+*/
 void 
 test_c_set(){
-    CLIB_SET_PTR set1 = new_c_set ( delete_e, compare_e);
+/*    CLIB_SET_PTR set1 = new_c_set ( delete_e, compare_e);
     CLIB_SET_PTR set2 = new_c_set ( delete_e, compare_e);
     CLIB_SET_PTR set3 = new_c_set ( delete_e, compare_e);
     CLIB_SET_PTR set4 = new_c_set ( delete_e, compare_e);
@@ -41,4 +41,5 @@ test_c_set(){
     delete_c_set(set3);
     delete_c_set(set4);
     delete_c_set(set5);
+    */
 }

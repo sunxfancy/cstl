@@ -34,8 +34,8 @@ typedef size_t CLIB_SIZE;
 /*                            P  A  I   R                                  */
 /* ------------------------------------------------------------------------*/
 typedef struct __c_pair {
-    CLIB_TYPE _key;
-    CLIB_TYPE _value;
+    CLIB_TYPE key;
+    CLIB_TYPE value;
 }c_pair;
 
 typedef c_pair         CLIB_PAIR;
