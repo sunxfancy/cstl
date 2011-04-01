@@ -37,7 +37,7 @@ void
 test_c_slist() {
     CLIB_SLIST_PTR list = new_c_slist(free_element,compare_element);
     add_elements_to_list(list,1, 10 );
-    /*for_each_c_slist(list, print_e);
+    for_each_c_slist(list, print_e);
     {
         int i = 55;
         int *v = ( int *) malloc ( sizeof ( int ));
@@ -95,7 +95,7 @@ test_c_slist() {
         int i = 100;
         CLIB_TYPE find = find_c_slist ( list, &i);
         assert ( find ==  CLIB_NULL );
-    } */
+    }
     {
         delete_c_slist ( list );
     }

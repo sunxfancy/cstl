@@ -1,98 +1,177 @@
 #include "c_datastructure.h"
-#include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
+#define CLIB_DEQUE_INDEX(x)  ((char *)(pDeq)->elements + ((pDeq)->size_of_element * (x)))
+
+static CLIB_ERROR 
+insert_c_deque ( CLIB_DEQUE_PTR pDeq, int index, CLIB_TYPE elem) {
+    CLIB_ERROR rc = CLIB_ERROR_SUCCESS;
+
+    clib_memcpy ( CLIB_DEQUE_INDEX(index), elem, pDeq->size_of_element);
+    pDeq->no_of_elements++;
+    return rc;
+}
+
+static CLIB_DEQUE_PTR
+grow_deque ( CLIB_DEQUE_PTR pDeq ) {
+   	pDeq->no_max_elements = pDeq->no_max_elements * 2;
+        pDeq->elements = ( CLIB_TYPE*) realloc (pDeq->elements,
+                                                pDeq->no_max_elements * pDeq->size_of_element);
+    return pDeq;
+}
 CLIB_DEQUE_PTR  
-new_c_deque(int size , CLIB_DESTROY fn_destroy, CLIB_COMPARE fn_compare) {
+new_c_deque( int deq_size , CLIB_COMPARE fn_c, CLIB_DESTROY fn_d, CLIB_SIZE elem_size) {
 
-    CLIB_DEQUE_PTR deq  = ( CLIB_DEQUE_PTR ) clib_malloc ( sizeof ( c_deque ));
-    deq->_size          = size < 8 ? 8 : size;
-    deq->_fn_compare    = fn_compare;
-    deq->_fn_destroy    = fn_destroy;
-    deq->_front_index   = (int)size / 2;
-    deq->_back_index    = deq->_front_index + 1;
-    deq->_current_size  = 0;
-    deq->_elements      = ( CLIB_TYPE*) calloc ( deq->_size, sizeof ( CLIB_TYPE));
+    CLIB_DEQUE_PTR pDeq = (CLIB_DEQUE_PTR)clib_malloc(sizeof(CLIB_DEQUE));
+	if ( pDeq == CLIB_DEQUE_NULL )
+		return CLIB_DEQUE_NULL;
 
-    return deq;
+    pDeq->no_max_elements  = deq_size < 8 ? 8 : deq_size;
+    pDeq->size_of_element = elem_size;
+
+    pDeq->elements = (CLIB_TYPE)clib_malloc(pDeq->no_max_elements * pDeq->size_of_element);
+	if ( pDeq == CLIB_DEQUE_NULL )
+		return CLIB_DEQUE_NULL;
+
+    pDeq->compare_fn      = fn_c;
+    pDeq->destruct_fn     = fn_d;
+    pDeq->head            = (int)deq_size / 2;
+    pDeq->tail            = pDeq->head + 1;
+    pDeq->no_of_elements  = 0;
+    
+
+    return pDeq;
 }
-void 
-delete_c_deque ( CLIB_DEQUE_PTR deq ) {
-    int i  = 0 ;
-    for ( i = deq->_front_index + 1; i < deq->_back_index; i++ )  {
-	    if ( deq->_elements[i] ) 
-	        (deq->_fn_destroy)(deq->_elements[i]);
+CLIB_ERROR 
+push_back_c_deque(CLIB_DEQUE_PTR pDeq, CLIB_TYPE elem) {
+	if ( pDeq == CLIB_DEQUE_NULL )
+		return CLIB_DEQUE_NOT_INITIALIZED;
+
+    if ( pDeq->tail == pDeq->no_max_elements )
+        pDeq = grow_deque(pDeq);
+
+    insert_c_deque(pDeq, pDeq->tail, elem);
+    pDeq->tail++;
+    return CLIB_ERROR_SUCCESS;
+}
+CLIB_ERROR 
+push_front_c_deque(CLIB_DEQUE_PTR pDeq, CLIB_TYPE elem) {
+    CLIB_ERROR rc = CLIB_ERROR_SUCCESS;	
+    int to       = 0;
+    int from     = 0;
+    int count    = 0;
+
+    if ( pDeq->head == 0 ) {
+        pDeq = grow_deque(pDeq);
+
+        to    = (pDeq->no_max_elements - pDeq->no_of_elements)/2;
+	    from  = pDeq->head + 1;
+	    count = pDeq->tail - from + 1;
+
+	    memmove (CLIB_DEQUE_INDEX(to), 
+                 CLIB_DEQUE_INDEX(from), 
+                 count * pDeq->size_of_element);
+
+	    pDeq->head = to - 1;
+	    pDeq->tail  = pDeq->head + count;
     }
-    clib_free ( deq->_elements);
-    clib_free ( deq );
+    insert_c_deque(pDeq, pDeq->head, elem);
+    pDeq->head--;
+    return rc;
+}
+
+CLIB_ERROR     
+front_c_deque (CLIB_DEQUE_PTR pDeq, CLIB_TYPE elem) {
+	if ( pDeq == CLIB_DEQUE_NULL )
+		return CLIB_DEQUE_NOT_INITIALIZED;
+
+    clib_memcpy(elem, 
+                CLIB_DEQUE_INDEX(pDeq->head + 1), 
+                pDeq->size_of_element);
+
+    return CLIB_ERROR_SUCCESS;
+
+}
+CLIB_ERROR 
+back_c_deque (CLIB_DEQUE_PTR pDeq, CLIB_TYPE elem) {
+	if ( pDeq == CLIB_DEQUE_NULL )
+		return CLIB_DEQUE_NOT_INITIALIZED;
+
+    clib_memcpy(elem, 
+                CLIB_DEQUE_INDEX(pDeq->tail - 1), 
+                pDeq->size_of_element);
+
+    return CLIB_ERROR_SUCCESS;
+}
+CLIB_ERROR     
+pop_back_c_deque (CLIB_DEQUE_PTR pDeq, CLIB_TYPE elem) {
+	if ( pDeq == CLIB_DEQUE_NULL )
+		return CLIB_DEQUE_NOT_INITIALIZED;
+
+    back_c_deque( pDeq, elem);
+    pDeq->tail--;
+    pDeq->no_of_elements--;
+
+    return CLIB_ERROR_SUCCESS;
+
+}
+CLIB_ERROR     
+pop_front_c_deque(CLIB_DEQUE_PTR pDeq, CLIB_TYPE elem) {
+	if ( pDeq == CLIB_DEQUE_NULL )
+		return CLIB_DEQUE_NOT_INITIALIZED;
+
+    front_c_deque ( pDeq, elem );
+    pDeq->head++;
+    pDeq->no_of_elements--;
+    return CLIB_ERROR_SUCCESS;
+}
+CLIB_BOOL      
+empty_c_deque (CLIB_DEQUE_PTR pDeq) {
+	if ( pDeq == CLIB_DEQUE_NULL )
+		return CLIB_TRUE;
+
+    return pDeq->no_of_elements == 0 ? CLIB_TRUE : CLIB_FALSE;
 }
 int 
-size_c_deque( CLIB_DEQUE_PTR deq ) {
-    return deq->_size;
-}
-int 
-empty_c_deque( CLIB_DEQUE_PTR deq){
-    return deq->_size == 0;
-}
-CLIB_TYPE
-front_c_deque ( CLIB_DEQUE_PTR   deq) {
-    return deq->_elements[deq->_front_index + 1];
-}
-CLIB_TYPE
-back_c_deque ( CLIB_DEQUE_PTR   deq) {
-    return deq->_elements[deq->_back_index - 1];
-}
-void 
-push_back_c_deque(CLIB_DEQUE_PTR   deq, void* value) {
-    if ( deq->_back_index == deq->_size ){
-    	deq->_size = deq->_size * 2;
-	    deq->_elements = ( CLIB_TYPE*) realloc ( deq->_elements, deq->_size * sizeof ( CLIB_TYPE));
-    }
-    deq->_elements[deq->_back_index++] = value;
-    deq->_current_size++;
-}
-void 
-push_front_c_deque(CLIB_DEQUE_PTR   deq, void* value) {
-    int _TO      = 0;
-    int _FROM    = 0;
-    int _COUNT   = 0;
-    int new_size = 0;
+size_c_deque( CLIB_DEQUE_PTR pDeq ) {
+	if ( pDeq == CLIB_DEQUE_NULL )
+		return CLIB_TRUE;
 
-    if ( deq->_front_index == 0 ) {
-	    new_size = deq->_size * 2;
-	    deq->_elements  = (CLIB_TYPE*)realloc( deq->_elements, new_size * sizeof ( CLIB_TYPE));
-	    _TO    = (int)(new_size - deq->_current_size)/2;
-	    _FROM  = deq->_front_index + 1;
-	    _COUNT = deq->_back_index - _FROM + 1;
-	    memmove (&(deq->_elements[_TO]), &(deq->_elements[_FROM]), _COUNT * sizeof (CLIB_TYPE));
-    	deq->_size        = new_size;
-	    deq->_front_index = _TO - 1;
-	    deq->_back_index  = deq->_front_index + _COUNT;
-    }
-    deq->_elements[deq->_front_index--] = value;
-    deq->_current_size++;
+    return pDeq->no_of_elements - 1;
 }
-void
-pop_back_c_deque ( CLIB_DEQUE_PTR   deq ) {
-    CLIB_TYPE elem = back_c_deque( deq );
-    (deq->_fn_destroy)(elem);
-    deq->_back_index--;
-    deq->_current_size--;
-}
-void
-pop_front_c_deque ( CLIB_DEQUE_PTR   deq ) {
-    CLIB_TYPE elem = front_c_deque ( deq );
-    (deq->_fn_destroy)(elem);
-    deq->_front_index++;
-    deq->_current_size--;
-}
-void 
-for_each_c_deque(CLIB_DEQUE_PTR   deq, void (*fn)(void*)) {
-    int i  = 0 ;
-    for ( i = deq->_front_index + 1; i < deq->_back_index; i++ ) {
-	if ( deq->_elements[i] )
-	    (fn)(deq->_elements[i]);
-    }
+extern CLIB_ERROR 
+element_at_c_deque (CLIB_DEQUE_PTR pDeq, int index,CLIB_TYPE elem) {
+    CLIB_ERROR rc = CLIB_ERROR_SUCCESS;
+
+	if ( pDeq == CLIB_DEQUE_NULL )
+		return CLIB_DEQUE_NOT_INITIALIZED;
+
+    if ( index < 0 || index > pDeq->no_max_elements )
+        return CLIB_DEQUE_INDEX_OUT_OF_BOUND;
+
+    if ( index < pDeq->head || index > pDeq->tail)
+        return CLIB_DEQUE_INDEX_OUT_OF_BOUND;
+
+    clib_memcpy(elem, CLIB_DEQUE_INDEX(index), pDeq->size_of_element);
+    return rc;
 }
 
+CLIB_ERROR
+delete_c_deque ( CLIB_DEQUE_PTR pDeq ) {
+	if ( pDeq == CLIB_DEQUE_NULL )
+		return CLIB_ERROR_SUCCESS;
+
+    if ( pDeq->destruct_fn ) {
+        int i = 0;
+        for ( i = pDeq->head + 1; i < pDeq->tail; i++ ){
+            CLIB_TYPE elem;
+            if ( element_at_c_deque( pDeq, i, &elem ) == CLIB_ERROR_SUCCESS ) {
+                pDeq->destruct_fn(elem);
+            }
+        }
+    }
+    clib_free ( pDeq->elements);
+    clib_free ( pDeq );
+
+    return CLIB_ERROR_SUCCESS;
+}

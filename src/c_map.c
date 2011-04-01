@@ -44,7 +44,7 @@ find_c_map( CLIB_MAP_PTR x, CLIB_TYPE k) {
 	CLIB_TYPE y;
 
 	if ( x == CLIB_MAP_NULL || !k )
-		return CLIB_SUCCESS;
+		return CLIB_ERROR_SUCCESS;
 
 	y = find_c_rb ( x->root, k );
 	return y;

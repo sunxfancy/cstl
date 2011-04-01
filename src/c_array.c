@@ -1,116 +1,164 @@
 #include "c_datastructure.h"
-#include <stdlib.h>
 #include <string.h>
 
-CLIB_ARRAY_PTR  
-new_c_array( int size, CLIB_DESTROY fn_destroy, CLIB_COMPARE fn_compare) {
-    int s = 0;
-    CLIB_ARRAY_PTR array;
 
-    s = size < 8 ? 8 : size;
-    array  = ( CLIB_ARRAY_PTR ) clib_malloc (sizeof ( CLIB_ARRAY ));
-    array->capacity    = s;
-    array->compare_key_fn  = fn_compare;
-    array->destruct_fn = fn_destroy;
-    array->cur_size    = 0;
-    array->_elem       = (CLIB_TYPE*)calloc(s, sizeof(CLIB_TYPE));
+#define CLIB_ARRAY_INDEX(x)  ((char *)(pArray)->elements + ((pArray)->size_of_element * (x)))
 
-    return array;
-}
-void 
-delete_c_array( CLIB_ARRAY_PTR array) {
-    int i = 0;
-    for ( i = 0; i < array->cur_size; i++) {
-        (array->destruct_fn)(array->_elem[i]);
-    }
-    clib_free ( array->_elem );
-    if ( array ) {
-        clib_free ( array );
-    }
-}
-void
-push_back_c_array ( CLIB_ARRAY_PTR array, CLIB_TYPE value ) {
-    int new_size = array->capacity * 2;
-    if ( array->cur_size == array->capacity ) {
-        array->_elem = ( CLIB_TYPE*) realloc ( array->_elem, 
-                sizeof ( CLIB_TYPE) * new_size);
-        array->capacity = new_size;
-    }
-    array->_elem[array->cur_size++] = value;
-}
-CLIB_TYPE
-element_at_c_array ( CLIB_ARRAY_PTR array, int pos ) {
-    return array->_elem[pos];
-}
-int
-size_c_array ( CLIB_ARRAY_PTR  array ){
-    return array->cur_size;
-}
-int 
-empty_c_array ( CLIB_ARRAY_PTR  array ) {
-    return ( array->cur_size == 0 );
-}
-int
-capacity_c_array ( CLIB_ARRAY_PTR array ) {
-    return array->capacity;
-}
-void 
-    reserve_c_array ( CLIB_ARRAY_PTR array , int size) {
-        if ( array->capacity >= size )
-            return;
-        array->_elem = ( CLIB_TYPE*) realloc ( array->_elem, sizeof ( CLIB_TYPE) * size);
-        array->capacity = size;
-    }
-CLIB_TYPE
-front_c_array ( CLIB_ARRAY_PTR   array) {
-    return array->_elem[0];
-}
-CLIB_TYPE
-back_c_array ( CLIB_ARRAY_PTR   array){
-    return array->_elem[array->cur_size-1];
-}
-void
-pop_back_c_array ( CLIB_ARRAY_PTR array ) {
-    (array->destruct_fn)(back_c_array(array));
-    array->cur_size = array->cur_size - 1;
-}
-void 
-insert_c_array ( CLIB_ARRAY_PTR   array, int pos, CLIB_TYPE value) {
-    int new_size = array->capacity * 2;
-    if ( array->capacity == array->cur_size ){
-        array->_elem = ( CLIB_TYPE*) realloc ( array->_elem, 
-                sizeof ( CLIB_TYPE) * new_size);
-    }
-    memmove (&(array->_elem[pos + 1]), 
-            &(array->_elem[pos]), 
-            (array->cur_size - pos) * sizeof (CLIB_TYPE));
-    array->_elem[pos] = value;
-    array->cur_size++;
-}
+static CLIB_ARRAY_PTR 
+array_check_and_grow ( CLIB_ARRAY_PTR pArray, int index) {
+    CLIB_BOOL reallocation_required = CLIB_FALSE;
 
-void 
-for_each_c_array(CLIB_ARRAY_PTR   array, void (*fn)(void*)) {
-    int i = 0;
-    for ( i = 0; i < array->cur_size; i++ ) {
-        (fn)(array->_elem[i]);
+    if ( pArray->no_max_elements <= index ){
+        pArray->no_max_elements  = pArray->no_max_elements * 2;
+        reallocation_required = CLIB_TRUE;
     }
+
+    if ( reallocation_required ) {
+        pArray->elements = (CLIB_TYPE)realloc(pArray->elements, 
+                              (pArray->size_of_element * pArray->no_max_elements));
+    }
+    return pArray;
 }
+static CLIB_ERROR 
+insert_c_array ( CLIB_ARRAY_PTR pArray, int index, CLIB_TYPE elem) {
+    CLIB_ERROR rc = CLIB_ERROR_SUCCESS;
 
-int 
-is_equal_to_c_array ( CLIB_ARRAY_PTR arrL, CLIB_ARRAY_PTR  arrR) {
-    int i = 0;
-    int rc = 0;
-    if ( arrL->cur_size != arrR->cur_size ) 
-        return 1;
-    if ( arrL->compare_key_fn != arrR->compare_key_fn ) 
-        return 1;
-
-    for ( i = 0; i < arrL->cur_size; i++){
-        if ( (arrL->compare_key_fn)(arrL->_elem[i], arrR->_elem[i]) != 1 ){
-            rc = 1;
-            break;
-        }
-
-    }
+    clib_memcpy ( CLIB_ARRAY_INDEX(index), elem, pArray->size_of_element);
+    pArray->no_of_elements++;
     return rc;
+}
+
+
+CLIB_ARRAY_PTR 
+new_c_array(int array_size, CLIB_COMPARE fn_c, CLIB_DESTROY fn_d , size_t elem_size) {
+
+    CLIB_ARRAY_PTR pArray = (CLIB_ARRAY_PTR)clib_malloc(sizeof(CLIB_ARRAY));
+	if ( pArray == CLIB_ARRAY_NULL )
+		return CLIB_ARRAY_NULL;
+
+    pArray->no_max_elements = array_size < 8 ? 8 : array_size;
+    pArray->elements = (CLIB_TYPE)clib_malloc(pArray->no_max_elements * elem_size);
+
+	if ( pArray == CLIB_ARRAY_NULL )
+		return CLIB_ARRAY_NULL;
+
+	pArray->size_of_element = elem_size;
+    pArray->compare_fn      = fn_c;
+    pArray->destruct_fn     = fn_d;
+    pArray->no_of_elements  = 0;
+   
+    return pArray;
+
+}
+
+CLIB_ERROR 
+push_back_c_array (CLIB_ARRAY_PTR pArray, CLIB_TYPE elem) {
+	CLIB_ERROR rc       = CLIB_ERROR_SUCCESS;	
+	if ( pArray == CLIB_ARRAY_NULL )
+		return CLIB_ARRAY_NOT_INITIALIZED;
+
+    array_check_and_grow ( pArray, pArray->no_of_elements + 1);
+
+    rc = insert_c_array( pArray, pArray->no_of_elements, elem);
+    return rc;
+}
+extern CLIB_ERROR 
+element_at_c_array (CLIB_ARRAY_PTR pArray, int index,CLIB_TYPE elem) {
+    CLIB_ERROR rc = CLIB_ERROR_SUCCESS;
+
+	if ( pArray == CLIB_ARRAY_NULL )
+		return CLIB_ARRAY_NOT_INITIALIZED;
+
+    if ( index < 0 || index > pArray->no_max_elements )
+        return CLIB_ARRAY_INDEX_OUT_OF_BOUND;
+
+    clib_memcpy(elem, CLIB_ARRAY_INDEX(index), pArray->size_of_element);
+    return rc;
+}
+int
+size_c_array ( CLIB_ARRAY_PTR pArray ) {
+    if ( pArray == CLIB_ARRAY_NULL )
+        return 0;
+    return pArray->no_of_elements - 1 ;
+}
+int
+capacity_c_array ( CLIB_ARRAY_PTR pArray ) {
+    if ( pArray == CLIB_ARRAY_NULL )
+        return 0;
+    return pArray->no_max_elements;
+}
+CLIB_BOOL  
+empty_c_array ( CLIB_ARRAY_PTR pArray) {
+    if ( pArray == CLIB_ARRAY_NULL )
+        return 0;
+    return pArray->no_of_elements == 0 ? CLIB_TRUE : CLIB_FALSE;
+}
+CLIB_ERROR 
+reserve_c_array ( CLIB_ARRAY_PTR pArray, int new_size) {
+    if ( pArray == CLIB_ARRAY_NULL )
+        return CLIB_ARRAY_NOT_INITIALIZED;
+
+    if ( new_size <= pArray->no_max_elements )
+        return CLIB_ERROR_SUCCESS;
+    
+    array_check_and_grow ( pArray, new_size );
+    return CLIB_ERROR_SUCCESS;
+
+}
+CLIB_ERROR 
+front_c_array ( CLIB_ARRAY_PTR pArray,CLIB_TYPE elem) {
+    return element_at_c_array ( pArray, 0, elem );
+}
+CLIB_ERROR 
+back_c_array ( CLIB_ARRAY_PTR pArray,CLIB_TYPE elem) {
+    return element_at_c_array ( pArray, pArray->no_of_elements - 1, elem );
+}
+CLIB_ERROR 
+pop_back_c_array( CLIB_ARRAY_PTR pArray, CLIB_TYPE elem) {
+    CLIB_ERROR rc = CLIB_ERROR_SUCCESS;
+    rc = element_at_c_array ( pArray, pArray->no_of_elements - 1, elem );
+    pArray->no_of_elements--;
+    return rc;
+}
+CLIB_ERROR 
+insert_at_c_array ( CLIB_ARRAY_PTR pArray, int index, CLIB_TYPE elem) {
+    CLIB_ERROR rc = CLIB_ERROR_SUCCESS;
+
+	if ( pArray == CLIB_ARRAY_NULL )
+		return CLIB_ARRAY_NOT_INITIALIZED;
+
+    if ( index < 0 || index > pArray->no_max_elements )
+        return CLIB_ARRAY_INDEX_OUT_OF_BOUND;
+
+    array_check_and_grow ( pArray, pArray->no_of_elements + 1);
+
+    memmove(CLIB_ARRAY_INDEX(index + 1), 
+            CLIB_ARRAY_INDEX(index), 
+            (pArray->no_of_elements - index) * pArray->size_of_element);
+
+    insert_c_array ( pArray, index, elem );
+
+    return rc;
+}
+
+CLIB_ERROR 
+delete_c_array( CLIB_ARRAY_PTR pArray) {
+    CLIB_ERROR rc = CLIB_ERROR_SUCCESS;
+
+	if ( pArray == CLIB_ARRAY_NULL )
+		return rc;
+
+    if ( pArray->destruct_fn ) {
+        int i = 0;
+        for ( i = 0; i < pArray->no_of_elements; i++) {
+                CLIB_TYPE elem;
+                if ( CLIB_ERROR_SUCCESS == element_at_c_array ( pArray, i , &elem ) )
+                    pArray->destruct_fn(elem);
+        }
+    }
+
+    clib_free ( pArray->elements);
+    clib_free ( pArray );
+    return rc;
+
 }

@@ -47,7 +47,8 @@
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(IntDir)\cstl.pdb"
-				WarningLevel="3"
+				WarningLevel="4"
+				WarnAsError="false"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
 			/>
@@ -172,10 +173,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\c_graph.c"
-				>
-			</File>
-			<File
 				RelativePath="..\src\c_map.c"
 				>
 			</File>
@@ -202,7 +199,35 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\inc\c_array.h"
+				>
+			</File>
+			<File
 				RelativePath="..\inc\c_datastructure.h"
+				>
+			</File>
+			<File
+				RelativePath="..\inc\c_deque.h"
+				>
+			</File>
+			<File
+				RelativePath="..\inc\c_errors.h"
+				>
+			</File>
+			<File
+				RelativePath="..\inc\c_map.h"
+				>
+			</File>
+			<File
+				RelativePath="..\inc\c_rb.h"
+				>
+			</File>
+			<File
+				RelativePath="..\inc\c_set.h"
+				>
+			</File>
+			<File
+				RelativePath="..\inc\c_slist.h"
 				>
 			</File>
 		</Filter>

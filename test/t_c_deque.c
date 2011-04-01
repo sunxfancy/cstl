@@ -2,59 +2,77 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
-c_deque *test_deq;
-
-static void 
-print_elements ( void *ptr ) {
-    int value = *(int*)ptr;
-    printf ( "%d\n", value);
-    return;
-}
-static void 
-free_element ( void *ptr ) {
-    if ( ptr )
-	free ( ptr);
-}
 static int 
-compare_element ( void *left, void *right ) {
+compare_e ( void *left, void *right ) {
     int *l = (int*) left;
     int *r = (int*) right;
     return *l == *r ;
 }
+static void 
+free_e ( void *ptr ) {
+    if ( ptr )
+    free ( ptr);
+}
 
 void 
-test_c_deque(int value) {
-    int i = 10;
-    void *elem = (void*) 0;
+test_c_deque() {
     int flip = 1;
+    int i = 0;
+    int limit = 20;
 
-    test_deq = new_c_deque (10, free_element, compare_element ); 
-    for ( i = 0; i <= value; i++ ) { 
-	int *v = ( int *) malloc ( sizeof ( int ));
-	memcpy ( v, &i, sizeof ( int ));
-	if ( flip ) {
-	    push_back_c_deque ( test_deq, v );
-	    flip = 0;
-	} else {
-	    push_front_c_deque ( test_deq, v );
-	    flip = 1;
-	}
+    CLIB_DEQUE_PTR myDeq = new_c_deque ( 10, compare_e, NULL, sizeof(int));
+    assert ( CLIB_DEQUE_NULL != myDeq );
+
+    for ( i = 0; i <= limit; i++ ) { 
+        if ( flip ) {
+            push_back_c_deque ( myDeq, &i );
+            flip = 0;
+        } else {
+            push_front_c_deque ( myDeq, &i );
+            flip = 1;
+        }
     }
-    for_each_c_deque(test_deq, print_elements);
+    {
+       int element;
+       front_c_deque ( myDeq, &element );
+       assert ( element == limit - 1 );
 
-    elem = front_c_deque ( test_deq );
-    printf ( "Front Element = %d\n", *(int*)elem);
-    elem = back_c_deque ( test_deq );
-    printf ( "Back  Element = %d\n", *(int*)elem);
+       back_c_deque ( myDeq, &element );
+       assert ( element == limit);
+    }
+    {
+        int element;
+        while ( empty_c_deque(myDeq) != CLIB_TRUE ) {
+            pop_front_c_deque ( myDeq, &element );
+            printf ( "%d\n", element );
+        }
+    }
+    {
+        delete_c_deque(myDeq);
+    }
+    {
+        myDeq = new_c_deque ( 10, compare_e, free_e, sizeof(int*)); 
+        for ( i = 0; i <= limit; i ++ ) { 
+            int *v = ( int *) malloc ( sizeof ( int ));
+            memcpy ( v, &i, sizeof ( int ));
+            push_back_c_deque ( myDeq, &v );
+        }   
+    }
+    {
+        int i = 0;
+        int j = 0;
+        for ( i = myDeq->head + 1; i < myDeq->tail; i++ ){
+            int *elem;
+            if ( element_at_c_deque( myDeq, i, &elem ) == CLIB_ERROR_SUCCESS ) {
+                assert ( *elem == j++ );
+            }
+        }
+    }
+    {
+        delete_c_deque(myDeq);
+    }
 
-    pop_back_c_deque(test_deq);
-    elem = back_c_deque ( test_deq );
-    printf ( "After Removal Back Element = %d\n", *(int*)elem);
 
-    pop_front_c_deque(test_deq);
-    elem = front_c_deque ( test_deq );
-    printf ( "After Removal Front Element = %d\n", *(int*)elem);
-
-    delete_c_deque ( test_deq );
 }
