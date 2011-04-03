@@ -139,7 +139,7 @@ test_all_elements(CLIB_RB_PTR tree, TS ts[], int size) {
 static CLIB_RB_PTR 
 create_tree(TS ts[], int size) {
     int i = 0;
-    CLIB_RB_PTR tree = new_c_rb( free_rb_e, CLIB_NULL, compare_rb_e, sizeof(int),0);
+    CLIB_RB_PTR tree = new_c_rb( compare_rb_e,free_rb_e, CLIB_NULL, sizeof(int),0);
     for ( i = 0; i < size; i++) {
        /* int *v = ( int *) malloc ( sizeof ( int ));
         memcpy ( v, &(ts[i].element), sizeof ( int ));*/
@@ -195,9 +195,9 @@ test_c_rb() {
         size = (sizeof(ts)/sizeof(TS));
         size_after_delete = (sizeof(ts_delete_leaf_13)/sizeof(TS));
         node = remove_c_rb( tree, &i);
-        if ( node->data.key ) {
-            free ( node->data.key);
-            free ( node );
+        if ( node != CLIB_RB_NODE_NULL ) {
+            clib_free ( node->data.key);
+            clib_free ( node);
         }
         test_all_elements(tree, ts_delete_leaf_13, size_after_delete);
     }
@@ -205,9 +205,9 @@ test_c_rb() {
         i = 9;	
         size_after_delete = (sizeof(ts_delete_9)/sizeof(TS));
         node = remove_c_rb( tree, &i);
-        if ( node->data.key )  {
-            free ( node->data.key);
-            free ( node );
+        if ( node != CLIB_RB_NODE_NULL ) {
+            clib_free ( node->data.key);
+            clib_free ( node);
         }
         test_all_elements(tree, ts_delete_9, size_after_delete);
     }
@@ -215,9 +215,9 @@ test_c_rb() {
         i = 15;	
         size_after_delete = (sizeof(ts_delete_15)/sizeof(TS));
         node = remove_c_rb( tree, &i);
-        if ( node->data.key )  {
-            free ( node->data.key);
-            free ( node );
+        if ( node != CLIB_RB_NODE_NULL ) {
+            clib_free ( node->data.key);
+            clib_free ( node);
         }
         test_all_elements(tree, ts_delete_15, size_after_delete);
     }

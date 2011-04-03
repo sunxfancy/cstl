@@ -48,6 +48,7 @@ typedef c_pair*        CLIB_PAIR_PTR;
 #include "c_set.h"
 #include "c_map.h"
 #include "c_slist.h"
+#include "c_map.h"
 
 /* ------------------------------------------------------------------------*/
 /*            H E L P E R       F U N C T I O N S                          */

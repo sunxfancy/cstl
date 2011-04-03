@@ -1,8 +1,6 @@
 #ifndef _C_DEQUE_H_
 #define _C_DEQUE_H_
-/* ------------------------------------------------------------------------*/
-/*                 D O U B L E    E N E D E D     Q U E U E                */
-/* ------------------------------------------------------------------------*/
+
 typedef struct __c_deque {
     CLIB_TYPE elements;
     int no_max_elements;

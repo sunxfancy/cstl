@@ -37,6 +37,8 @@ test_c_array(){
 		    int rv, rc ;
             rc = element_at_c_array ( myArray, i , &rv );
 		    assert ( rv == i );
+            rc = element_at_c_array ( myArray, i , &rv );
+            assert ( rv == i );
 	    }
     }    
     {
@@ -94,4 +96,5 @@ test_c_array(){
     {
         delete_c_array ( myArray );
     }
+
 }

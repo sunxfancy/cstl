@@ -49,7 +49,7 @@ __right_rotate(CLIB_RB_PTR pTree, CLIB_RB_NODE_PTR x) {
 }
 
 CLIB_RB_PTR
-new_c_rb(CLIB_DESTROY fn_ed, CLIB_DESTROY fn_vd, CLIB_COMPARE fn_c, CLIB_SIZE key_size, CLIB_SIZE value_size ){
+new_c_rb(CLIB_COMPARE fn_c,CLIB_DESTROY fn_ed, CLIB_DESTROY fn_vd,  CLIB_SIZE key_size, CLIB_SIZE value_size ){
 
     CLIB_RB_PTR pTree = (CLIB_RB_PTR)clib_malloc(sizeof(CLIB_RB));
     if ( pTree == CLIB_RB_NULL )
@@ -122,8 +122,8 @@ __rb_insert_fixup( CLIB_RB_PTR pTree, CLIB_RB_NODE_PTR x ) {
     }
     pTree->root->color = CLIB_BLACK;
 }
-static CLIB_TYPE
-__find_c_rb ( CLIB_RB_PTR pTree, CLIB_TYPE k ) {
+CLIB_RB_NODE_PTR   
+find_c_rb (CLIB_RB_PTR pTree, CLIB_TYPE k) {
     CLIB_RB_NODE_PTR x = pTree->root;
     int compare_result;
 
@@ -134,18 +134,16 @@ __find_c_rb ( CLIB_RB_PTR pTree, CLIB_TYPE k ) {
 
         compare_result = pTree->compare_fn (current_key, x->data.key);
         if (compare_result == 0) {
-            if ( pTree->type == CLIB_MAP_TYPE ) {
-                clib_free ( current_key );
-                return x->data.value;
-            }
             clib_free ( current_key );
-            return x->data.key;
+            break;
         } else {
             x = compare_result < 0 ? x->left : x->right;
         }
         clib_free ( current_key );
     }
-    return CLIB_NULL;
+    if ( x == RB_SENTINEL )
+        return CLIB_RB_NODE_NULL;
+    return x;
 }
 
 CLIB_ERROR  
@@ -198,16 +196,6 @@ insert_c_rb(CLIB_RB_PTR pTree, CLIB_TYPE k , CLIB_TYPE v) {
         clib_free ( current_key );
     }    
     x->parent = z;
-    /* To handle the case when set theory operation are called
-     * Since we are dealing with the void* everywhere 
-     * we cannot make the copy of those elements
-     * instead of reference is incresed during this time
-     */
-    /*if ( reference ) {
-      x->reference++;
-      } else
-      x->reference = 0;
-     */
     if (z) {
         CLIB_TYPE current_key = CLIB_NULL;
         current_key = (CLIB_TYPE)clib_malloc ( pTree->size_of_key);
@@ -282,10 +270,13 @@ __rb_remove_fixup( CLIB_RB_PTR pTree, CLIB_RB_NODE_PTR x ) {
     }
     x->color = CLIB_BLACK;
 }
+
 static CLIB_RB_NODE_PTR  
 __remove_c_rb(CLIB_RB_PTR pTree, CLIB_RB_NODE_PTR z ) {
-    CLIB_RB_NODE_PTR x, y;
-    void *tmp;
+    CLIB_RB_NODE_PTR x = CLIB_RB_NODE_NULL;
+    CLIB_RB_NODE_PTR y = CLIB_RB_NODE_NULL;
+    CLIB_TYPE  tmp = CLIB_NULL;
+
     if (z->left == RB_SENTINEL || z->right == RB_SENTINEL)
         y = z;
     else {
@@ -309,26 +300,24 @@ __remove_c_rb(CLIB_RB_PTR pTree, CLIB_RB_NODE_PTR z ) {
     else
         pTree->root = x;
     if (y != z) {
-        tmp           = z->data.key;
+        tmp  = z->data.key;
         z->data.key   = y->data.key;
         y->data.key   = tmp;
 
-        tmp             = z->data.value;
+        tmp  = z->data.value;
         z->data.value = y->data.value;
         y->data.value = tmp;
     }
     if (y->color == CLIB_BLACK)
         __rb_remove_fixup (pTree, x);
 
-    /*    if ( y->reference ) {
-          y->reference--;
-          return CLIB_RB_NODE_NULL;
-          }*/
     return y;
 }
+
 CLIB_RB_NODE_PTR
-remove_c_rb ( CLIB_RB_PTR pTree, CLIB_TYPE key ) {
-    CLIB_RB_NODE_PTR z;
+remove_c_rb (CLIB_RB_PTR pTree, CLIB_TYPE key) {
+    CLIB_RB_NODE_PTR z = CLIB_RB_NODE_NULL;
+
     z = pTree->root;
     while (z != RB_SENTINEL) {
         CLIB_TYPE current_key = CLIB_NULL;
@@ -347,12 +336,13 @@ remove_c_rb ( CLIB_RB_PTR pTree, CLIB_TYPE key ) {
     }
     if (z == RB_SENTINEL)
         return CLIB_RB_NODE_NULL;
-    return ( __remove_c_rb(pTree, z ));
 
+    return __remove_c_rb(pTree, z );
 }
 
-void  
+CLIB_ERROR  
 delete_c_rb(CLIB_RB_PTR pTree) {
+    CLIB_ERROR rc = CLIB_ERROR_SUCCESS;
     CLIB_RB_NODE_PTR z = pTree->root;
     while (z != RB_SENTINEL) {
         if (z->left != RB_SENTINEL)
@@ -360,14 +350,6 @@ delete_c_rb(CLIB_RB_PTR pTree) {
         else if (z->right != RB_SENTINEL)
             z = z->right;
         else {
-            /*if ( z->reference == 0 ) {
-              if (pTree->destroy_key_fn)
-              pTree->destroy_key_fn (z->data.key);
-              if ( pTree->_type == CLIB_MAP_TYPE ) 
-              (pTree->destroy_val_fn)( z->data.value);
-              } else {
-              z->reference--;
-              }*/
             if (z->parent) {
                 z = z->parent;
                 if (z->left != RB_SENTINEL){
@@ -396,19 +378,15 @@ delete_c_rb(CLIB_RB_PTR pTree) {
         }
     }
     clib_free ( pTree );
-}
-
-CLIB_TYPE
-find_c_rb(CLIB_RB_PTR pTree, CLIB_TYPE key ) {
-    return __find_c_rb ( pTree, key );
+    return rc;
 }
 
 CLIB_BOOL 
-    empty_c_rb(CLIB_RB_PTR pTree) {
-        if ( pTree->root != RB_SENTINEL )
-            return CLIB_TRUE;
-        return CLIB_FALSE;
-    }
+empty_c_rb(CLIB_RB_PTR pTree) {
+    if ( pTree->root != RB_SENTINEL )
+        return CLIB_TRUE;
+    return CLIB_FALSE;
+}
 CLIB_RB_NODE_PTR
 get_next_c_rb(CLIB_RB_PTR pTree, CLIB_RB_NODE_PTR *current, CLIB_RB_NODE_PTR *pre) {
     CLIB_RB_NODE_PTR prev_current;

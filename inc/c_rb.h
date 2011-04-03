@@ -30,15 +30,12 @@ typedef c_rb         CLIB_RB;
 typedef c_rb*        CLIB_RB_PTR;
 #define CLIB_RB_NULL        (CLIB_RB_PTR)0 
 
-extern CLIB_RB_PTR  new_c_rb(CLIB_DESTROY fn_ed, CLIB_DESTROY fn_vd, CLIB_COMPARE fn_c, CLIB_SIZE key_size, CLIB_SIZE value_size );
-extern CLIB_ERROR insert_c_rb(CLIB_RB_PTR tree, CLIB_TYPE k, CLIB_TYPE v);
-
-
-extern void         delete_c_rb       (CLIB_RB_PTR);
-
-extern CLIB_RB_NODE_PTR  remove_c_rb  (CLIB_RB_PTR, CLIB_TYPE);
-extern CLIB_TYPE    find_c_rb         (CLIB_RB_PTR, CLIB_TYPE);
-extern CLIB_BOOL    empty_c_rb        (CLIB_RB_PTR);
-extern CLIB_RB_NODE_PTR get_next_c_rb (CLIB_RB_PTR , CLIB_RB_NODE_PTR *, CLIB_RB_NODE_PTR *);
+extern CLIB_RB_PTR new_c_rb(CLIB_COMPARE fn_c,CLIB_DESTROY fn_ed, CLIB_DESTROY fn_vd,  CLIB_SIZE key_size, CLIB_SIZE value_size );
+extern CLIB_ERROR  insert_c_rb(CLIB_RB_PTR pTree, CLIB_TYPE key, CLIB_TYPE value);
+extern CLIB_RB_NODE_PTR   find_c_rb (CLIB_RB_PTR pTree, CLIB_TYPE k);
+extern CLIB_RB_NODE_PTR remove_c_rb (CLIB_RB_PTR pTree, CLIB_TYPE key);
+extern CLIB_ERROR  delete_c_rb (CLIB_RB_PTR pTree);
+extern CLIB_BOOL   empty_c_rb  (CLIB_RB_PTR pTree);
+extern CLIB_RB_NODE_PTR get_next_c_rb (CLIB_RB_PTR pTree, CLIB_RB_NODE_PTR *, CLIB_RB_NODE_PTR *);
 
 #endif
