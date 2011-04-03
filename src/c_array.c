@@ -1,4 +1,4 @@
-#include "c_datastructure.h"
+#include "c_lib.h"
 #include <string.h>
 
 
@@ -24,6 +24,7 @@ insert_c_array ( CLIB_ARRAY_PTR pArray, int index, CLIB_TYPE elem) {
     CLIB_ERROR rc = CLIB_ERROR_SUCCESS;
 
     clib_memcpy ( CLIB_ARRAY_INDEX(index), elem, pArray->size_of_element);
+
     pArray->no_of_elements++;
     return rc;
 }
@@ -46,7 +47,8 @@ new_c_array(int array_size, CLIB_COMPARE fn_c, CLIB_DESTROY fn_d , size_t elem_s
     pArray->compare_fn      = fn_c;
     pArray->destruct_fn     = fn_d;
     pArray->no_of_elements  = 0;
-   
+
+
     return pArray;
 
 }
@@ -73,6 +75,7 @@ element_at_c_array (CLIB_ARRAY_PTR pArray, int index,CLIB_TYPE elem) {
         return CLIB_ARRAY_INDEX_OUT_OF_BOUND;
 
     clib_memcpy(elem, CLIB_ARRAY_INDEX(index), pArray->size_of_element);
+
     return rc;
 }
 int

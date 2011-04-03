@@ -1,5 +1,5 @@
-#ifndef _C_DATASTRUCTURE_H_
-#define _C_DATASTRUCTURE_H_
+#ifndef _C_LIB_H_
+#define _C_LIB_H_
 
 #include "c_errors.h"
 #include <stdlib.h>
@@ -29,6 +29,19 @@ typedef size_t CLIB_SIZE;
 #define CLIB_POSTORDER       2
 #define CLIB_RB_VALUE_COPY   0
 #define CLIB_RB_REFER_COPY   1
+
+#define CLIB_PTR_DATA_TYPE 1
+#define CLIB_BASIC_DATA_TYPE 2
+/* ------------------------------------------------------------------------*/
+/*                  L I B R A R Y    C O N T E X T                         */
+/* ------------------------------------------------------------------------*/
+typedef struct _c_lib_context {
+    int ptr_data_type;
+}c_lib_context;
+
+typedef c_lib_context  CLIB_CONTEXT;
+typedef c_lib_context* CLIB_CONTEXT_PTR;
+#define CLIB_CONTEXT_NULL (CLIB_CONTEXT_PTR)0
 
 /* ------------------------------------------------------------------------*/
 /*                            P  A  I   R                                  */

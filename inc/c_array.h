@@ -8,6 +8,8 @@ typedef struct __c_array {
 	size_t size_of_element;
     CLIB_COMPARE compare_fn;
     CLIB_DESTROY destruct_fn;
+
+    CLIB_CONTEXT_PTR pContext;
 }c_array;
 
 typedef c_array         CLIB_ARRAY;

@@ -1,4 +1,5 @@
-#include "c_datastructure.h"
+#include "c_lib.h"
+
 CLIB_SLIST_PTR 
 new_c_slist(CLIB_DESTROY fn_d, CLIB_COMPARE fn_c){
     CLIB_SLIST_PTR ll  = (CLIB_SLIST_PTR)clib_malloc(sizeof(CLIB_SLIST));

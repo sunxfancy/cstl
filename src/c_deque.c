@@ -1,4 +1,5 @@
-#include "c_datastructure.h"
+#include "c_lib.h"
+
 #include <string.h>
 
 #define CLIB_DEQUE_INDEX(x)  ((char *)(pDeq)->elements + ((pDeq)->size_of_element * (x)))

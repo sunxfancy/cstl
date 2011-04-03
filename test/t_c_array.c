@@ -1,4 +1,5 @@
-#include "c_datastructure.h"
+#include "c_lib.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -14,8 +15,20 @@ compare_e ( void *left, void *right ) {
 static void 
 free_e ( void *ptr ) {
     if ( ptr )
-    free ( ptr);
+        free ( ptr);
 }
+
+static int
+compare_strings ( void *left, void *right ) {
+    return strcmp ( (const char *)left, (const char *) right );
+}
+static void
+free_strings ( void *ptr) {
+    if ( ptr )
+        free ( ptr);
+}
+
+
 
 void 
 test_c_array(){
@@ -95,6 +108,55 @@ test_c_array(){
     }
     {
         delete_c_array ( myArray );
+    }
+    {
+        typedef struct test {
+            char *string;
+        } TEST_INPUT;
+        int index = 0;
+        int size = 0;
+
+        TEST_INPUT ti[] ={
+            {"A for APPLE"},
+            {"B for BALL"},
+            {"C for CAT"},
+            {"D for DOG"},
+            {"E for ELEPHANT"},
+            {"F for FISH"},
+            {"G for GOAT"},
+            {"H for HORSE"},
+            {"I for ICECREAM"},
+            {"J for JOKER"},
+            {"K for KITE"},
+            {"L for LAMB"},
+            {"M for MONKEY"},
+            {"N for NEST"},
+            {"O for ORANGE"},
+            {"P for POT"},
+            {"Q for QUEEN"},
+            {"R for RAT"},
+            {"S for SHEEP"},
+            {"T for TABLE"},
+            {"U for UMBRELLA"},
+            {"V for VIOLIN"},
+            {"W for WAX"},
+            {"X for XEROX"},
+            {"Y for YUMMY"},
+            {"Z for ZEBRA"}
+        };
+
+        CLIB_ARRAY_PTR pArray  = new_c_array (8,compare_strings,free_strings, sizeof(char*));
+        size = sizeof ( ti ) / sizeof ( ti[0]);
+        for ( index = 0; index < size; index++ ){
+            char *temp = strdup ( ti[index].string);
+            push_back_c_array ( pArray, &temp);
+        }
+        for ( index = 0; index < size; index++ ){
+            char *temp ;
+            element_at_c_array ( pArray, index, &temp);
+            assert ( strcmp ( temp, ti[index].string) == 0 );
+        }
+        delete_c_array ( pArray );
     }
 
 }

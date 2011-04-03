@@ -47,7 +47,7 @@
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(IntDir)\cstl.pdb"
-				WarningLevel="4"
+				WarningLevel="3"
 				WarnAsError="false"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
@@ -203,15 +203,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\inc\c_datastructure.h"
-				>
-			</File>
-			<File
 				RelativePath="..\inc\c_deque.h"
 				>
 			</File>
 			<File
 				RelativePath="..\inc\c_errors.h"
+				>
+			</File>
+			<File
+				RelativePath="..\inc\c_lib.h"
 				>
 			</File>
 			<File
