@@ -23,8 +23,8 @@ test_c_deque() {
     int i = 0;
     int limit = 20;
 
-    CLIB_DEQUE_PTR myDeq = new_c_deque ( 10, compare_e, NULL, sizeof(int));
-    assert ( CLIB_DEQUE_NULL != myDeq );
+    clib_deque_ptr myDeq = new_c_deque ( 10, compare_e, NULL, sizeof(int));
+    assert ( clib_deque_null != myDeq );
 
     for ( i = 0; i <= limit; i++ ) { 
         if ( flip ) {
@@ -45,7 +45,7 @@ test_c_deque() {
     }
     {
         int element;
-        while ( empty_c_deque(myDeq) != CLIB_TRUE ) {
+        while ( empty_c_deque(myDeq) != clib_true ) {
             pop_front_c_deque ( myDeq, &element );
             printf ( "%d\n", element );
         }

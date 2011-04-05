@@ -5,37 +5,41 @@ typedef struct __c_rb_node {
     struct __c_rb_node *left;
     struct __c_rb_node *right;
     struct __c_rb_node *parent;
+
     int color; 
-    CLIB_PAIR data;
+
+    clib_pair data;
+
+    clib_size key_size;
+    clib_size value_size;
+
 }c_rb_node;
 
-typedef c_rb_node          CLIB_RB_NODE;
-typedef c_rb_node*         CLIB_RB_NODE_PTR;
-#define CLIB_RB_NODE_NULL  (CLIB_RB_NODE_PTR)0 
+typedef c_rb_node          clib_rb_node;
+typedef c_rb_node*         clib_rb_node_ptr;
+#define clib_rb_node_null  (clib_rb_node_ptr)0 
 
 
 
 typedef struct __c_rb {
-    CLIB_RB_NODE_PTR root;
-    CLIB_RB_NODE sentinel;
-    CLIB_DESTROY destruct_k_fn;
-	CLIB_DESTROY destruct_v_fn;
-    CLIB_COMPARE compare_fn;
-    CLIB_SIZE    size_of_key;
-    CLIB_SIZE    size_of_value;
+    clib_rb_node_ptr root;
+    clib_rb_node sentinel;
+    clib_destroy destruct_k_fn;
+	clib_destroy destruct_v_fn;
+    clib_compare compare_fn;
     int          type;
 }c_rb;
 
-typedef c_rb         CLIB_RB;
-typedef c_rb*        CLIB_RB_PTR;
-#define CLIB_RB_NULL        (CLIB_RB_PTR)0 
+typedef c_rb         clib_rb;
+typedef c_rb*        clib_rb_ptr;
+#define clib_rb_null        (clib_rb_ptr)0 
 
-extern CLIB_RB_PTR new_c_rb(CLIB_COMPARE fn_c,CLIB_DESTROY fn_ed, CLIB_DESTROY fn_vd,  CLIB_SIZE key_size, CLIB_SIZE value_size );
-extern CLIB_ERROR  insert_c_rb(CLIB_RB_PTR pTree, CLIB_TYPE key, CLIB_TYPE value);
-extern CLIB_RB_NODE_PTR   find_c_rb (CLIB_RB_PTR pTree, CLIB_TYPE k);
-extern CLIB_RB_NODE_PTR remove_c_rb (CLIB_RB_PTR pTree, CLIB_TYPE key);
-extern CLIB_ERROR  delete_c_rb (CLIB_RB_PTR pTree);
-extern CLIB_BOOL   empty_c_rb  (CLIB_RB_PTR pTree);
-extern CLIB_RB_NODE_PTR get_next_c_rb (CLIB_RB_PTR pTree, CLIB_RB_NODE_PTR *, CLIB_RB_NODE_PTR *);
+extern clib_rb_ptr new_c_rb(clib_compare fn_c,clib_destroy fn_ed, clib_destroy fn_vd );
+extern clib_error  insert_c_rb(clib_rb_ptr pTree, clib_type key, clib_type value, clib_size key_size, clib_size value_size);
+extern clib_rb_node_ptr   find_c_rb (clib_rb_ptr pTree, clib_type key);
+extern clib_rb_node_ptr remove_c_rb (clib_rb_ptr pTree, clib_type key);
+extern clib_error  delete_c_rb (clib_rb_ptr pTree);
+extern clib_bool   empty_c_rb  (clib_rb_ptr pTree);
+extern clib_rb_node_ptr get_next_c_rb (clib_rb_ptr pTree, clib_rb_node_ptr *, clib_rb_node_ptr *);
 
 #endif

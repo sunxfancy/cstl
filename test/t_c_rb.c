@@ -1,6 +1,6 @@
 #include "c_lib.h"
 
-#include <stdio.h>
+/*#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
@@ -8,32 +8,32 @@
 #define BLACK 0
 #define RED   1
 
-#define RB_SENTINEL &tree->sentinel 
+#define rb_sentinel &tree->sentinel 
 
-static CLIB_TYPE
-    get_key ( CLIB_RB_PTR tree, CLIB_RB_NODE_PTR node) {
+static clib_type
+    get_key ( clib_rb_ptr tree, clib_rb_node_ptr node) {
         if ( node ) 
             return node->data.key;
-        return CLIB_NULL;
+        return clib_null;
     }
 
-static CLIB_RB_NODE_PTR
-    get_left (CLIB_RB_PTR tree, CLIB_RB_NODE_PTR node ) {
-        if ( node->left != RB_SENTINEL && node->left != CLIB_RB_NODE_NULL)
+static clib_rb_node_ptr
+    get_left (clib_rb_ptr tree, clib_rb_node_ptr node ) {
+        if ( node->left != rb_sentinel && node->left != clib_rb_node_null)
             return node->left;
-        return CLIB_RB_NODE_NULL;
+        return clib_rb_node_null;
     }
-static CLIB_RB_NODE_PTR
-    get_right (CLIB_RB_PTR tree, CLIB_RB_NODE_PTR node ){
-        if ( node->right != RB_SENTINEL && node->right != CLIB_RB_NODE_NULL)
+static clib_rb_node_ptr
+    get_right (clib_rb_ptr tree, clib_rb_node_ptr node ){
+        if ( node->right != rb_sentinel && node->right != clib_rb_node_null)
             return node->right;
-        return CLIB_RB_NODE_NULL;
+        return clib_rb_node_null;
     }
-static CLIB_RB_NODE_PTR
-    get_parent ( CLIB_RB_PTR tree,CLIB_RB_NODE_PTR node ) {
-        if ( node->parent != RB_SENTINEL && node->parent != CLIB_RB_NODE_NULL)
+static clib_rb_node_ptr
+    get_parent ( clib_rb_ptr tree,clib_rb_node_ptr node ) {
+        if ( node->parent != rb_sentinel && node->parent != clib_rb_node_null)
             return node->parent;
-        return CLIB_RB_NODE_NULL;
+        return clib_rb_node_null;
     }
 
 int 
@@ -67,17 +67,17 @@ typedef struct test_data_tree {
 } TS;
 
 
-static CLIB_RB_NODE_PTR
-__find_c_rb ( CLIB_RB_PTR tree, CLIB_COMPARE fn_c, CLIB_TYPE key ) {
-    CLIB_RB_NODE_PTR node = tree->root;
-    CLIB_TYPE current_key = CLIB_NULL;
+static clib_rb_node_ptr
+__find_c_rb ( clib_rb_ptr tree, clib_compare fn_c, clib_type key ) {
+    clib_rb_node_ptr node = tree->root;
+    clib_type current_key = clib_null;
     int compare_result = 0;
 
-    current_key = (CLIB_TYPE)clib_malloc ( tree->size_of_key);
+    current_key = (clib_type)clib_malloc ( tree->size_of_key);
     clib_memcpy ( current_key, key, tree->size_of_key);
 
     compare_result = (fn_c)(current_key, node->data.key);
-    while ((node != RB_SENTINEL) && (compare_result = (fn_c)(current_key, node->data.key)) != 0 ){
+    while ((node != rb_sentinel) && (compare_result = (fn_c)(current_key, node->data.key)) != 0 ){
         if ( compare_result < 0 ) {
             node = node->left;
         } else {
@@ -87,13 +87,13 @@ __find_c_rb ( CLIB_RB_PTR tree, CLIB_COMPARE fn_c, CLIB_TYPE key ) {
     clib_free ( current_key );
     return node;
 }
-CLIB_RB_NODE_PTR
-find(CLIB_RB_PTR tree, CLIB_TYPE key ) {
+clib_rb_node_ptr
+find(clib_rb_ptr tree, clib_type key ) {
     return __find_c_rb ( tree, tree->compare_fn, key );
 }
 
-static void update_values ( CLIB_TYPE v, int *l, int *r, int *p , int *e, CLIB_RB_PTR tree ) {
-    CLIB_RB_NODE_PTR x;
+static void update_values ( clib_type v, int *l, int *r, int *p , int *e, clib_rb_ptr tree ) {
+    clib_rb_node_ptr x;
     if ( get_key(tree,v)) 
         *e = *(int*)get_key (tree,v);
     x = get_left(tree,v);
@@ -108,8 +108,8 @@ static void update_values ( CLIB_TYPE v, int *l, int *r, int *p , int *e, CLIB_R
 }
 
 static void 
-test_each_elements(int l,int r, int p, int e,CLIB_TYPE v, TS ts[], int i, 
-        CLIB_RB_PTR tree) {
+test_each_elements(int l,int r, int p, int e,clib_type v, TS ts[], int i, 
+        clib_rb_ptr tree) {
     assert ( ts[i].element == e);
     if (ts[i].left != 0 ) 
         assert ( ts[i].left == l);
@@ -126,10 +126,10 @@ test_each_elements(int l,int r, int p, int e,CLIB_TYPE v, TS ts[], int i,
 }
 
 static void
-test_all_elements(CLIB_RB_PTR tree, TS ts[], int size) {
+test_all_elements(clib_rb_ptr tree, TS ts[], int size) {
     int i = 0;
     for ( i = 0; i < size; i++) {
-        CLIB_TYPE v = CLIB_NULL;
+        clib_type v = clib_null;
         int l,r,p,e;
         v = find ( tree, &ts[i].element);
         update_values( v, &l,&r,&p,&e, tree);
@@ -137,14 +137,12 @@ test_all_elements(CLIB_RB_PTR tree, TS ts[], int size) {
     }
 }
 
-static CLIB_RB_PTR 
+static clib_rb_ptr 
 create_tree(TS ts[], int size) {
     int i = 0;
-    CLIB_RB_PTR tree = new_c_rb( compare_rb_e,free_rb_e, CLIB_NULL, sizeof(int),0);
+    clib_rb_ptr tree = new_c_rb( compare_rb_e,free_rb_e, clib_null, sizeof(int),0);
     for ( i = 0; i < size; i++) {
-       /* int *v = ( int *) malloc ( sizeof ( int ));
-        memcpy ( v, &(ts[i].element), sizeof ( int ));*/
-        insert_c_rb( tree, &(ts[i].element) ,CLIB_NULL);
+        insert_c_rb( tree, &(ts[i].element) ,clib_null);
     }
     return tree;
 }
@@ -155,8 +153,8 @@ test_c_rb() {
     int size;
     int size_after_delete;
     int i = 0;
-    CLIB_RB_PTR tree;
-    CLIB_RB_NODE_PTR node;
+    clib_rb_ptr tree;
+    clib_rb_node_ptr node;
 
     TS ts[] = {
         {15,6,18,0,BLACK},{6,3,9,15,RED},{18,17,20,15,BLACK},
@@ -196,7 +194,7 @@ test_c_rb() {
         size = (sizeof(ts)/sizeof(TS));
         size_after_delete = (sizeof(ts_delete_leaf_13)/sizeof(TS));
         node = remove_c_rb( tree, &i);
-        if ( node != CLIB_RB_NODE_NULL ) {
+        if ( node != clib_rb_node_null ) {
             clib_free ( node->data.key);
             clib_free ( node);
         }
@@ -206,7 +204,7 @@ test_c_rb() {
         i = 9;	
         size_after_delete = (sizeof(ts_delete_9)/sizeof(TS));
         node = remove_c_rb( tree, &i);
-        if ( node != CLIB_RB_NODE_NULL ) {
+        if ( node != clib_rb_node_null ) {
             clib_free ( node->data.key);
             clib_free ( node);
         }
@@ -216,7 +214,7 @@ test_c_rb() {
         i = 15;	
         size_after_delete = (sizeof(ts_delete_15)/sizeof(TS));
         node = remove_c_rb( tree, &i);
-        if ( node != CLIB_RB_NODE_NULL ) {
+        if ( node != clib_rb_node_null ) {
             clib_free ( node->data.key);
             clib_free ( node);
         }
@@ -224,11 +222,11 @@ test_c_rb() {
     }
     {
         int i = 1;
-        insert_c_rb( tree, &i, CLIB_NULL);
+        insert_c_rb( tree, &i, clib_null);
         size_after_delete = (sizeof(ts_insert_1)/sizeof(TS));
         test_all_elements(tree, ts_insert_1, size_after_delete);
     }
     {
       delete_c_rb(tree);
     }
-}
+}*/

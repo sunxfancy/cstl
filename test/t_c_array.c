@@ -11,13 +11,11 @@ compare_e ( void *left, void *right ) {
     int *r = (int*) right;
     return *l == *r ;
 }
-
 static void 
 free_e ( void *ptr ) {
     if ( ptr )
         free ( ptr);
 }
-
 static int
 compare_strings ( void *left, void *right ) {
     return strcmp ( (const char *)left, (const char *) right );
@@ -27,24 +25,21 @@ free_strings ( void *ptr) {
     if ( ptr )
         free ( ptr);
 }
-
-
-
 void 
 test_c_array(){
     int size = 10;
 	int i = 0;
-	CLIB_ARRAY_PTR myArray  = new_c_array (8,compare_e,NULL, sizeof(int));
+	clib_array_ptr myArray  = new_c_array (8,compare_e,NULL, sizeof(int));
 
     {
-        assert ( CLIB_TRUE == empty_c_array( myArray ));
+        assert ( clib_true == empty_c_array( myArray ));
     }
 
     {
 	    for ( i = 0; i <= size; i++) {
 		    push_back_c_array ( myArray, &i );
 	    }
-        assert ( CLIB_FALSE == empty_c_array( myArray ));
+        assert ( clib_false == empty_c_array( myArray ));
         assert ( size == size_c_array( myArray ));
 	    for ( i = 0; i <= size; i++) {
 		    int rv, rc ;
@@ -98,7 +93,7 @@ test_c_array(){
         }   
     }
     {
-        assert ( CLIB_FALSE == empty_c_array( myArray ));
+        assert ( clib_false == empty_c_array( myArray ));
         assert ( size == size_c_array( myArray ));
 	    for ( i = 0; i <= size; i++) {
 		    int rc, *rv;
@@ -145,10 +140,14 @@ test_c_array(){
             {"Z for ZEBRA"}
         };
 
-        CLIB_ARRAY_PTR pArray  = new_c_array (8,compare_strings,free_strings, sizeof(char*));
+        clib_array_ptr pArray  = new_c_array (8,compare_strings,free_strings, sizeof(char*));
         size = sizeof ( ti ) / sizeof ( ti[0]);
         for ( index = 0; index < size; index++ ){
+        #ifdef WIN32
+            char *temp = _strdup ( ti[index].string);
+        #else
             char *temp = strdup ( ti[index].string);
+        #endif
             push_back_c_array ( pArray, &temp);
         }
         for ( index = 0; index < size; index++ ){

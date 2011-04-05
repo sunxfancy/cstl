@@ -2,59 +2,59 @@
 
 #include <stdio.h>
 
-CLIB_SET_PTR 
-new_c_set ( CLIB_COMPARE fn_c, CLIB_DESTROY fn_d, CLIB_SIZE elem_size) {
+clib_set_ptr 
+new_c_set ( clib_compare fn_c, clib_destroy fn_d) {
 
-    CLIB_SET_PTR pSet  =  (CLIB_SET_PTR)clib_malloc(sizeof(CLIB_SET));
-    if (pSet == CLIB_SET_NULL)
-        return CLIB_SET_NULL;
+    clib_set_ptr pSet  =  (clib_set_ptr)clib_malloc(sizeof(clib_set));
+    if (pSet == clib_set_null)
+        return clib_set_null;
 
-    pSet->root  = new_c_rb (fn_c, fn_d, CLIB_NULL, elem_size, 0);
-    if (pSet->root == CLIB_RB_NULL)
-        return CLIB_SET_NULL;
+    pSet->root  = new_c_rb (fn_c, fn_d, clib_null);
+    if (pSet->root == clib_rb_null)
+        return clib_set_null;
 
     return pSet;
 }
-CLIB_ERROR   
-insert_c_set ( CLIB_SET_PTR pSet, CLIB_TYPE key) {
-    if (pSet == CLIB_SET_NULL)
+clib_error   
+insert_c_set (clib_set_ptr pSet, clib_type key, clib_size key_size) {
+    if (pSet == clib_set_null)
         return CLIB_SET_NOT_INITIALIZED;
 
-    return insert_c_rb ( pSet->root, key, 0);
+    return insert_c_rb ( pSet->root, key, 0, key_size , 0);
 }
-CLIB_BOOL    
-exists_c_set ( CLIB_SET_PTR pSet, CLIB_TYPE key) {
-    CLIB_BOOL found = CLIB_FALSE;
-    CLIB_RB_NODE_PTR node;
+clib_bool    
+exists_c_set ( clib_set_ptr pSet, clib_type key) {
+    clib_bool found = clib_false;
+    clib_rb_node_ptr node;
 
-    if (pSet == CLIB_SET_NULL)
-        return CLIB_FALSE;
+    if (pSet == clib_set_null)
+        return clib_false;
     
     node = find_c_rb ( pSet->root, key);
-    if ( node != CLIB_RB_NODE_NULL ) {
-        return CLIB_TRUE;
+    if ( node != clib_rb_node_null ) {
+        return clib_true;
     }
     return found;    
 }
-CLIB_ERROR   
-remove_c_set ( CLIB_SET_PTR pSet, CLIB_TYPE key) {
-    CLIB_ERROR rc = CLIB_ERROR_SUCCESS;
-    CLIB_RB_NODE_PTR node;
-    if (pSet == CLIB_SET_NULL)
+clib_error   
+remove_c_set ( clib_set_ptr pSet, clib_type key) {
+    clib_error rc = CLIB_ERROR_SUCCESS;
+    clib_rb_node_ptr node;
+    if (pSet == clib_set_null)
         return CLIB_SET_NOT_INITIALIZED;
 
     node = remove_c_rb ( pSet->root, key );
-    if ( node != CLIB_RB_NODE_NULL ) {
+    if ( node != clib_rb_node_null ) {
         clib_free ( node->data.key);
         clib_free ( node );
     }
     return rc;
 }
 
-CLIB_ERROR    
-delete_c_set ( CLIB_SET_PTR x) {
-    CLIB_ERROR rc = CLIB_ERROR_SUCCESS;
-    if ( x != CLIB_SET_NULL ){
+clib_error    
+delete_c_set ( clib_set_ptr x) {
+    clib_error rc = CLIB_ERROR_SUCCESS;
+    if ( x != clib_set_null ){
         rc = delete_c_rb ( x->root );
         clib_free ( x );
     }

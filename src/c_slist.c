@@ -1,20 +1,20 @@
 #include "c_lib.h"
 
-CLIB_SLIST_PTR 
-new_c_slist(CLIB_DESTROY fn_d, CLIB_COMPARE fn_c){
-    CLIB_SLIST_PTR ll  = (CLIB_SLIST_PTR)clib_malloc(sizeof(CLIB_SLIST));
-    ll->head           = CLIB_SLIST_NODE_NULL;
+clib_slist_ptr 
+new_c_slist(clib_destroy fn_d, clib_compare fn_c){
+    clib_slist_ptr ll  = (clib_slist_ptr)clib_malloc(sizeof(clib_slist));
+    ll->head           = clib_slist_node_null;
     ll->destruct_fn    = fn_d;
     ll->compare_key_fn = fn_c;
     ll->size           = 0;
     return ll;
 }
 void           
-delete_c_slist( CLIB_SLIST_PTR ll){
-    CLIB_SLIST_NODE_PTR current = ll->head;
-    CLIB_SLIST_NODE_PTR temp    = CLIB_SLIST_NODE_NULL;
+delete_c_slist( clib_slist_ptr ll){
+    clib_slist_node_ptr current = ll->head;
+    clib_slist_node_ptr temp    = clib_slist_node_null;
 
-    while ( current != CLIB_SLIST_NODE_NULL ) {
+    while ( current != clib_slist_node_null ) {
 	temp    = current;
         current = current->next;
 
@@ -25,30 +25,30 @@ delete_c_slist( CLIB_SLIST_PTR ll){
 }
 
 void           
-push_back_c_slist( CLIB_SLIST_PTR ll, CLIB_TYPE v){
-    CLIB_SLIST_NODE_PTR current  = CLIB_SLIST_NODE_NULL;
-    CLIB_SLIST_NODE_PTR new_node = CLIB_SLIST_NODE_NULL;
+push_back_c_slist( clib_slist_ptr ll, clib_type v){
+    clib_slist_node_ptr current  = clib_slist_node_null;
+    clib_slist_node_ptr new_node = clib_slist_node_null;
 
-    new_node       = (CLIB_SLIST_NODE_PTR)clib_malloc(sizeof(CLIB_SLIST_NODE));
+    new_node       = (clib_slist_node_ptr)clib_malloc(sizeof(clib_slist_node));
     new_node->elem = v;
-    new_node->next = CLIB_SLIST_NODE_NULL;
+    new_node->next = clib_slist_node_null;
 
-    if ( ll->head == CLIB_SLIST_NODE_NULL ) {
+    if ( ll->head == clib_slist_node_null ) {
         ll->head = new_node;
         ll->size++;
         return;
     }
     current = ll->head;
-    while ( current->next != CLIB_SLIST_NODE_NULL )
+    while ( current->next != clib_slist_node_null )
         current  = current->next;    
     current->next = new_node;
     ll->size++;
 }
 void           
-remove_c_slist( CLIB_SLIST_PTR ll, int pos) {
+remove_c_slist( clib_slist_ptr ll, int pos) {
     int i = 0;
-    CLIB_SLIST_NODE_PTR current = ll->head;
-    CLIB_SLIST_NODE_PTR temp    = CLIB_SLIST_NODE_NULL;
+    clib_slist_node_ptr current = ll->head;
+    clib_slist_node_ptr temp    = clib_slist_node_null;
 
     if ( pos > ll->size ) return;
 
@@ -70,13 +70,13 @@ remove_c_slist( CLIB_SLIST_PTR ll, int pos) {
     ll->size--;
 }
 void           
-insert_c_slist( CLIB_SLIST_PTR ll, CLIB_TYPE v, int pos) {
+insert_c_slist( clib_slist_ptr ll, clib_type v, int pos) {
     int i = 0;
-    CLIB_SLIST_NODE_PTR current  = ll->head;
-    CLIB_SLIST_NODE_PTR new_node = CLIB_SLIST_NODE_NULL;
+    clib_slist_node_ptr current  = ll->head;
+    clib_slist_node_ptr new_node = clib_slist_node_null;
    
     if ( pos == 1 ) {
-        new_node       = (CLIB_SLIST_NODE_PTR)clib_malloc(sizeof(CLIB_SLIST_NODE));
+        new_node       = (clib_slist_node_ptr)clib_malloc(sizeof(clib_slist_node));
         new_node->elem = v;
         new_node->next = ll->head;
         ll->head       = new_node;
@@ -92,27 +92,27 @@ insert_c_slist( CLIB_SLIST_PTR ll, CLIB_TYPE v, int pos) {
     for ( i = 1; i < pos - 1; i++) {
         current = current->next;
     }
-    new_node       = (CLIB_SLIST_NODE_PTR)clib_malloc(sizeof(CLIB_SLIST_NODE));
+    new_node       = (clib_slist_node_ptr)clib_malloc(sizeof(clib_slist_node));
     new_node->elem = v;
     new_node->next = current->next;
     current->next  = new_node;
     ll->size++;
 }
 void           
-for_each_c_slist (CLIB_SLIST_PTR ll, void (*fn)(void*)) {
-    CLIB_SLIST_NODE_PTR current  = ll->head;
-    while ( current != CLIB_SLIST_NODE_NULL ) {
+for_each_c_slist (clib_slist_ptr ll, void (*fn)(void*)) {
+    clib_slist_node_ptr current  = ll->head;
+    while ( current != clib_slist_node_null ) {
         (fn)(current->elem);
         current = current->next;
     }    
 }
-CLIB_TYPE      
-find_c_slist (CLIB_SLIST_PTR ll, CLIB_TYPE v) {
-    CLIB_SLIST_NODE_PTR current  = ll->head;
-    while ( current != CLIB_SLIST_NODE_NULL && (ll->compare_key_fn)(v,current->elem) == 0) {
+clib_type      
+find_c_slist (clib_slist_ptr ll, clib_type v) {
+    clib_slist_node_ptr current  = ll->head;
+    while ( current != clib_slist_node_null && (ll->compare_key_fn)(v,current->elem) == 0) {
             current = current->next;
     }
     if ( current )
         return current->elem;
-    return CLIB_NULL;
+    return clib_null;
 }

@@ -8,52 +8,31 @@
 /*       C O M M O N       D E F I N I T O N S                             */
 /* ------------------------------------------------------------------------*/
 
-typedef void*  CLIB_TYPE;
-typedef void   (*CLIB_DESTROY)(CLIB_TYPE);
-typedef int    (*CLIB_COMPARE)(CLIB_TYPE,CLIB_TYPE);
-typedef void   (*CLIB_TRAVERSAL)( CLIB_TYPE);
-typedef int    CLIB_ERROR;
-typedef int    CLIB_BOOL;
-typedef size_t CLIB_SIZE;
+typedef void*  clib_type;
+typedef void   (*clib_destroy)(clib_type);
+typedef int    (*clib_compare)(clib_type,clib_type);
+typedef void   (*clib_traversal)( clib_type);
+typedef int    clib_error;
+typedef int    clib_bool;
+typedef size_t clib_size;
 
-#define CLIB_BLACK           0
-#define CLIB_RED             1
-#define CLIB_SET_TYPE        0
-#define CLIB_MAP_TYPE        1
-#define CLIB_GRAPH_TYPE      2
-#define CLIB_TRUE            1
-#define CLIB_FALSE           0
-#define CLIB_NULL            (CLIB_TYPE)0
-#define CLIB_INORDER		 0
-#define CLIB_PREORDER        1
-#define CLIB_POSTORDER       2
-#define CLIB_RB_VALUE_COPY   0
-#define CLIB_RB_REFER_COPY   1
-
-#define CLIB_PTR_DATA_TYPE 1
-#define CLIB_BASIC_DATA_TYPE 2
-/* ------------------------------------------------------------------------*/
-/*                  L I B R A R Y    C O N T E X T                         */
-/* ------------------------------------------------------------------------*/
-typedef struct _c_lib_context {
-    int ptr_data_type;
-}c_lib_context;
-
-typedef c_lib_context  CLIB_CONTEXT;
-typedef c_lib_context* CLIB_CONTEXT_PTR;
-#define CLIB_CONTEXT_NULL (CLIB_CONTEXT_PTR)0
+#define clib_black           0
+#define clib_red             1
+#define clib_true            1
+#define clib_false           0
+#define clib_null            (clib_type)0
 
 /* ------------------------------------------------------------------------*/
 /*                            P  A  I   R                                  */
 /* ------------------------------------------------------------------------*/
 typedef struct __c_pair {
-    CLIB_TYPE key;
-    CLIB_TYPE value;
+    clib_type key;
+    clib_type value;
 }c_pair;
 
-typedef c_pair         CLIB_PAIR;
-typedef c_pair*        CLIB_PAIR_PTR;
-#define CLIB_PAIR_NULL (CLIB_PAIR_PTR)0
+typedef c_pair         clib_pair;
+typedef c_pair*        clib_pair_ptr;
+#define clib_pair_null (clib_pair_ptr)0
 
 #include "c_array.h"
 #include "c_deque.h"
@@ -68,8 +47,11 @@ typedef c_pair*        CLIB_PAIR_PTR;
 /* ------------------------------------------------------------------------*/
 
 extern void *clib_malloc(size_t);
-extern void  clib_free (CLIB_TYPE);
+extern void  clib_free (clib_type);
 extern void* clib_memcpy(void* , const void* , size_t );
+extern void  clib_copy ( void *destination, void *source, size_t size );
+extern void  clib_get  ( void *destination, void *source, size_t size);
+extern char* clib_strdup ( char *ptr );
 
 
 #endif

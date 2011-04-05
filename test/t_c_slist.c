@@ -12,7 +12,7 @@ free_element ( void *ptr ) {
 }
 
 void
-add_elements_to_list( CLIB_SLIST_PTR ll, int x, int y ) {
+add_elements_to_list( clib_slist_ptr ll, int x, int y ) {
     int i = 0;
     for ( i = x; i <= y; i++ ) { 
         int *v = ( int *) malloc ( sizeof ( int ));
@@ -36,7 +36,7 @@ compare_element ( void *left, void *right ) {
 
 void
 test_c_slist() {
-    CLIB_SLIST_PTR list = new_c_slist(free_element,compare_element);
+    clib_slist_ptr list = new_c_slist(free_element,compare_element);
     add_elements_to_list(list,1, 10 );
     for_each_c_slist(list, print_e);
     {
@@ -94,8 +94,8 @@ test_c_slist() {
     }
     {
         int i = 100;
-        CLIB_TYPE find = find_c_slist ( list, &i);
-        assert ( find ==  CLIB_NULL );
+        clib_type find = find_c_slist ( list, &i);
+        assert ( find ==  clib_null );
     }
     {
         delete_c_slist ( list );

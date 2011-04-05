@@ -5,16 +5,16 @@
 #include <assert.h>
 
 
-#define RB_SENTINEL &pTree->sentinel
+#define rb_sentinel &pTree->sentinel
 
 static void
-__left_rotate(CLIB_RB_PTR pTree, CLIB_RB_NODE_PTR x){
-    CLIB_RB_NODE_PTR y;
+__left_rotate(clib_rb_ptr pTree, clib_rb_node_ptr x){
+    clib_rb_node_ptr y;
     y = x->right;
     x->right = y->left;
-    if (y->left != RB_SENTINEL)
+    if (y->left != rb_sentinel)
         y->left->parent = x;
-    if (y != RB_SENTINEL)
+    if (y != rb_sentinel)
         y->parent = x->parent;
     if (x->parent){
         if (x == x->parent->left)
@@ -25,16 +25,16 @@ __left_rotate(CLIB_RB_PTR pTree, CLIB_RB_NODE_PTR x){
     else
         pTree->root = y;
     y->left = x;
-    if (x != RB_SENTINEL)
+    if (x != rb_sentinel)
         x->parent = y;
 }
 static void
-__right_rotate(CLIB_RB_PTR pTree, CLIB_RB_NODE_PTR x) {
-    CLIB_RB_NODE_PTR y = x->left;
+__right_rotate(clib_rb_ptr pTree, clib_rb_node_ptr x) {
+    clib_rb_node_ptr y = x->left;
     x->left = y->right;
-    if (y->right != RB_SENTINEL)
+    if (y->right != rb_sentinel)
         y->right->parent = x;
-    if (y != RB_SENTINEL)
+    if (y != rb_sentinel)
         y->parent = x->parent;
     if (x->parent) {
         if (x == x->parent->right)
@@ -45,146 +45,145 @@ __right_rotate(CLIB_RB_PTR pTree, CLIB_RB_NODE_PTR x) {
     else
         pTree->root = y;
     y->right = x;
-    if (x != RB_SENTINEL)
+    if (x != rb_sentinel)
         x->parent = y;
 }
 
-CLIB_RB_PTR
-new_c_rb(CLIB_COMPARE fn_c,CLIB_DESTROY fn_ed, CLIB_DESTROY fn_vd,  CLIB_SIZE key_size, CLIB_SIZE value_size ){
+clib_rb_ptr
+new_c_rb(clib_compare fn_c,clib_destroy fn_ed, clib_destroy fn_vd ){
 
-    CLIB_RB_PTR pTree = (CLIB_RB_PTR)clib_malloc(sizeof(CLIB_RB));
-    if ( pTree == CLIB_RB_NULL )
-        return CLIB_RB_NULL;
+    clib_rb_ptr pTree = (clib_rb_ptr)clib_malloc(sizeof(clib_rb));
+    if ( pTree == clib_rb_null )
+        return clib_rb_null;
 
     pTree->compare_fn = fn_c;
     pTree->destruct_k_fn  = fn_ed;
     pTree->destruct_v_fn  = fn_vd;
-    pTree->size_of_key = key_size;
-    pTree->size_of_value = value_size;
 
-    pTree->root  = RB_SENTINEL;
-    pTree->sentinel.left = RB_SENTINEL;
-    pTree->sentinel.right= RB_SENTINEL;
+    pTree->root  = rb_sentinel;
+    pTree->sentinel.left = rb_sentinel;
+    pTree->sentinel.right= rb_sentinel;
 
-    pTree->sentinel.parent = CLIB_RB_NODE_NULL;
+    pTree->sentinel.parent = clib_rb_node_null;
 
-    pTree->sentinel.color = CLIB_BLACK;
+    pTree->sentinel.color = clib_black;
 
-    pTree->sentinel.data.key = CLIB_NULL;
-    pTree->sentinel.data.value  = CLIB_NULL;
+    pTree->sentinel.data.key = clib_null;
+    pTree->sentinel.data.value  = clib_null;
 
     return pTree;
 }
 static void
-__rb_insert_fixup( CLIB_RB_PTR pTree, CLIB_RB_NODE_PTR x ) {
-    while (x != pTree->root && x->parent->color == CLIB_RED) {
-        /* Remember newly insertly CLIB_RB_NODE_PTR always has color CLIB_RED
+__rb_insert_fixup( clib_rb_ptr pTree, clib_rb_node_ptr x ) {
+    while (x != pTree->root && x->parent->color == clib_red) {
+        /* Remember newly insertly clib_rb_node_ptr always has color clib_red
          * If we are here means, color of PARENT of the newly inserted
-         * CLIB_RB_NODE_PTR is also CLIB_RED and we have CLIB_RED->CLIB_RED voialtion
+         * clib_rb_node_ptr is also clib_red and we have clib_red->clib_red voialtion
          */
         if (x->parent == x->parent->parent->left) {
             /* Identify the orientation of the newly inserted
-             * CLIB_RB_NODE_PTR, whether the CLIB_RB_NODE_PTR is inserted into left or right
+             * clib_rb_node_ptr, whether the clib_rb_node_ptr is inserted into left or right
              */
-            CLIB_RB_NODE_PTR y = x->parent->parent->right; /*Get the uncle */
-            if (y->color == CLIB_RED) {
-                /* Case : Uncle is CLIB_RED */
-                x->parent->color         = CLIB_BLACK;
-                y->color                 = CLIB_BLACK;
-                x->parent->parent->color = CLIB_RED;
+            clib_rb_node_ptr y = x->parent->parent->right; /*Get the uncle */
+            if (y->color == clib_red) {
+                /* Case : Uncle is clib_red */
+                x->parent->color         = clib_black;
+                y->color                 = clib_black;
+                x->parent->parent->color = clib_red;
                 x = x->parent->parent;
             } else {
                 if (x == x->parent->right){
                     x = x->parent;
                     __left_rotate (pTree, x);
                 }
-                x->parent->color         = CLIB_BLACK;
-                x->parent->parent->color = CLIB_RED;
+                x->parent->color         = clib_black;
+                x->parent->parent->color = clib_red;
                 __right_rotate (pTree, x->parent->parent);
             }
         } else {
             /* right orientation */
-            CLIB_RB_NODE_PTR y = x->parent->parent->left;
-            if (y->color == CLIB_RED) {
-                x->parent->color         = CLIB_BLACK;
-                y->color                 = CLIB_BLACK;
-                x->parent->parent->color = CLIB_RED;
+            clib_rb_node_ptr y = x->parent->parent->left;
+            if (y->color == clib_red) {
+                x->parent->color         = clib_black;
+                y->color                 = clib_black;
+                x->parent->parent->color = clib_red;
                 x = x->parent->parent;
             } else {
                 if (x == x->parent->left) {
                     x = x->parent;
                     __right_rotate (pTree, x);
                 }
-                x->parent->color         = CLIB_BLACK;
-                x->parent->parent->color = CLIB_RED;
+                x->parent->color         = clib_black;
+                x->parent->parent->color = clib_red;
                 __left_rotate (pTree, x->parent->parent);
             }
         }
     }
-    pTree->root->color = CLIB_BLACK;
+    pTree->root->color = clib_black;
 }
-CLIB_RB_NODE_PTR   
-find_c_rb (CLIB_RB_PTR pTree, CLIB_TYPE k) {
-    CLIB_RB_NODE_PTR x = pTree->root;
-    int compare_result;
+clib_rb_node_ptr   
+find_c_rb (clib_rb_ptr pTree, clib_type key) {
+    clib_rb_node_ptr x = pTree->root;
 
-    while (x != RB_SENTINEL) {
-        CLIB_TYPE current_key = CLIB_NULL;
-        current_key = (CLIB_TYPE)clib_malloc ( pTree->size_of_key);
-        clib_memcpy ( current_key, k, pTree->size_of_key);
-
-        compare_result = pTree->compare_fn (current_key, x->data.key);
+    while (x != rb_sentinel) {
+        int compare_result;
+        compare_result = pTree->compare_fn (key, x->data.key);
         if (compare_result == 0) {
-            clib_free ( current_key );
             break;
         } else {
             x = compare_result < 0 ? x->left : x->right;
         }
-        clib_free ( current_key );
     }
-    if ( x == RB_SENTINEL )
-        return CLIB_RB_NODE_NULL;
+    if ( x == rb_sentinel )
+        return clib_rb_node_null;
+
     return x;
 }
 
-CLIB_ERROR  
-insert_c_rb(CLIB_RB_PTR pTree, CLIB_TYPE k , CLIB_TYPE v) {
+clib_error  
+insert_c_rb(clib_rb_ptr pTree, clib_type k , clib_type v, clib_size key_size, clib_size value_size) {
 
-    CLIB_ERROR rc = CLIB_ERROR_SUCCESS;
-    CLIB_RB_NODE_PTR x,y,z;
+    clib_error rc = CLIB_ERROR_SUCCESS;
+    clib_rb_node_ptr x,y,z;
 
-    x = (CLIB_RB_NODE_PTR)clib_malloc (sizeof(CLIB_RB_NODE));
-    if ( x == CLIB_RB_NODE_NULL ) 
+    x = (clib_rb_node_ptr)clib_malloc (sizeof(clib_rb_node));
+    if ( x == clib_rb_node_null ) 
         return CLIB_ERROR_MEMORY;
 
-    x->left    = RB_SENTINEL;
-    x->right   = RB_SENTINEL;
-    x->color   = CLIB_RED;
+    x->left    = rb_sentinel;
+    x->right   = rb_sentinel;
+    x->color   = clib_red;
 
-    x->data.key     = (CLIB_TYPE)clib_malloc ( pTree->size_of_key);
-    clib_memcpy ( x->data.key, k, pTree->size_of_key);
+    /* Allocate and copy Key */
+    x->data.key     = (clib_type)clib_malloc (key_size);
+    /* copy bytes equal to size of key from passed k parameter
+     * to RB tree key */
+    clib_memcpy ((char*)x->data.key, k, key_size);
     if ( v ) {
-        x->data.value = (CLIB_TYPE)clib_malloc ( pTree->size_of_value);
-        clib_memcpy ( x->data.value, k, pTree->size_of_value);
+        /* Allocate and copy value */
+        x->data.value = (clib_type)clib_malloc (value_size);
+        /* copy bytes equal to size of value from passed v parameter
+         * to RB tree value */
+        clib_memcpy ((char*)x->data.value, v, value_size);
     } else {
-        x->data.value =  CLIB_NULL;
+        /* assign null otherwise */
+        x->data.value =  clib_null;
     }
 
-    y = pTree->root;
-    z = CLIB_RB_NODE_NULL;
-    while (y != RB_SENTINEL)
-    {
-        int c = 0;
-        CLIB_TYPE current_key = CLIB_NULL;
-        current_key = (CLIB_TYPE)clib_malloc ( pTree->size_of_key);
-        clib_memcpy ( current_key, y->data.key, pTree->size_of_key);
+    x->key_size   = key_size;
+    x->value_size = value_size;
 
-        c = (pTree->compare_fn) ( x->data.key, current_key);
+    y = pTree->root;
+    z = clib_rb_node_null;
+
+    while (y != rb_sentinel) {
+        int c = 0;
+        c = (pTree->compare_fn) ( x->data.key, y->data.key);
         if (c == 0) {
-            clib_free ( current_key );
             clib_free ( x->data.key);
-            if (  x->data.value )
+            if ( x->data.value) {
                 clib_free ( x->data.value);
+            }
             clib_free ( x );
             return CLIB_RBTREE_KEY_DUPLICATE;
         }
@@ -193,99 +192,91 @@ insert_c_rb(CLIB_RB_PTR pTree, CLIB_TYPE k , CLIB_TYPE v) {
             y = y->left;
         else
             y = y->right;
-
-        clib_free ( current_key );
     }    
     x->parent = z;
     if (z) {
-        CLIB_TYPE current_key = CLIB_NULL;
-        current_key = (CLIB_TYPE)clib_malloc ( pTree->size_of_key);
-        clib_memcpy ( current_key, z->data.key, pTree->size_of_key);
-
-        if (pTree->compare_fn(x->data.key, current_key) < 0)
+        if (pTree->compare_fn( x->data.key, z->data.key) < 0) {
             z->left = x;
-        else
+        } else {
             z->right = x;
-
-        clib_free ( current_key );
+        }
     }
     else
         pTree->root = x;
 
     __rb_insert_fixup (pTree, x);
-
     return rc;
 }
 static void
-__rb_remove_fixup( CLIB_RB_PTR pTree, CLIB_RB_NODE_PTR x ) {
-    while (x != pTree->root && x->color == CLIB_BLACK) {
+__rb_remove_fixup( clib_rb_ptr pTree, clib_rb_node_ptr x ) {
+    while (x != pTree->root && x->color == clib_black) {
         if (x == x->parent->left) {
-            CLIB_RB_NODE_PTR w = x->parent->right;
-            if (w->color == CLIB_RED) {
-                w->color         = CLIB_BLACK;
-                x->parent->color = CLIB_RED;
+            clib_rb_node_ptr w = x->parent->right;
+            if (w->color == clib_red) {
+                w->color         = clib_black;
+                x->parent->color = clib_red;
                 __left_rotate (pTree, x->parent);
                 w = x->parent->right;
             }
-            if (w->left->color == CLIB_BLACK && w->right->color == CLIB_BLACK) {
-                w->color = CLIB_RED;
+            if (w->left->color == clib_black && w->right->color == clib_black) {
+                w->color = clib_red;
                 x = x->parent;
             } else {
-                if (w->right->color == CLIB_BLACK)  {
-                    w->left->color = CLIB_BLACK;
-                    w->color       = CLIB_RED;
+                if (w->right->color == clib_black)  {
+                    w->left->color = clib_black;
+                    w->color       = clib_red;
                     __right_rotate (pTree, w);
                     w = x->parent->right;
                 }
                 w->color = x->parent->color;
-                x->parent->color = CLIB_BLACK;
-                w->right->color = CLIB_BLACK;
+                x->parent->color = clib_black;
+                w->right->color = clib_black;
                 __left_rotate (pTree, x->parent);
                 x = pTree->root;
             }
         } else {
-            CLIB_RB_NODE_PTR w = x->parent->left;
-            if (w->color == CLIB_RED) {
-                w->color = CLIB_BLACK;
-                x->parent->color = CLIB_RED;
+            clib_rb_node_ptr w = x->parent->left;
+            if (w->color == clib_red) {
+                w->color = clib_black;
+                x->parent->color = clib_red;
                 __right_rotate (pTree, x->parent);
                 w = x->parent->left;
             }
-            if (w->right->color == CLIB_BLACK && w->left->color == CLIB_BLACK) {
-                w->color = CLIB_RED;
+            if (w->right->color == clib_black && w->left->color == clib_black) {
+                w->color = clib_red;
                 x = x->parent;
             } else {
-                if (w->left->color == CLIB_BLACK) {
-                    w->right->color = CLIB_BLACK;
-                    w->color = CLIB_RED;
+                if (w->left->color == clib_black) {
+                    w->right->color = clib_black;
+                    w->color = clib_red;
                     __left_rotate (pTree, w);
                     w = x->parent->left;
                 }
                 w->color = x->parent->color;
-                x->parent->color = CLIB_BLACK;
-                w->left->color = CLIB_BLACK;
+                x->parent->color = clib_black;
+                w->left->color = clib_black;
                 __right_rotate (pTree, x->parent);
                 x = pTree->root;
             }
         }
     }
-    x->color = CLIB_BLACK;
+    x->color = clib_black;
 }
 
-static CLIB_RB_NODE_PTR  
-__remove_c_rb(CLIB_RB_PTR pTree, CLIB_RB_NODE_PTR z ) {
-    CLIB_RB_NODE_PTR x = CLIB_RB_NODE_NULL;
-    CLIB_RB_NODE_PTR y = CLIB_RB_NODE_NULL;
-    CLIB_TYPE  tmp = CLIB_NULL;
+static clib_rb_node_ptr  
+__remove_c_rb(clib_rb_ptr pTree, clib_rb_node_ptr z ) {
+    clib_rb_node_ptr x = clib_rb_node_null;
+    clib_rb_node_ptr y = clib_rb_node_null;
+    clib_type  tmp = clib_null;
 
-    if (z->left == RB_SENTINEL || z->right == RB_SENTINEL)
+    if (z->left == rb_sentinel || z->right == rb_sentinel)
         y = z;
     else {
         y = z->right;
-        while (y->left != RB_SENTINEL)
+        while (y->left != rb_sentinel)
             y = y->left;
     }
-    if (y->left != RB_SENTINEL)
+    if (y->left != rb_sentinel)
         x = y->left;
     else
         x = y->right;
@@ -309,64 +300,57 @@ __remove_c_rb(CLIB_RB_PTR pTree, CLIB_RB_NODE_PTR z ) {
         z->data.value = y->data.value;
         y->data.value = tmp;
     }
-    if (y->color == CLIB_BLACK)
+    if (y->color == clib_black)
         __rb_remove_fixup (pTree, x);
 
     return y;
 }
 
-CLIB_RB_NODE_PTR
-remove_c_rb (CLIB_RB_PTR pTree, CLIB_TYPE key) {
-    CLIB_RB_NODE_PTR z = CLIB_RB_NODE_NULL;
+clib_rb_node_ptr
+remove_c_rb (clib_rb_ptr pTree, clib_type key) {
+    clib_rb_node_ptr z = clib_rb_node_null;
 
     z = pTree->root;
-    while (z != RB_SENTINEL) {
-        CLIB_TYPE current_key = CLIB_NULL;
-        current_key = (CLIB_TYPE)clib_malloc ( pTree->size_of_key);
-        clib_memcpy ( current_key, key, pTree->size_of_key);
-
-        if (pTree->compare_fn (current_key, z->data.key) == 0) {
-            clib_free ( current_key);
+    while (z != rb_sentinel) {
+        if (pTree->compare_fn (key, z->data.key) == 0) {
             break;
         }
         else {
-            z = (pTree->compare_fn (current_key, z->data.key) < 0) ?
-                z->left : z->right;
+            z = (pTree->compare_fn (key, z->data.key) < 0) ? z->left : z->right;
         }
-        clib_free ( current_key);
     }
-    if (z == RB_SENTINEL)
-        return CLIB_RB_NODE_NULL;
+    if (z == rb_sentinel)
+        return clib_rb_node_null;
 
     return __remove_c_rb(pTree, z );
 }
 
-CLIB_ERROR  
-delete_c_rb(CLIB_RB_PTR pTree) {
-    CLIB_ERROR rc = CLIB_ERROR_SUCCESS;
-    CLIB_RB_NODE_PTR z = pTree->root;
-    while (z != RB_SENTINEL) {
-        if (z->left != RB_SENTINEL)
+clib_error  
+delete_c_rb(clib_rb_ptr pTree) {
+    clib_error rc = CLIB_ERROR_SUCCESS;
+    clib_rb_node_ptr z = pTree->root;
+    while (z != rb_sentinel) {
+        if (z->left != rb_sentinel)
             z = z->left;
-        else if (z->right != RB_SENTINEL)
+        else if (z->right != rb_sentinel)
             z = z->right;
         else {
             if (z->parent) {
                 z = z->parent;
-                if (z->left != RB_SENTINEL){
+                if (z->left != rb_sentinel){
                     clib_free ( z->left->data.key );
                     if ( z->left->data.value ) {
                         clib_free ( z->left->data.value);
                     }
                     clib_free (z->left);
-                    z->left = RB_SENTINEL;
-                }else if (z->right != RB_SENTINEL){
+                    z->left = rb_sentinel;
+                }else if (z->right != rb_sentinel){
                     clib_free ( z->right->data.key );
                     if ( z->right->data.value ) {
                         clib_free ( z->right->data.value);
                     }
                     clib_free (z->right);
-                    z->right = RB_SENTINEL;
+                    z->right = rb_sentinel;
                 }
             } else {
                 clib_free ( z->data.key );
@@ -374,7 +358,7 @@ delete_c_rb(CLIB_RB_PTR pTree) {
                     clib_free ( z->data.value);
                 }
                 clib_free (z);
-                z =	RB_SENTINEL;
+                z =	rb_sentinel;
             }
         }
     }
@@ -382,35 +366,35 @@ delete_c_rb(CLIB_RB_PTR pTree) {
     return rc;
 }
 
-CLIB_BOOL 
-empty_c_rb(CLIB_RB_PTR pTree) {
-    if ( pTree->root != RB_SENTINEL )
-        return CLIB_TRUE;
-    return CLIB_FALSE;
+clib_bool 
+empty_c_rb(clib_rb_ptr pTree) {
+    if ( pTree->root != rb_sentinel )
+        return clib_true;
+    return clib_false;
 }
-CLIB_RB_NODE_PTR
-get_next_c_rb(CLIB_RB_PTR pTree, CLIB_RB_NODE_PTR *current, CLIB_RB_NODE_PTR *pre) {
-    CLIB_RB_NODE_PTR prev_current;
-    while((*current) != RB_SENTINEL) {
-        if((*current)->left == RB_SENTINEL){
+clib_rb_node_ptr
+get_next_c_rb(clib_rb_ptr pTree, clib_rb_node_ptr *current, clib_rb_node_ptr *pre) {
+    clib_rb_node_ptr prev_current;
+    while((*current) != rb_sentinel) {
+        if((*current)->left == rb_sentinel){
             prev_current = (*current);
             (*current) = (*current)->right;
             return prev_current->data.key;			
         } else {
             (*pre) = (*current)->left;
-            while((*pre)->right != RB_SENTINEL && (*pre)->right != (*current))
+            while((*pre)->right != rb_sentinel && (*pre)->right != (*current))
                 (*pre) = (*pre)->right; 
-            if((*pre)->right == RB_SENTINEL) {
+            if((*pre)->right == rb_sentinel) {
                 (*pre)->right = (*current);
                 (*current) = (*current)->left;
             } else {
-                (*pre)->right = RB_SENTINEL;
+                (*pre)->right = rb_sentinel;
                 prev_current = (*current);
                 (*current) = (*current)->right;
                 return prev_current->data.key;				
             }
         } 
     } 
-    return CLIB_RB_NODE_NULL;
+    return clib_rb_node_null;
 }
 
