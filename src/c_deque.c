@@ -154,12 +154,14 @@ back_c_deque (clib_deque_ptr pDeq, clib_type elem) {
 }
 clib_error     
 pop_back_c_deque (clib_deque_ptr pDeq, clib_type elem) {
+    clib_element temp;
+
 	if ( pDeq == clib_deque_null )
 		return CLIB_DEQUE_NOT_INITIALIZED;
 
     back_c_deque( pDeq, elem);
 
-    clib_element temp;
+
     clib_memcpy ( &temp, 
                  (char*)pDeq->pElements + ((pDeq->tail - 1 )* sizeof(clib_element)),
                  sizeof(clib_element));
@@ -172,12 +174,12 @@ pop_back_c_deque (clib_deque_ptr pDeq, clib_type elem) {
 }
 clib_error     
 pop_front_c_deque(clib_deque_ptr pDeq, clib_type elem) {
+    clib_element temp;
+
 	if ( pDeq == clib_deque_null )
 		return CLIB_DEQUE_NOT_INITIALIZED;
 
     front_c_deque ( pDeq, elem );
-
-    clib_element temp;
     clib_memcpy ( &temp, 
                  (char*)pDeq->pElements + ((pDeq->head + 1 )* sizeof(clib_element)),
                  sizeof(clib_element));
