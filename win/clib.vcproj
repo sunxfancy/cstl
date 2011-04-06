@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="cstl"
+	Name="clib"
 	ProjectGUID="{B0D5C92E-C0FD-48EB-A472-FF5DC031ECB9}"
-	RootNamespace="cstl"
+	RootNamespace="clib"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)cstl_$(ConfigurationName)"
-			IntermediateDirectory="cstl_$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)clib_$(ConfigurationName)"
+			IntermediateDirectory="clib_$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
 			>
@@ -46,7 +46,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
-				ProgramDataBaseFileName="$(IntDir)\cstl.pdb"
+				ProgramDataBaseFileName="$(IntDir)\clib.pdb"
 				WarningLevel="3"
 				WarnAsError="false"
 				Detect64BitPortabilityProblems="true"
