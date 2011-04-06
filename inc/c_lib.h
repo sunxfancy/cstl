@@ -25,6 +25,16 @@ typedef size_t clib_size;
 /* ------------------------------------------------------------------------*/
 /*                            P  A  I   R                                  */
 /* ------------------------------------------------------------------------*/
+
+typedef struct __c_lib_element {
+    clib_type  elem;
+    clib_size  size;
+}c_lib_element;
+
+typedef c_lib_element clib_element;
+typedef c_lib_element* clib_element_ptr;
+
+
 typedef struct __c_pair {
     clib_type key;
     clib_type value;
@@ -46,9 +56,9 @@ typedef c_pair*        clib_pair_ptr;
 /*            H E L P E R       F U N C T I O N S                          */
 /* ------------------------------------------------------------------------*/
 
-extern void *clib_malloc(size_t);
-extern void  clib_free (clib_type);
-extern void* clib_memcpy(void* , const void* , size_t );
+extern void *clib_malloc(size_t size);
+extern void  clib_free (clib_type ptr);
+extern void* clib_memcpy(void* destination, const void* source, size_t size );
 extern void  clib_copy ( void *destination, void *source, size_t size );
 extern void  clib_get  ( void *destination, void *source, size_t size);
 extern char* clib_strdup ( char *ptr );

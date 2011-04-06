@@ -11,13 +11,13 @@ extern void test_c_map();
 int main( int argc, char**argv ) {	
     printf ( "Performing test for dynamic array\n");
     test_c_array();
-    printf ( "Performing test for deque\n");
+    /*printf ( "Performing test for deque\n");
     test_c_deque();
     printf ( "Performing test for sets\n");
     test_c_set();
     printf ( "Performing test for map\n");
     test_c_map();
-    /*printf ( "Performing test for slist\n");
+    printf ( "Performing test for slist\n");
     test_c_slist();*/
     return 0;
 }
