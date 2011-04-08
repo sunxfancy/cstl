@@ -45,6 +45,8 @@ test_c_deque() {
     int flip = 1;
     int i = 0;
     int limit = 20;
+    void* element;
+    int j = 0;
 
     clib_deque_ptr myDeq = new_c_deque ( 10, compare_e, NULL);
     assert ( clib_deque_null != myDeq );
@@ -58,44 +60,32 @@ test_c_deque() {
             flip = 1;
         }
     }
-   {
-       int element;
-       front_c_deque ( myDeq, &element );
-       assert ( element == limit - 1 );
+    front_c_deque ( myDeq, &element );
+    assert ( *(int*)element == limit - 1 );
+    free ( element );
 
-       back_c_deque ( myDeq, &element );
-       assert ( element == limit);
+    back_c_deque ( myDeq, &element );
+    assert ( *(int*)element == limit);
+    free ( element );
+
+    while ( empty_c_deque(myDeq) != clib_true ) {
+        pop_front_c_deque ( myDeq);
     }
-    {
-        int element;
-        while ( empty_c_deque(myDeq) != clib_true ) {
-            pop_front_c_deque ( myDeq, &element );
-            printf ( "%d\n", element );
+    delete_c_deque(myDeq);
+
+    myDeq = new_c_deque ( 10, compare_e, free_e); 
+    for ( i = 0; i <= limit; i ++ ) { 
+        int *v = ( int *) malloc ( sizeof ( int ));
+        memcpy ( v, &i, sizeof ( int ));
+        push_back_c_deque ( myDeq, v , sizeof(int*));
+        free ( v );
+    }   
+    for ( i = myDeq->head + 1; i < myDeq->tail; i++ ){
+        void *elem;
+        if ( element_at_c_deque( myDeq, i, &elem ) == CLIB_ERROR_SUCCESS ) {
+                assert ( *(int*)elem == j++ );
+                clib_free ( elem );
         }
     }
-    {
-        delete_c_deque(myDeq);
-    }
-    {
-        myDeq = new_c_deque ( 10, compare_e, free_e); 
-        for ( i = 0; i <= limit; i ++ ) { 
-            int *v = ( int *) malloc ( sizeof ( int ));
-            memcpy ( v, &i, sizeof ( int ));
-            push_back_c_deque ( myDeq, &v , sizeof(int*));
-        }   
-    }
-    {
-        int i = 0;
-        int j = 0;
-        for ( i = myDeq->head + 1; i < myDeq->tail; i++ ){
-            int *elem;
-            if ( element_at_c_deque( myDeq, i, &elem ) == CLIB_ERROR_SUCCESS ) {
-                assert ( *elem == j++ );
-            }
-        }
-    }
-    {
-        delete_c_deque(myDeq);
-    } 
-
+    delete_c_deque(myDeq);
 }

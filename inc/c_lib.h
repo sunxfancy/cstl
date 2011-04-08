@@ -49,13 +49,18 @@ typedef size_t clib_size;
 /*                            P  A  I   R                                  */
 /* ------------------------------------------------------------------------*/
 
+typedef struct __c_lib__object {
+    void *raw_data;
+    size_t size;
+} clib_object, *clib_object_ptr;
+
+
+
 typedef struct __c_lib_element {
     clib_type  elem;
     clib_size  size;
-}c_lib_element;
+}clib_element,*clib_element_ptr;
 
-typedef c_lib_element clib_element;
-typedef c_lib_element* clib_element_ptr;
 
 
 typedef struct __c_pair {
@@ -65,7 +70,17 @@ typedef struct __c_pair {
 
 typedef c_pair         clib_pair;
 typedef c_pair*        clib_pair_ptr;
+
+#define clib_object_null (clib_object_ptr)0
+#define clib_array_null  (clib_array_ptr)0 
+#define clib_slist_node_null (clib_slist_node_ptr)0
 #define clib_pair_null (clib_pair_ptr)0
+#define clib_element_null (clib_element_ptr)0
+#define clib_slist_null (clib_slist_ptr)0
+#define clib_set_null  (clib_set_ptr)0 
+#define clib_rb_node_null  (clib_rb_node_ptr)0 
+#define clib_rb_null        (clib_rb_ptr)0 
+
 
 #include "c_array.h"
 #include "c_deque.h"
@@ -86,5 +101,8 @@ extern void  clib_copy ( void *destination, void *source, size_t size );
 extern void  clib_get  ( void *destination, void *source, size_t size);
 extern char* clib_strdup ( char *ptr );
 
+extern clib_object_ptr new_clib_object     (void *inObject, size_t obj_size);
+extern clib_error      get_raw_clib_object (clib_object *inObject, clib_type *elem);
+extern void            delete_clib_object  (clib_object_ptr inObject );
 
 #endif

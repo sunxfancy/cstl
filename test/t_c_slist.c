@@ -23,7 +23,7 @@
 
 #include "c_lib.h"
 
-#include <stdlib.h>
+/*#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <assert.h>
@@ -123,4 +123,4 @@ test_c_slist() {
     {
         delete_c_slist ( list );
     }
-}
+}*/

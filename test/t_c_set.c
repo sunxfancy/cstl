@@ -35,7 +35,9 @@ delete_e ( void *ptr ) {
 }
 static int
 compare_e ( void *left, void *right ) {
-    return strcmp ( (const char *)left, (const char *) right );
+    char *l = (char*)left;
+    char *r = (char*)right;
+    return strcmp ( (const char *)l, (const char *) r );
 }
 static int 
 compare_int ( void *left, void *right ) {
@@ -52,20 +54,21 @@ void
 test_c_set(){
     {
         int test[] = { 0,1,2,3,4,5,6,7,8,9 };
-        int index =0;
-        int size = sizeof (test) /sizeof(test[0]);
+        int index  = 0;
+        int size   = sizeof (test) /sizeof(test[0]);
+
         clib_set_ptr pSet = new_c_set ( compare_int, NULL);
 
-        for ( index = 0; index < size; index++ ){
+        for ( index = 0; index < size; index++ ) {
             int v = test[index];
             insert_c_set ( pSet, &v, sizeof(int));
         }
-        for ( index = 0; index < size; index++ ){
+        for ( index = 0; index < size; index++ ) {
             int v = test[index];
             assert ( clib_true == exists_c_set ( pSet, &v));
         }
         delete_c_set(pSet);
-    } 
+    }
     {
         typedef struct test {
             char *string;
@@ -89,13 +92,9 @@ test_c_set(){
         size = sizeof ( ti ) / sizeof ( ti[0]);
         
         for ( index = 0; index < size; index++ ){
-            char *temp;
-            int length = 0;
-            v = ti[index].string;
-            temp = clib_strdup (v);
-            length = (int)strlen ( temp ) + 1;
-            insert_c_set ( pSet, temp, length);
-            free ( temp );
+            char *temp = clib_strdup ( ti[index].string );
+            insert_c_set ( pSet, temp, strlen(temp) + 1 );
+            clib_free ( temp );
         }
         for ( index = 0; index < size; index++ ){
             v = ti[index].string;

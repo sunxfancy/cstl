@@ -22,7 +22,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include "c_lib.h"
-
+/*
 clib_slist_ptr 
 new_c_slist(clib_destroy fn_d, clib_compare fn_c){
     clib_slist_ptr ll  = (clib_slist_ptr)clib_malloc(sizeof(clib_slist));
@@ -139,3 +139,4 @@ find_c_slist (clib_slist_ptr ll, clib_type v) {
         return current->elem;
     return clib_null;
 }
+*/

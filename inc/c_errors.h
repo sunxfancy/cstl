@@ -30,11 +30,13 @@
 #define CLIB_ERROR_SUCCESS  0
 #define CLIB_ERROR_ERROR    1
 #define CLIB_ERROR_MEMORY   2
+#define CLIB_ELEMENT_RETURN_ERROR 3
 /* ------------------------------------------------------------------------*/
 /*         D Y N A M I C    A R R A Y   E R R O R    C O D E S             */
 /* ------------------------------------------------------------------------*/
 #define CLIB_ARRAY_NOT_INITIALIZED    101
 #define CLIB_ARRAY_INDEX_OUT_OF_BOUND 102
+#define CLIB_ARRAY_INSERT_FAILED      103
 
 #define CLIB_DEQUE_NOT_INITIALIZED    201
 #define CLIB_DEQUE_INDEX_OUT_OF_BOUND 202

@@ -41,11 +41,11 @@ new_c_map ( clib_compare fn_c_k, clib_destroy fn_k_d,
     return pMap;
 }
 clib_error   
-insert_c_map ( clib_map_ptr pMap, clib_type key, clib_type value, clib_size key_size, clib_size value_size) {
+insert_c_map ( clib_map_ptr pMap, clib_type key, clib_size key_size, clib_type value,  clib_size value_size) {
     if (pMap == clib_map_null)
         return CLIB_MAP_NOT_INITIALIZED;
 
-    return insert_c_rb ( pMap->root, key, value, key_size, value_size);
+    return insert_c_rb ( pMap->root, key, key_size, value, value_size);
 }
 clib_bool    
 exists_c_map ( clib_map_ptr pMap, clib_type key) {
@@ -70,14 +70,19 @@ remove_c_map ( clib_map_ptr pMap, clib_type key) {
 
     node = remove_c_rb ( pMap->root, key );
     if ( node != clib_rb_node_null ) {
-        clib_free ( node->data.key);
-        clib_free ( node->data.value);
+        clib_type removed_node;
+        get_raw_clib_object ( node->key, &removed_node );
+        clib_free ( removed_node);
+
+        get_raw_clib_object ( node->value, &removed_node );
+        clib_free ( removed_node);
+
         clib_free ( node );
     }
     return rc;
 }
 clib_bool    
-find_c_map ( clib_map_ptr pMap, clib_type key, clib_type value) {
+find_c_map ( clib_map_ptr pMap, clib_type key, clib_type *value) {
     clib_rb_node_ptr node;
 
     if (pMap == clib_map_null)
@@ -87,7 +92,8 @@ find_c_map ( clib_map_ptr pMap, clib_type key, clib_type value) {
     if ( node == clib_rb_node_null ) 
         return clib_false;
 
-    clib_memcpy ( value, node->data.value, node->value_size);
+    get_raw_clib_object ( node->value, value );
+
     return clib_true;
 
 }

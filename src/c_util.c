@@ -29,14 +29,14 @@ void *
 clib_malloc( size_t size ) {
     void *t = malloc ( size );
     if ( !t ) {
-	abort();
+	    return (void*)0;
     }
     return t;
 }
 void
 clib_free ( void *ptr ) {
     if ( ptr )
-	free ( ptr );
+	    free ( ptr );
 }
 
 void* 
@@ -57,6 +57,39 @@ clib_copy( void *destination, void *source, size_t size ) {
 void
 clib_get ( void *destination, void *source, size_t size) {
     clib_memcpy ( destination, (char*)source, size);
+}
+
+clib_object_ptr
+new_clib_object(void *inObject, size_t obj_size) {
+    clib_object_ptr tmp = (clib_object_ptr)malloc(sizeof(clib_object));   
+    if ( ! tmp )
+        return clib_object_null;
+    tmp->size        = obj_size;
+    tmp->raw_data    = (clib_type)clib_malloc(obj_size);
+    if ( !tmp->raw_data ) {
+        clib_free ( tmp );
+        return clib_object_null;
+    }
+    memcpy ( tmp->raw_data, inObject, obj_size);
+    return tmp;
+}
+
+clib_error
+get_raw_clib_object ( clib_object *inObject, clib_type *elem) {
+    *elem = (clib_type)clib_malloc(inObject->size);
+    if ( ! *elem )
+        return CLIB_ELEMENT_RETURN_ERROR;
+    memcpy ( *elem, inObject->raw_data, inObject->size );
+
+    return CLIB_ERROR_SUCCESS;
+}
+
+void 
+delete_clib_object ( clib_object_ptr inObject ) {
+    if (inObject) {
+        clib_free (inObject->raw_data);
+        clib_free (inObject);
+    }
 }
 
 char*

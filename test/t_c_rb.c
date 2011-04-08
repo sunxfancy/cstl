@@ -36,7 +36,7 @@
 static clib_type
     get_key ( clib_rb_ptr tree, clib_rb_node_ptr node) {
         if ( node ) 
-            return node->data.key;
+            return node->raw_data.key;
         return clib_null;
     }
 
@@ -99,8 +99,8 @@ __find_c_rb ( clib_rb_ptr tree, clib_compare fn_c, clib_type key ) {
     current_key = (clib_type)clib_malloc ( tree->size_of_key);
     clib_memcpy ( current_key, key, tree->size_of_key);
 
-    compare_result = (fn_c)(current_key, node->data.key);
-    while ((node != rb_sentinel) && (compare_result = (fn_c)(current_key, node->data.key)) != 0 ){
+    compare_result = (fn_c)(current_key, node->raw_data.key);
+    while ((node != rb_sentinel) && (compare_result = (fn_c)(current_key, node->raw_data.key)) != 0 ){
         if ( compare_result < 0 ) {
             node = node->left;
         } else {
@@ -218,7 +218,7 @@ test_c_rb() {
         size_after_delete = (sizeof(ts_delete_leaf_13)/sizeof(TS));
         node = remove_c_rb( tree, &i);
         if ( node != clib_rb_node_null ) {
-            clib_free ( node->data.key);
+            clib_free ( node->raw_data.key);
             clib_free ( node);
         }
         test_all_elements(tree, ts_delete_leaf_13, size_after_delete);
@@ -228,7 +228,7 @@ test_c_rb() {
         size_after_delete = (sizeof(ts_delete_9)/sizeof(TS));
         node = remove_c_rb( tree, &i);
         if ( node != clib_rb_node_null ) {
-            clib_free ( node->data.key);
+            clib_free ( node->raw_data.key);
             clib_free ( node);
         }
         test_all_elements(tree, ts_delete_9, size_after_delete);
@@ -238,7 +238,7 @@ test_c_rb() {
         size_after_delete = (sizeof(ts_delete_15)/sizeof(TS));
         node = remove_c_rb( tree, &i);
         if ( node != clib_rb_node_null ) {
-            clib_free ( node->data.key);
+            clib_free ( node->raw_data.key);
             clib_free ( node);
         }
         test_all_elements(tree, ts_delete_15, size_after_delete);

@@ -43,7 +43,7 @@ insert_c_set (clib_set_ptr pSet, clib_type key, clib_size key_size) {
     if (pSet == clib_set_null)
         return CLIB_SET_NOT_INITIALIZED;
 
-    return insert_c_rb ( pSet->root, key, 0, key_size , 0);
+    return insert_c_rb ( pSet->root, key, key_size, clib_null, 0);
 }
 clib_bool    
 exists_c_set ( clib_set_ptr pSet, clib_type key) {
@@ -68,10 +68,26 @@ remove_c_set ( clib_set_ptr pSet, clib_type key) {
 
     node = remove_c_rb ( pSet->root, key );
     if ( node != clib_rb_node_null ) {
-        clib_free ( node->data.key);
-        clib_free ( node );
+        /*clib_free ( node->raw_data.key);
+        clib_free ( node );*/
     }
     return rc;
+}
+clib_bool    
+find_c_set ( clib_set_ptr pSet, clib_type key, clib_type outKey) {
+    clib_rb_node_ptr node;
+
+    if (pSet == clib_set_null)
+        return clib_false;
+
+    node = find_c_rb ( pSet->root, key);
+    if ( node == clib_rb_node_null ) 
+        return clib_false;
+
+    get_raw_clib_object ( node->key, outKey );
+
+    return clib_true;
+
 }
 
 clib_error    

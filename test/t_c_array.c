@@ -39,20 +39,18 @@ free_e ( void *ptr ) {
     if ( ptr )
         free ( ptr);
 }
-static int
-compare_strings ( void *left, void *right ) {
-    return strcmp ( (const char *)left, (const char *) right );
-}
 static void
-free_strings ( void *ptr) {
-    if ( ptr )
-        free ( ptr);
+print_e ( void *ptr ){
+    if ( ptr ) 
+        printf ( "%d\n", *(int*)ptr);
 }
 static void 
 test_with_int() {
     int size = 10;
     int i = 0;
-    int rv, rc ;
+    int rc ;
+    void *p_rv = (void*)0;
+    int rv = 0;
     clib_array_ptr myArray  = new_c_array (8,compare_e,NULL);
     assert ( clib_true == empty_c_array( myArray ));
 
@@ -62,41 +60,63 @@ test_with_int() {
     assert ( clib_false == empty_c_array( myArray ));
     assert ( size == size_c_array( myArray ));
 	for ( i = 0; i <= size; i++) {	    
-        rc = element_at_c_array ( myArray, i , &rv );
+        rc = element_at_c_array ( myArray, i , &p_rv );
+        rv = *(int*)p_rv;
 	    assert ( rv == i );
+        free ( p_rv );
     }	
-    rc = front_c_array ( myArray, &rv );
+    rc = front_c_array ( myArray, &p_rv );
+    rv = *(int*)p_rv;
     assert ( rv == 0 );
-    rc = back_c_array( myArray, &rv );
+    free ( p_rv );
+
+    rc = back_c_array( myArray, &p_rv );
+    rv = *(int*)p_rv;
     assert ( rv == size );
+    free ( p_rv );
 
     remove_from_c_array( myArray, 0 );
     assert ( size - 1  == size_c_array( myArray ));
-    rc = element_at_c_array ( myArray, 0 , &rv );
+    rc = element_at_c_array ( myArray, 0 , &p_rv );
+    rv = *(int*)p_rv;
     assert ( rv == 1 );
+    free ( p_rv );
 
     size = size_c_array( myArray );
     remove_from_c_array( myArray, size/2 );
     assert ( size - 1  == size_c_array( myArray ));
-    rc = element_at_c_array ( myArray, size/2 , &rv );
+    rc = element_at_c_array ( myArray, size/2 , &p_rv );
+    rv = *(int*)p_rv;
     assert ( rv == size/2 + 2 );
+    free ( p_rv );
 
     size = size_c_array( myArray );
     remove_from_c_array( myArray, size );
     assert ( size - 1  == size_c_array( myArray ));
     size = size_c_array( myArray );
-    rc = element_at_c_array ( myArray, size , &rv );
+    rc = element_at_c_array ( myArray, size , &p_rv );
+    rv = *(int*)p_rv;
     assert ( rv == 9 );
+    free ( p_rv );
 
     i = 900;
     insert_at_c_array ( myArray, 5, &i, sizeof(int));
-    rc = element_at_c_array ( myArray, 5 , &rv );
+    rc = element_at_c_array ( myArray, 5 , &p_rv );
+    rv = *(int*)p_rv;
     assert ( rv == i );
-    rc = element_at_c_array ( myArray, 6 , &rv );
+    free ( p_rv );
+
+    rc = element_at_c_array ( myArray, 6 , &p_rv );
+    rv = *(int*)p_rv;
     assert ( rv == 7 );
+    free ( p_rv );   
 
-
-
+    for ( i = 0; i < size_c_array(myArray ); i++){
+        rc = element_at_c_array ( myArray, i , &p_rv );
+        print_e ( p_rv);
+        free ( p_rv );
+        
+    }
   
     delete_c_array ( myArray );
 }
@@ -106,44 +126,61 @@ test_with_pointers() {
     int size = 10;
     int i = 0;
     int *rv, rc ;
+    void *p_rv = (void*)0;
     clib_array_ptr myArray  = new_c_array (8,compare_e,free_e);
     assert ( clib_true == empty_c_array( myArray ));
 
     for ( i = 0; i <= size; i++) {
         int *v = ( int*) malloc ( sizeof(int));
         memcpy ( v, &i, sizeof(int));
-        push_back_c_array ( myArray, &v ,sizeof(int*));
+        push_back_c_array ( myArray, v ,sizeof(int*));
+        free ( v );
     }
     assert ( clib_false == empty_c_array( myArray ));
     assert ( size == size_c_array( myArray ));
 	for ( i = 0; i <= size; i++) {	    
-        rc = element_at_c_array ( myArray, i , &rv );
+        rc = element_at_c_array ( myArray, i , &p_rv );
+        rv = ( int *)p_rv;
 	    assert ( *rv == i );
+        free ( p_rv);
     }	
-    rc = front_c_array ( myArray, &rv );
+    rc = front_c_array ( myArray, &p_rv );
+    rv = ( int *)p_rv;
     assert ( *rv == 0 );
-    rc = back_c_array( myArray, &rv );
+    free ( p_rv);
+
+    rc = back_c_array( myArray, &p_rv );
+    rv = ( int *)p_rv;
     assert ( *rv == size );
+    free ( p_rv);
 
     remove_from_c_array( myArray, 0 );
     assert ( size - 1  == size_c_array( myArray ));
-    rc = element_at_c_array ( myArray, 0 , &rv );
+
+    rc = element_at_c_array ( myArray, 0 , &p_rv );
+    rv = ( int *)p_rv;
     assert ( *rv == 1 );
+    free ( p_rv);
 
     size = size_c_array( myArray );
     remove_from_c_array( myArray, size/2 );
     assert ( size - 1  == size_c_array( myArray ));
-    rc = element_at_c_array ( myArray, size/2 , &rv );
+    rc = element_at_c_array ( myArray, size/2 , &p_rv );
+    rv = ( int *)p_rv;
     assert ( *rv == size/2 + 2 );
+    free ( p_rv);
 
     size = size_c_array( myArray );
     remove_from_c_array( myArray, size );
     assert ( size - 1  == size_c_array( myArray ));
-    size = size_c_array( myArray );
-    rc = element_at_c_array ( myArray, size , &rv );
-    assert ( *rv == 9 );
 
-    
+    size = size_c_array( myArray );
+
+    rc = element_at_c_array ( myArray, size , &p_rv );
+    rv = ( int *)p_rv;
+    assert ( *rv == 9 );
+    free ( p_rv);
+   
     delete_c_array ( myArray );
 }
 
@@ -153,6 +190,7 @@ test_with_strings() {
     char *input_array[11];
     int i = 0;
     char *rv, rc ;
+    void *p_rv = (void*)0;
     clib_array_ptr myArray  = new_c_array (8,compare_e,free_e);
     assert ( clib_true == empty_c_array( myArray ));
 
@@ -171,35 +209,52 @@ test_with_strings() {
 
     for ( i = 0; i <= size; i++) {
         char *v  = clib_strdup ( input_array[i]);
-        push_back_c_array ( myArray ,&v,  sizeof(char*));
+        push_back_c_array ( myArray ,v, strlen(v) + 1 );
+        free ( v );
     }
     assert ( clib_false == empty_c_array( myArray ));
     assert ( size == size_c_array( myArray ));
 	for ( i = 0; i <= size; i++) {	  
-        rc = element_at_c_array ( myArray, i , &rv );
+        rc = element_at_c_array ( myArray, i , &p_rv );
+        rv = (char*)p_rv;
 	    assert ( strcmp( rv, input_array[i]) == 0);
+        free ( p_rv );
     }	
-    rc = front_c_array ( myArray, &rv );
+    rc = front_c_array ( myArray, &p_rv );
+    rv = (char*)p_rv;
     assert ( strcmp( rv, input_array[0]) == 0);
-    rc = back_c_array( myArray, &rv );
+    free ( p_rv );
+
+    rc = back_c_array( myArray, &p_rv );
+    rv = (char*)p_rv;
     assert ( strcmp( rv, input_array[size]) == 0);
+    free ( p_rv );
 
     remove_from_c_array( myArray, 0 );
     assert ( size - 1  == size_c_array( myArray ));
-    rc = element_at_c_array ( myArray, 0 , &rv );
+
+    rc = element_at_c_array ( myArray, 0 , &p_rv );
+    rv = (char*)p_rv;
     assert ( strcmp( rv, input_array[1]) == 0);
+    free ( p_rv );
 
     size = size_c_array( myArray );
     remove_from_c_array( myArray, size/2 );
-    rc = element_at_c_array ( myArray, size/2 , &rv );
+
+    rc = element_at_c_array ( myArray, size/2 , &p_rv );
+    rv = (char*)p_rv;
     assert ( strcmp( rv, input_array[size/2 + 2]) == 0);
+    free ( p_rv );
 
     size = size_c_array( myArray );
     remove_from_c_array( myArray, size );
     assert ( size - 1  == size_c_array( myArray ));
     size = size_c_array( myArray );
-    rc = element_at_c_array ( myArray, size , &rv );
+
+    rc = element_at_c_array ( myArray, size , &p_rv );
+    rv = (char*)p_rv;    
     assert ( strcmp( rv, input_array[9]) == 0);
+    free ( p_rv );
 
     delete_c_array ( myArray );
 }
