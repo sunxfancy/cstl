@@ -56,6 +56,7 @@ test_c_set(){
         int test[] = { 0,1,2,3,4,5,6,7,8,9 };
         int index  = 0;
         int size   = sizeof (test) /sizeof(test[0]);
+        void *outKey;
 
         clib_set_ptr pSet = new_c_set ( compare_int, NULL);
 
@@ -67,6 +68,11 @@ test_c_set(){
             int v = test[index];
             assert ( clib_true == exists_c_set ( pSet, &v));
         }
+
+        index = 9;
+        find_c_set ( pSet, &index, &outKey);
+        assert ( 9 == *(int*)outKey);
+        clib_free ( outKey );
         delete_c_set(pSet);
     }
     {

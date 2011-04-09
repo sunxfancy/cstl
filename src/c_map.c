@@ -73,9 +73,11 @@ remove_c_map ( clib_map_ptr pMap, clib_type key) {
         clib_type removed_node;
         get_raw_clib_object ( node->key, &removed_node );
         clib_free ( removed_node);
+        delete_clib_object ( node->key );
 
         get_raw_clib_object ( node->value, &removed_node );
         clib_free ( removed_node);
+        delete_clib_object ( node->value);
 
         clib_free ( node );
     }

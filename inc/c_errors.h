@@ -51,6 +51,8 @@
 #define CLIB_MAP_NOT_INITIALIZED      501
 #define CLIB_MAP_INVALID_INPUT        502
 
+#define CLIB_SLIST_INSERT_FAILED      601
+
 
 
 #endif

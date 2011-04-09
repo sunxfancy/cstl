@@ -104,7 +104,7 @@ void
 test_c_map() {
     clib_map_ptr myMap = new_c_map ( compare_e, NULL, NULL);
     insert_all(myMap);
-    check_exists_all(myMap);
+    check_exists_all(myMap);   
     remove_some_exist(myMap);
     add_removed_check_all(myMap);
     delete_c_map(myMap);

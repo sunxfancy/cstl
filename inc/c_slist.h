@@ -24,8 +24,8 @@
 #ifndef _C_SLIST_H_
 #define _C_SLIST_H_
 
-/*typedef struct __c_slist_node {
-    clib_type elem;
+typedef struct __c_slist_node {
+    clib_object_ptr elem;
     struct __c_slist_node *next;
 }clib_slist_node,*clib_slist_node_ptr;
 
@@ -38,12 +38,12 @@ typedef struct __c_slist {
 }clib_slist,*clib_slist_ptr;
 
 
-extern clib_slist_ptr new_c_slist(clib_destroy, clib_compare);
-extern void           delete_c_slist   (clib_slist_ptr );
-extern void           insert_c_slist   (clib_slist_ptr, clib_type, int );
-extern void           push_back_c_slist(clib_slist_ptr, clib_type);
-extern void           remove_c_slist   (clib_slist_ptr, int );
-extern void           for_each_c_slist (clib_slist_ptr, void (*)(void*));
-extern clib_type      find_c_slist     (clib_slist_ptr, clib_type);
-*/
+extern clib_slist_ptr new_c_slist(clib_destroy fn_d, clib_compare fn_c);
+extern void           delete_c_slist   (clib_slist_ptr pSlist);
+extern clib_error     insert_c_slist   (clib_slist_ptr pSlist, int pos, clib_type elem, clib_size elem_size);
+extern clib_error     push_back_c_slist(clib_slist_ptr pSlist, clib_type elem, clib_size elem_size);
+extern void           remove_c_slist   (clib_slist_ptr pSlist, int pos);
+extern void           for_each_c_slist (clib_slist_ptr pSlist, void (*fn)(void*));
+extern clib_bool      find_c_slist     (clib_slist_ptr pSlist, clib_type find_value, clib_type *out_value);
+
 #endif

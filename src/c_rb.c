@@ -373,7 +373,6 @@ clib_error
 delete_c_rb(clib_rb_ptr pTree) {
 
     clib_error rc = CLIB_ERROR_SUCCESS;
-/*    clib_type key, value; */
     clib_rb_node_ptr z = pTree->root;
 
     while (z != rb_sentinel) {
@@ -383,22 +382,6 @@ delete_c_rb(clib_rb_ptr pTree) {
             z = z->right;
         else {
             __delete_c_rb_node ( pTree, z );
-            /*if ( pTree->destruct_k_fn ) {
-                get_raw_clib_object ( z->key, &key );
-                pTree->destruct_k_fn ( key );
-            }
-            clib_free ( z->key->raw_data);
-            clib_free ( z->key);
-
-            if ( z->value ) {
-                if ( pTree->destruct_v_fn ) {
-                    get_raw_clib_object ( z->value, &value);
-                    pTree->destruct_v_fn ( value );
-                }
-                clib_free ( z->value->raw_data );
-                clib_free ( z->value);
-            }*/
-
             if (z->parent) {
                 z = z->parent;
                 if (z->left != rb_sentinel){
