@@ -34,16 +34,16 @@ typedef struct __c_slist {
     clib_slist_node_ptr head;
     clib_destroy destruct_fn;
     clib_compare compare_key_fn;
-    int size;
+    clib_int size;
 }clib_slist,*clib_slist_ptr;
 
 
 extern clib_slist_ptr new_c_slist(clib_destroy fn_d, clib_compare fn_c);
 extern void           delete_c_slist   (clib_slist_ptr pSlist);
-extern clib_error     insert_c_slist   (clib_slist_ptr pSlist, int pos, clib_type elem, clib_size elem_size);
+extern clib_error     insert_c_slist   (clib_slist_ptr pSlist, clib_int pos, clib_type elem, clib_size elem_size);
 extern clib_error     push_back_c_slist(clib_slist_ptr pSlist, clib_type elem, clib_size elem_size);
-extern void           remove_c_slist   (clib_slist_ptr pSlist, int pos);
-extern void           for_each_c_slist (clib_slist_ptr pSlist, void (*fn)(void*));
+extern void           remove_c_slist   (clib_slist_ptr pSlist, clib_int pos);
+extern void           for_each_c_slist (clib_slist_ptr pSlist, void (*fn)(clib_type ));
 extern clib_bool      find_c_slist     (clib_slist_ptr pSlist, clib_type find_value, clib_type *out_value);
 
 #endif

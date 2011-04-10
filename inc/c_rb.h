@@ -28,7 +28,7 @@ typedef struct __c_rb_node {
     struct __c_rb_node *left;
     struct __c_rb_node *right;
     struct __c_rb_node *parent;
-    int color; 
+    clib_int color; 
 
     clib_object_ptr key;
     clib_object_ptr value;

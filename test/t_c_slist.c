@@ -29,39 +29,39 @@
 #include <assert.h>
 
 static void 
-free_element ( void *ptr ) {
+free_element ( clib_type ptr ) {
     if ( ptr )
         free ( ptr);
 }
 
 void
-add_elements_to_list( clib_slist_ptr ll, int x, int y ) {
-    int i = 0;
+add_elements_to_list( clib_slist_ptr ll, clib_int x, clib_int y ) {
+    clib_int i = 0;
     for ( i = x; i <= y; i++ ) { 
-        int *v = ( int *) malloc ( sizeof ( int ));
-        memcpy ( v, &i, sizeof ( int ));
+        clib_int *v = ( clib_int *) malloc ( sizeof ( clib_int ));
+        memcpy ( v, &i, sizeof ( clib_int ));
         push_back_c_slist ( ll, v , sizeof(v));
         clib_free ( v );
     }
 }
 void
-print_e ( void *ptr ) {
+print_e ( clib_type ptr ) {
     if ( ptr )
-        printf ( "%d\n", *(int*)ptr);
+        printf ( "%d\n", *(clib_int*)ptr);
 }
 
-static int 
-compare_element ( void *left, void *right ) {
-    int *l = (int*) left;
-    int *r = (int*) right;
+static clib_int 
+compare_element ( clib_type left, clib_type right ) {
+    clib_int *l = (clib_int*) left;
+    clib_int *r = (clib_int*) right;
     return *l == *r ;
 }
 
 
 void
 test_c_slist() {
-    int i = 0;
-    int *v;
+    clib_int i = 0;
+    clib_int *v;
     clib_type outValue;
     clib_slist_ptr list = new_c_slist(free_element,compare_element);
 
@@ -69,8 +69,8 @@ test_c_slist() {
     for_each_c_slist(list, print_e);
 
     i = 55;
-    v = ( int *) malloc ( sizeof ( int ));
-    memcpy ( v, &i, sizeof ( int ));
+    v = ( clib_int *) malloc ( sizeof ( clib_int ));
+    memcpy ( v, &i, sizeof ( clib_int ));
     insert_c_slist(list,5, v,sizeof(v));
     clib_free ( v );
     for_each_c_slist(list, print_e);
@@ -85,22 +85,22 @@ test_c_slist() {
     for_each_c_slist(list, print_e);
 
     i = 1;
-    v = ( int *) malloc ( sizeof ( int ));
-    memcpy ( v, &i, sizeof ( int ));
+    v = ( clib_int *) malloc ( sizeof ( clib_int ));
+    memcpy ( v, &i, sizeof ( clib_int ));
     insert_c_slist(list,1,v,sizeof(v));
     clib_free ( v );
     for_each_c_slist(list, print_e);
 
     i = 11;
-    v = ( int *) malloc ( sizeof ( int ));
-    memcpy ( v, &i, sizeof ( int ));
+    v = ( clib_int *) malloc ( sizeof ( clib_int ));
+    memcpy ( v, &i, sizeof ( clib_int ));
     insert_c_slist(list,11,v,sizeof(v));
     clib_free ( v );
     for_each_c_slist(list, print_e);
 
     i = 12;
-    v = ( int *) malloc ( sizeof ( int ));
-    memcpy ( v, &i, sizeof ( int ));
+    v = ( clib_int *) malloc ( sizeof ( clib_int ));
+    memcpy ( v, &i, sizeof ( clib_int ));
     insert_c_slist(list,200,v,sizeof(v));
     clib_free ( v );
     for_each_c_slist(list, print_e);
@@ -110,7 +110,7 @@ test_c_slist() {
 
     i = 10;
     if ( clib_true == find_c_slist ( list, &i, &outValue)) {
-        assert ( i == *(int*)outValue );
+        assert ( i == *(clib_int*)outValue );
         clib_free ( outValue );
     }
     i = 100;

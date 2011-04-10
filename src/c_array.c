@@ -38,7 +38,7 @@ array_check_and_grow ( clib_array_ptr pArray) {
     return pArray;
 }
 clib_array_ptr 
-new_c_array(int array_size, clib_compare fn_c, clib_destroy fn_d) {
+new_c_array(clib_int array_size, clib_compare fn_c, clib_destroy fn_d) {
 
     clib_array_ptr pArray = (clib_array_ptr)clib_malloc(sizeof(clib_array));
     if ( ! pArray )
@@ -58,7 +58,7 @@ new_c_array(int array_size, clib_compare fn_c, clib_destroy fn_d) {
 }
 
 static clib_error 
-insert_c_array ( clib_array_ptr pArray, int index, clib_type elem, clib_size elem_size) {
+insert_c_array ( clib_array_ptr pArray, clib_int index, clib_type elem, clib_size elem_size) {
 
     clib_error rc           = CLIB_ERROR_SUCCESS;
     clib_object_ptr pObject = new_clib_object ( elem, elem_size );
@@ -85,7 +85,7 @@ push_back_c_array (clib_array_ptr pArray, clib_type elem, clib_size elem_size) {
     return rc;
 }
 clib_error 
-element_at_c_array (clib_array_ptr pArray, int index, clib_type *elem) {
+element_at_c_array (clib_array_ptr pArray, clib_int index, clib_type *elem) {
     clib_error rc = CLIB_ERROR_SUCCESS;
 
     if ( ! pArray )
@@ -97,13 +97,13 @@ element_at_c_array (clib_array_ptr pArray, int index, clib_type *elem) {
     get_raw_clib_object ( pArray->pElements[index], elem );
     return rc;
 }
-int
+clib_int
 size_c_array ( clib_array_ptr pArray ) {
 	if ( pArray == clib_array_null )
 		return 0;
 	return pArray->no_of_elements - 1 ;
 }
-int
+clib_int
 capacity_c_array ( clib_array_ptr pArray ) {
 	if ( pArray == clib_array_null )
 		return 0;
@@ -116,7 +116,7 @@ empty_c_array ( clib_array_ptr pArray) {
 	return pArray->no_of_elements == 0 ? clib_true : clib_false;
 }
 clib_error 
-reserve_c_array ( clib_array_ptr pArray, int new_size) {
+reserve_c_array ( clib_array_ptr pArray, clib_int new_size) {
 	if ( pArray == clib_array_null )
 		return CLIB_ARRAY_NOT_INITIALIZED;
 
@@ -136,7 +136,7 @@ back_c_array ( clib_array_ptr pArray,clib_type elem) {
     return element_at_c_array ( pArray, pArray->no_of_elements - 1, elem );
 }
 clib_error 
-insert_at_c_array ( clib_array_ptr pArray, int index, clib_type elem, clib_size elem_size) {
+insert_at_c_array ( clib_array_ptr pArray, clib_int index, clib_type elem, clib_size elem_size) {
     clib_error rc = CLIB_ERROR_SUCCESS;
     if ( ! pArray )
         return CLIB_ARRAY_NOT_INITIALIZED;
@@ -155,7 +155,7 @@ insert_at_c_array ( clib_array_ptr pArray, int index, clib_type elem, clib_size 
     return rc;
 }
 clib_error     
-remove_from_c_array ( clib_array_ptr pArray, int index) {
+remove_from_c_array ( clib_array_ptr pArray, clib_int index) {
     clib_error   rc = CLIB_ERROR_SUCCESS;
 
     if ( ! pArray )
@@ -181,7 +181,7 @@ remove_from_c_array ( clib_array_ptr pArray, int index) {
 clib_error 
 delete_c_array( clib_array_ptr pArray) {
     clib_error rc = CLIB_ERROR_SUCCESS;
-    int i = 0;
+    clib_int i = 0;
 
     if ( pArray == clib_array_null )
         return rc;

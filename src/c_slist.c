@@ -80,8 +80,8 @@ __remove_c_list ( clib_slist_ptr pSlist, clib_slist_node_ptr pSlistNode ) {
     clib_free ( pSlistNode);
 }
 void           
-remove_c_slist( clib_slist_ptr pSlist, int pos ) {
-    int i = 0;
+remove_c_slist( clib_slist_ptr pSlist, clib_int pos ) {
+    clib_int i = 0;
 
     clib_slist_node_ptr current = pSlist->head;
     clib_slist_node_ptr temp    = clib_slist_node_null;
@@ -104,8 +104,8 @@ remove_c_slist( clib_slist_ptr pSlist, int pos ) {
     pSlist->size--;
 }
 clib_error           
-insert_c_slist(clib_slist_ptr pSlist, int pos, clib_type elem, clib_size elem_size) {
-    int i = 0;
+insert_c_slist(clib_slist_ptr pSlist, clib_int pos, clib_type elem, clib_size elem_size) {
+    clib_int i = 0;
     clib_slist_node_ptr current  = pSlist->head;
     clib_slist_node_ptr new_node = clib_slist_node_null;
    
@@ -143,7 +143,7 @@ insert_c_slist(clib_slist_ptr pSlist, int pos, clib_type elem, clib_size elem_si
     return CLIB_ERROR_SUCCESS;
 }
 void           
-for_each_c_slist (clib_slist_ptr pSlist, void (*fn)(void*)) {
+for_each_c_slist (clib_slist_ptr pSlist, void (*fn)(clib_type )) {
     clib_type elem;
     clib_slist_node_ptr current  = pSlist->head;
     while ( current != clib_slist_node_null ) {

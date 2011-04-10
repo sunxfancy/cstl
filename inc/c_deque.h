@@ -26,10 +26,10 @@
 
 typedef struct __c_deque {
     clib_object_ptr *pElements;
-    int no_max_elements;
-    int head;
-    int tail;
-    int no_of_elements;
+    clib_int no_max_elements;
+    clib_int head;
+    clib_int tail;
+    clib_int no_of_elements;
     clib_compare compare_fn;
     clib_destroy destruct_fn;
 }c_deque;
@@ -38,7 +38,7 @@ typedef c_deque          clib_deque;
 typedef c_deque*         clib_deque_ptr;
 #define clib_deque_null  (clib_deque_ptr)0
 
-extern clib_deque_ptr new_c_deque( int deq_size , clib_compare fn_c, clib_destroy fn_d);
+extern clib_deque_ptr new_c_deque( clib_int deq_size , clib_compare fn_c, clib_destroy fn_d);
 extern clib_error     push_back_c_deque (clib_deque_ptr pDeq, clib_type elem, clib_size elem_size);
 extern clib_error     push_front_c_deque(clib_deque_ptr pDeq, clib_type elem,clib_size elem_size);
 
@@ -47,8 +47,8 @@ extern clib_error     back_c_deque      (clib_deque_ptr pDeq,clib_type);
 extern clib_error     pop_back_c_deque  (clib_deque_ptr pDeq);
 extern clib_error     pop_front_c_deque (clib_deque_ptr pDeq);
 extern clib_bool      empty_c_deque     (clib_deque_ptr pDeq);
-extern int            size_c_deque ( clib_deque_ptr pDeq);
+extern clib_int            size_c_deque ( clib_deque_ptr pDeq);
 extern clib_error     delete_c_deque ( clib_deque_ptr pDeq);
-extern clib_error     element_at_c_deque (clib_deque_ptr pDeq, int index, clib_type *elem);
+extern clib_error     element_at_c_deque (clib_deque_ptr pDeq, clib_int index, clib_type *elem);
 
 #endif

@@ -59,11 +59,11 @@ static clib_rb_node_ptr
         return clib_rb_node_null;
     }
 
-int 
-compare_rb_e ( void* l, void *r ) {
+clib_int 
+compare_rb_e ( clib_type  l, clib_type r ) {
 
-    int left =  0;
-    int right = 0;
+    clib_int left =  0;
+    clib_int right = 0;
 
     if ( l ) left  = *(int*)l;
     if ( r ) right = *(int*)r;
@@ -75,18 +75,18 @@ compare_rb_e ( void* l, void *r ) {
 }
 
 void 
-free_rb_e ( void *p ) {
+free_rb_e ( clib_type p ) {
     if ( p ) {
         free ( p );
     }
 }
 
 typedef struct test_data_tree {
-    int element;
-    int left;
-    int right;
-    int parent;
-    int color;
+    clib_int element;
+    clib_int left;
+    clib_int right;
+    clib_int parent;
+    clib_int color;
 } TS;
 
 
@@ -94,7 +94,7 @@ static clib_rb_node_ptr
 __find_c_rb ( clib_rb_ptr tree, clib_compare fn_c, clib_type key ) {
     clib_rb_node_ptr node = tree->root;
     clib_type current_key = clib_null;
-    int compare_result = 0;
+    clib_int compare_result = 0;
 
     current_key = (clib_type)clib_malloc ( tree->size_of_key);
     clib_memcpy ( current_key, key, tree->size_of_key);
@@ -115,7 +115,7 @@ find(clib_rb_ptr tree, clib_type key ) {
     return __find_c_rb ( tree, tree->compare_fn, key );
 }
 
-static void update_values ( clib_type v, int *l, int *r, int *p , int *e, clib_rb_ptr tree ) {
+static void update_values ( clib_type v, clib_int *l, clib_int *r, clib_int *p , clib_int *e, clib_rb_ptr tree ) {
     clib_rb_node_ptr x;
     if ( get_key(tree,v)) 
         *e = *(int*)get_key (tree,v);
@@ -131,29 +131,29 @@ static void update_values ( clib_type v, int *l, int *r, int *p , int *e, clib_r
 }
 
 static void 
-test_each_elements(int l,int r, int p, int e,clib_type v, TS ts[], int i, 
+test_each_elements(clib_int l,clib_int r, clib_int p, clib_int e,clib_type v, TS ts[], clib_int i, 
         clib_rb_ptr tree) {
     assert ( ts[i].element == e);
     if (ts[i].left != 0 ) 
         assert ( ts[i].left == l);
     else
-        assert ((void*)0 == (void*)get_key(tree,get_left(tree,v)));
+        assert ((clib_type )0 == (clib_type )get_key(tree,get_left(tree,v)));
     if ( ts[i].right != 0 ) 
         assert (ts[i].right == r);
     else
-        assert ((void*)0 == (void*)get_key(tree,get_right(tree,v)));
+        assert ((clib_type )0 == (clib_type )get_key(tree,get_right(tree,v)));
     if (ts[i].parent != 0 ) 
         assert (ts[i].parent == p);
     else
-        assert ((void*)0 == (void*)get_key(tree,get_parent(tree,v)));
+        assert ((clib_type )0 == (clib_type )get_key(tree,get_parent(tree,v)));
 }
 
 static void
-test_all_elements(clib_rb_ptr tree, TS ts[], int size) {
-    int i = 0;
+test_all_elements(clib_rb_ptr tree, TS ts[], clib_int size) {
+    clib_int i = 0;
     for ( i = 0; i < size; i++) {
         clib_type v = clib_null;
-        int l,r,p,e;
+        clib_int l,r,p,e;
         v = find ( tree, &ts[i].element);
         update_values( v, &l,&r,&p,&e, tree);
         test_each_elements(l,r,p,e,v, ts, i, tree);
@@ -161,9 +161,9 @@ test_all_elements(clib_rb_ptr tree, TS ts[], int size) {
 }
 
 static clib_rb_ptr 
-create_tree(TS ts[], int size) {
-    int i = 0;
-    clib_rb_ptr tree = new_c_rb( compare_rb_e,free_rb_e, clib_null, sizeof(int),0);
+create_tree(TS ts[], clib_int size) {
+    clib_int i = 0;
+    clib_rb_ptr tree = new_c_rb( compare_rb_e,free_rb_e, clib_null, sizeof(clib_int),0);
     for ( i = 0; i < size; i++) {
         insert_c_rb( tree, &(ts[i].element) ,clib_null);
     }
@@ -173,9 +173,9 @@ create_tree(TS ts[], int size) {
 
 void 
 test_c_rb() {
-    int size;
-    int size_after_delete;
-    int i = 0;
+    clib_int size;
+    clib_int size_after_delete;
+    clib_int i = 0;
     clib_rb_ptr tree;
     clib_rb_node_ptr node;
 
@@ -244,7 +244,7 @@ test_c_rb() {
         test_all_elements(tree, ts_delete_15, size_after_delete);
     }
     {
-        int i = 1;
+        clib_int i = 1;
         insert_c_rb( tree, &i, clib_null);
         size_after_delete = (sizeof(ts_insert_1)/sizeof(TS));
         test_all_elements(tree, ts_insert_1, size_after_delete);

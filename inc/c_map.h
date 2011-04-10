@@ -25,7 +25,7 @@
 #define _C_MAP_H_
 
 typedef struct __c_map {
-    clib_rb* root;
+    clib_rb_ptr root;
 }clib_map,*clib_map_ptr;
 #define clib_map_null  (clib_map_ptr)0 
 

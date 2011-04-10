@@ -25,22 +25,22 @@
 #include <string.h>
 #include <stdlib.h>
 
-void *
+clib_type 
 clib_malloc( size_t size ) {
-    void *t = malloc ( size );
+    clib_type t = malloc ( size );
     if ( !t ) {
-	    return (void*)0;
+	    return (clib_type )0;
     }
     return t;
 }
 void
-clib_free ( void *ptr ) {
+clib_free ( clib_type ptr ) {
     if ( ptr )
 	    free ( ptr );
 }
 
-void* 
-clib_memcpy(void* dest, const void* src, size_t count) {
+clib_type  
+clib_memcpy(clib_type  dest, const clib_type  src, size_t count) {
 	char* dst8 = (char*)dest;
 	char* src8 = (char*)src;
 
@@ -51,16 +51,16 @@ clib_memcpy(void* dest, const void* src, size_t count) {
 }
 
 void 
-clib_copy( void *destination, void *source, size_t size ) {
+clib_copy( clib_type destination, clib_type source, size_t size ) {
     clib_memcpy ( (char*)destination, source, size);
 }
 void
-clib_get ( void *destination, void *source, size_t size) {
+clib_get ( clib_type destination, clib_type source, size_t size) {
     clib_memcpy ( destination, (char*)source, size);
 }
 
 clib_object_ptr
-new_clib_object(void *inObject, size_t obj_size) {
+new_clib_object(clib_type inObject, size_t obj_size) {
     clib_object_ptr tmp = (clib_object_ptr)malloc(sizeof(clib_object));   
     if ( ! tmp )
         return clib_object_null;

@@ -26,8 +26,8 @@
 
 typedef struct __c_array {
 
-    int              no_max_elements;
-    int              no_of_elements;
+    clib_int         no_max_elements;
+    clib_int         no_of_elements;
     clib_object_ptr *pElements;
     clib_compare     compare_fn;
     clib_destroy     destruct_fn;
@@ -36,17 +36,17 @@ typedef struct __c_array {
 
 
 
-extern clib_array_ptr new_c_array ( int init_size, clib_compare fn_c, clib_destroy fn_d);
+extern clib_array_ptr new_c_array ( clib_int init_size, clib_compare fn_c, clib_destroy fn_d);
 extern clib_error     push_back_c_array ( clib_array_ptr pArray, clib_type elem, clib_size elem_size);
-extern clib_error     element_at_c_array( clib_array_ptr pArray, int pos, clib_type *e);
-extern clib_error     insert_at_c_array ( clib_array_ptr pArray, int index, clib_type elem, clib_size elem_size);
-extern int            size_c_array( clib_array_ptr pArray);
-extern int            capacity_c_array( clib_array_ptr pArray );
+extern clib_error     element_at_c_array( clib_array_ptr pArray, clib_int pos, clib_type *e);
+extern clib_error     insert_at_c_array ( clib_array_ptr pArray, clib_int index, clib_type elem, clib_size elem_size);
+extern clib_int       size_c_array( clib_array_ptr pArray);
+extern clib_int       capacity_c_array( clib_array_ptr pArray );
 extern clib_bool      empty_c_array( clib_array_ptr pArray);
-extern clib_error     reserve_c_array( clib_array_ptr pArray, int pos);
+extern clib_error     reserve_c_array( clib_array_ptr pArray, clib_int pos);
 extern clib_error     front_c_array( clib_array_ptr pArray,clib_type elem);
 extern clib_error     back_c_array( clib_array_ptr pArray,clib_type elem);
-extern clib_error     remove_from_c_array ( clib_array_ptr, int pos);
+extern clib_error     remove_from_c_array ( clib_array_ptr, clib_int pos);
 extern clib_error     delete_c_array( clib_array_ptr pArray);
 
 #endif

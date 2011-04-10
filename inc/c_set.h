@@ -25,7 +25,7 @@
 #define _C_SET_H_
 
 typedef struct __c_set {
-    clib_rb* root;
+    clib_rb_ptr root;
 }clib_set,*clib_set_ptr;
 
 

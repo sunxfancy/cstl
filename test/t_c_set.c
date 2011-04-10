@@ -29,20 +29,20 @@
 #include <assert.h>
 
 static void 
-delete_e ( void *ptr ) {
+delete_e ( clib_type ptr ) {
     if ( ptr ) 
 	free ( ptr );
 }
-static int
-compare_e ( void *left, void *right ) {
+static clib_int
+compare_e ( clib_type left, clib_type right ) {
     char *l = (char*)left;
     char *r = (char*)right;
     return strcmp ( (const char *)l, (const char *) r );
 }
-static int 
-compare_int ( void *left, void *right ) {
-    int *l = (int*)left;
-    int *r = (int*)right;
+static clib_int 
+compare_int ( clib_type left, clib_type right ) {
+    clib_int *l = (clib_int*)left;
+    clib_int *r = (clib_int*)right;
 
     if ( *l < *r ) 
         return -1;
@@ -53,19 +53,19 @@ compare_int ( void *left, void *right ) {
 void 
 test_c_set(){
     {
-        int test[] = { 0,1,2,3,4,5,6,7,8,9 };
-        int index  = 0;
-        int size   = sizeof (test) /sizeof(test[0]);
-        void *outKey;
+        clib_int test[] = { 0,1,2,3,4,5,6,7,8,9 };
+        clib_int index  = 0;
+        clib_int size   = sizeof (test) /sizeof(test[0]);
+        clib_type outKey;
 
         clib_set_ptr pSet = new_c_set ( compare_int, NULL);
 
         for ( index = 0; index < size; index++ ) {
-            int v = test[index];
-            insert_c_set ( pSet, &v, sizeof(int));
+            clib_int v = test[index];
+            insert_c_set ( pSet, &v, sizeof(clib_int));
         }
         for ( index = 0; index < size; index++ ) {
-            int v = test[index];
+            clib_int v = test[index];
             assert ( clib_true == exists_c_set ( pSet, &v));
         }
 
@@ -80,8 +80,8 @@ test_c_set(){
             char *string;
         } TEST_INPUT;
 
-        int index = 0;
-        int size = 0;
+        clib_int index = 0;
+        clib_int size = 0;
         char *v;
 
         TEST_INPUT ti[] ={

@@ -32,10 +32,10 @@
 static void debug_verify_properties(clib_rb_ptr);
 static void debug_verify_property_1(clib_rb_ptr,clib_rb_node_ptr);
 static void debug_verify_property_2(clib_rb_ptr,clib_rb_node_ptr);
-static int debug_node_color(clib_rb_ptr,clib_rb_node_ptr n);
+static clib_int debug_node_color(clib_rb_ptr,clib_rb_node_ptr n);
 static void debug_verify_property_4(clib_rb_ptr,clib_rb_node_ptr);
 static void debug_verify_property_5(clib_rb_ptr,clib_rb_node_ptr);
-static void debug_verify_property_5_helper(clib_rb_ptr,clib_rb_node_ptr,int,int*);
+static void debug_verify_property_5_helper(clib_rb_ptr,clib_rb_node_ptr,clib_int,clib_int*);
 
 
 static void
@@ -142,7 +142,7 @@ find_c_rb (clib_rb_ptr pTree, clib_type key) {
     clib_rb_node_ptr x = pTree->root;
 
     while (x != rb_sentinel) {
-        int c = 0;
+        clib_int c = 0;
         clib_type cur_key ;
         get_raw_clib_object ( x->key, &cur_key );
         c = pTree->compare_fn (key, cur_key);
@@ -184,7 +184,7 @@ insert_c_rb(clib_rb_ptr pTree, clib_type k, clib_size key_size, clib_type v, cli
     z = clib_rb_node_null;
 
     while (y != rb_sentinel) {
-        int c = 0;
+        clib_int c = 0;
         clib_type cur_key,new_key ;
 
         get_raw_clib_object ( y->key, &cur_key );
@@ -205,7 +205,7 @@ insert_c_rb(clib_rb_ptr pTree, clib_type k, clib_size key_size, clib_type v, cli
     }    
     x->parent = z;
     if (z) {
-        int c = 0;
+        clib_int c = 0;
         clib_type cur_key,new_key ;
         get_raw_clib_object ( z->key, &cur_key );
         get_raw_clib_object ( x->key, &new_key );
@@ -333,7 +333,7 @@ remove_c_rb (clib_rb_ptr pTree, clib_type key) {
 
     z = pTree->root;
     while (z != rb_sentinel) {
-        int c = 0;
+        clib_int c = 0;
         clib_type cur_key;
         get_raw_clib_object ( z->key, &cur_key );
         c = pTree->compare_fn (key, cur_key);
@@ -451,7 +451,7 @@ void debug_verify_property_2(clib_rb_ptr pTree,clib_rb_node_ptr root) {
     assert(debug_node_color(pTree,root) == clib_black);
 }
 
-int debug_node_color(clib_rb_ptr pTree,clib_rb_node_ptr n) {
+clib_int debug_node_color(clib_rb_ptr pTree,clib_rb_node_ptr n) {
     return n == rb_sentinel ? clib_black : n->color;
 }
 
@@ -467,11 +467,11 @@ void debug_verify_property_4(clib_rb_ptr pTree,clib_rb_node_ptr n) {
 }
 
 void debug_verify_property_5(clib_rb_ptr pTree,clib_rb_node_ptr root) {
-    int black_count_path = -1;
+    clib_int black_count_path = -1;
     debug_verify_property_5_helper(pTree,root, 0, &black_count_path);
 }
 
-void debug_verify_property_5_helper(clib_rb_ptr pTree,clib_rb_node_ptr n, int black_count, int* path_black_count) {
+void debug_verify_property_5_helper(clib_rb_ptr pTree,clib_rb_node_ptr n, clib_int black_count, clib_int* path_black_count) {
     if (debug_node_color(pTree,n) == clib_black) {
         black_count++;
     }

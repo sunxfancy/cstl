@@ -28,7 +28,7 @@
 #define CLIB_DEQUE_INDEX(x)  ((char *)(pDeq)->pElements + (sizeof(clib_object) * (x)))
 
 static clib_error 
-insert_c_deque ( clib_deque_ptr pDeq, int index, clib_type elem,clib_size elem_size) {
+insert_c_deque ( clib_deque_ptr pDeq, clib_int index, clib_type elem,clib_size elem_size) {
     clib_error rc           = CLIB_ERROR_SUCCESS;
     clib_object_ptr pObject = new_clib_object ( elem, elem_size );
     if ( ! pObject )
@@ -49,7 +49,7 @@ grow_deque ( clib_deque_ptr pDeq ) {
 
 }
 clib_deque_ptr  
-new_c_deque( int deq_size , clib_compare fn_c, clib_destroy fn_d) {
+new_c_deque( clib_int deq_size , clib_compare fn_c, clib_destroy fn_d) {
 
     clib_deque_ptr pDeq = (clib_deque_ptr)clib_malloc(sizeof(clib_deque));
 	if ( pDeq == clib_deque_null )
@@ -63,7 +63,7 @@ new_c_deque( int deq_size , clib_compare fn_c, clib_destroy fn_d) {
 
     pDeq->compare_fn      = fn_c;
     pDeq->destruct_fn     = fn_d;
-    pDeq->head            = (int)pDeq->no_max_elements / 2;
+    pDeq->head            = (clib_int)pDeq->no_max_elements / 2;
     pDeq->tail            = pDeq->head + 1;
     pDeq->no_of_elements  = 0;    
 
@@ -85,9 +85,9 @@ push_back_c_deque(clib_deque_ptr pDeq, clib_type elem, clib_size elem_size) {
 clib_error 
 push_front_c_deque(clib_deque_ptr pDeq, clib_type elem,clib_size elem_size) {
     clib_error rc = CLIB_ERROR_SUCCESS;	
-    int to        = 0;
-    int from      = 0;
-    int count     = 0;
+    clib_int to        = 0;
+    clib_int from      = 0;
+    clib_int count     = 0;
 
     if ( pDeq->head == 0 ) {
         pDeq = grow_deque(pDeq);
@@ -162,7 +162,7 @@ empty_c_deque (clib_deque_ptr pDeq) {
 
     return pDeq->no_of_elements == 0 ? clib_true : clib_false;
 }
-int 
+clib_int 
 size_c_deque( clib_deque_ptr pDeq ) {
 	if ( pDeq == clib_deque_null )
 		return clib_true;
@@ -170,7 +170,7 @@ size_c_deque( clib_deque_ptr pDeq ) {
     return pDeq->no_of_elements - 1;
 }
 clib_error 
-element_at_c_deque (clib_deque_ptr pDeq, int index, clib_type *elem) {
+element_at_c_deque (clib_deque_ptr pDeq, clib_int index, clib_type *elem) {
 
     clib_error rc = CLIB_ERROR_SUCCESS;
 
@@ -183,7 +183,7 @@ element_at_c_deque (clib_deque_ptr pDeq, int index, clib_type *elem) {
 
 clib_error
 delete_c_deque ( clib_deque_ptr pDeq ) {
-    int i = 0;
+    clib_int i = 0;
 
 	if ( pDeq == clib_deque_null )
 		return CLIB_ERROR_SUCCESS;
