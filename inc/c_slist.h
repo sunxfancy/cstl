@@ -1,4 +1,4 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+/** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **
  *  This file is part of clib library
  *  Copyright (C) 2011 Avinash Dongre ( dongre.avinash@gmail.com )
  *
@@ -19,31 +19,31 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **/
 
 #ifndef _C_SLIST_H_
 #define _C_SLIST_H_
 
-typedef struct __c_slist_node {
-    clib_object_ptr elem;
-    struct __c_slist_node *next;
-}clib_slist_node,*clib_slist_node_ptr;
+struct clib_slist_node {
+    struct clib_object* elem;
+    struct clib_slist_node *next;
+};
 
 
-typedef struct __c_slist {
-    clib_slist_node_ptr head;
+struct clib_slist {
+    struct clib_slist_node* head;
     clib_destroy destruct_fn;
     clib_compare compare_key_fn;
-    clib_int size;
-}clib_slist,*clib_slist_ptr;
+    int size;
+};
 
 
-extern clib_slist_ptr new_c_slist(clib_destroy fn_d, clib_compare fn_c);
-extern void           delete_c_slist   (clib_slist_ptr pSlist);
-extern clib_error     insert_c_slist   (clib_slist_ptr pSlist, clib_int pos, clib_type elem, clib_size elem_size);
-extern clib_error     push_back_c_slist(clib_slist_ptr pSlist, clib_type elem, clib_size elem_size);
-extern void           remove_c_slist   (clib_slist_ptr pSlist, clib_int pos);
-extern void           for_each_c_slist (clib_slist_ptr pSlist, void (*fn)(clib_type ));
-extern clib_bool      find_c_slist     (clib_slist_ptr pSlist, clib_type find_value, clib_type *out_value);
+extern struct clib_slist* new_c_slist(clib_destroy fn_d, clib_compare fn_c);
+extern void           delete_c_slist   (struct clib_slist* pSlist);
+extern clib_error     insert_c_slist   (struct clib_slist* pSlist, int pos, void* elem, size_t elem_size);
+extern clib_error     push_back_c_slist(struct clib_slist* pSlist, void* elem, size_t elem_size);
+extern void           remove_c_slist   (struct clib_slist* pSlist, int pos);
+extern void           for_each_c_slist (struct clib_slist* pSlist, void (*fn)(void* ));
+extern clib_bool      find_c_slist     (struct clib_slist* pSlist, void* find_value, void**out_value);
 
 #endif

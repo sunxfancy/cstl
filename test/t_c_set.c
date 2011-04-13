@@ -1,4 +1,4 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+/** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **
  *  This file is part of clib library
  *  Copyright (C) 2011 Avinash Dongre ( dongre.avinash@gmail.com )
  *
@@ -19,7 +19,7 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **/
 
 #include "c_lib.h"
 
@@ -29,20 +29,20 @@
 #include <assert.h>
 
 static void 
-delete_e ( clib_type ptr ) {
+delete_e ( void* ptr ) {
     if ( ptr ) 
 	free ( ptr );
 }
-static clib_int
-compare_e ( clib_type left, clib_type right ) {
+static int
+compare_e ( void* left, void* right ) {
     char *l = (char*)left;
     char *r = (char*)right;
     return strcmp ( (const char *)l, (const char *) r );
 }
-static clib_int 
-compare_int ( clib_type left, clib_type right ) {
-    clib_int *l = (clib_int*)left;
-    clib_int *r = (clib_int*)right;
+static int 
+compare_int ( void* left, void* right ) {
+    int *l = (int*)left;
+    int *r = (int*)right;
 
     if ( *l < *r ) 
         return -1;
@@ -53,19 +53,19 @@ compare_int ( clib_type left, clib_type right ) {
 void 
 test_c_set(){
     {
-        clib_int test[] = { 0,1,2,3,4,5,6,7,8,9 };
-        clib_int index  = 0;
-        clib_int size   = sizeof (test) /sizeof(test[0]);
-        clib_type outKey;
+        int test[] = { 0,1,2,3,4,5,6,7,8,9 };
+        int index  = 0;
+        int size   = sizeof (test) /sizeof(test[0]);
+        void* outKey;
 
-        clib_set_ptr pSet = new_c_set ( compare_int, NULL);
+        struct clib_set* pSet = new_c_set ( compare_int, NULL);
 
         for ( index = 0; index < size; index++ ) {
-            clib_int v = test[index];
-            insert_c_set ( pSet, &v, sizeof(clib_int));
+            int v = test[index];
+            insert_c_set ( pSet, &v, sizeof(int));
         }
         for ( index = 0; index < size; index++ ) {
-            clib_int v = test[index];
+            int v = test[index];
             assert ( clib_true == exists_c_set ( pSet, &v));
         }
 
@@ -80,8 +80,8 @@ test_c_set(){
             char *string;
         } TEST_INPUT;
 
-        clib_int index = 0;
-        clib_int size = 0;
+        int index = 0;
+        int size = 0;
         char *v;
 
         TEST_INPUT ti[] ={
@@ -94,7 +94,7 @@ test_c_set(){
             {"T for TABLE"},{"U for UMBRELLA"},{"V for VIOLIN"},{"W for WAX"},
             {"X for XEROX"},{"Y for YUMMY"},{"Z for ZEBRA"}
         };
-        clib_set_ptr pSet = new_c_set ( compare_e, delete_e);
+        struct clib_set* pSet = new_c_set ( compare_e, delete_e);
         size = sizeof ( ti ) / sizeof ( ti[0]);
         
         for ( index = 0; index < size; index++ ){

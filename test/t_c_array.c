@@ -1,4 +1,4 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+/** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **
  *  This file is part of clib library
  *  Copyright (C) 2011 Avinash Dongre ( dongre.avinash@gmail.com )
  *
@@ -19,7 +19,7 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **/
 
 #include "c_lib.h"
 
@@ -28,34 +28,34 @@
 #include <stdio.h>
 #include <assert.h>
 
-static clib_int 
-compare_e ( clib_type left, clib_type right ) {
-    clib_int *l = (clib_int*) left;
-    clib_int *r = (clib_int*) right;
+static int 
+compare_e ( void* left, void* right ) {
+    int *l = (int*) left;
+    int *r = (int*) right;
     return *l == *r ;
 }
 static void 
-free_e ( clib_type ptr ) {
+free_e ( void* ptr ) {
     if ( ptr )
         free ( ptr);
 }
 static void
-print_e ( clib_type ptr ){
+print_e ( void* ptr ){
     if ( ptr ) 
-        printf ( "%d\n", *(clib_int*)ptr);
+        printf ( "%d\n", *(int*)ptr);
 }
 static void 
 test_with_int() {
-    clib_int size = 10;
-    clib_int i = 0;
-    clib_int rc ;
-    clib_type p_rv = (clib_type )0;
-    clib_int rv = 0;
-    clib_array_ptr myArray  = new_c_array (8,compare_e,NULL);
+    int size = 10;
+    int i = 0;
+    int rc ;
+    void* p_rv = (void* )0;
+    int rv = 0;
+    struct clib_array* myArray  = new_c_array (8,compare_e,NULL);
     assert ( clib_true == empty_c_array( myArray ));
 
     for ( i = 0; i <= size; i++) {
-        push_back_c_array ( myArray, &i ,sizeof(clib_int));
+        push_back_c_array ( myArray, &i ,sizeof(int));
     }
     assert ( clib_false == empty_c_array( myArray ));
     assert ( size == size_c_array( myArray ));
@@ -100,7 +100,7 @@ test_with_int() {
     free ( p_rv );
 
     i = 900;
-    insert_at_c_array ( myArray, 5, &i, sizeof(clib_int));
+    insert_at_c_array ( myArray, 5, &i, sizeof(int));
     rc = element_at_c_array ( myArray, 5 , &p_rv );
     rv = *(int*)p_rv;
     assert ( rv == i );
@@ -123,17 +123,17 @@ test_with_int() {
 
 static void 
 test_with_pointers() {
-    clib_int size = 10;
-    clib_int i = 0;
-    clib_int *rv, rc ;
-    clib_type p_rv = (clib_type )0;
-    clib_array_ptr myArray  = new_c_array (8,compare_e,free_e);
+    int size = 10;
+    int i = 0;
+    int *rv, rc ;
+    void* p_rv = (void* )0;
+    struct clib_array* myArray  = new_c_array (8,compare_e,free_e);
     assert ( clib_true == empty_c_array( myArray ));
 
     for ( i = 0; i <= size; i++) {
-        clib_int *v = ( clib_int*) malloc ( sizeof(clib_int));
-        memcpy ( v, &i, sizeof(clib_int));
-        push_back_c_array ( myArray, v ,sizeof(clib_int*));
+        int *v = ( int*) malloc ( sizeof(int));
+        memcpy ( v, &i, sizeof(int));
+        push_back_c_array ( myArray, v ,sizeof(int*));
         free ( v );
     }
     assert ( clib_false == empty_c_array( myArray ));
@@ -186,12 +186,12 @@ test_with_pointers() {
 
 static void 
 test_with_strings() {
-    clib_int size = 10;
+    int size = 10;
     char *input_array[11];
-    clib_int i = 0;
+    int i = 0;
     char *rv, rc ;
-    clib_type p_rv = (clib_type )0;
-    clib_array_ptr myArray  = new_c_array (8,compare_e,free_e);
+    void* p_rv = (void* )0;
+    struct clib_array* myArray  = new_c_array (8,compare_e,free_e);
     assert ( clib_true == empty_c_array( myArray ));
 
     input_array[0] = "STRING_0";

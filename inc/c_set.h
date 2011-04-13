@@ -1,4 +1,4 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+/** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **
  *  This file is part of clib library
  *  Copyright (C) 2011 Avinash Dongre ( dongre.avinash@gmail.com )
  *
@@ -19,21 +19,20 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **/
 
 #ifndef _C_SET_H_
 #define _C_SET_H_
 
-typedef struct __c_set {
-    clib_rb_ptr root;
-}clib_set,*clib_set_ptr;
+struct clib_set {
+    struct clib_rb* root;
+};
 
-
-extern clib_set_ptr new_c_set    ( clib_compare fn_c, clib_destroy fn_d);
-extern clib_error   insert_c_set ( clib_set_ptr pSet, clib_type key, clib_size key_size);
-extern clib_bool    exists_c_set ( clib_set_ptr pSet, clib_type key);
-extern clib_error   remove_c_set ( clib_set_ptr pSet, clib_type key);
-extern clib_bool    find_c_set   ( clib_set_ptr pSet, clib_type key, clib_type outKey);
-extern clib_error   delete_c_set ( clib_set_ptr pSet);
+extern struct clib_set* new_c_set( clib_compare fn_c, clib_destroy fn_d);
+extern clib_error   insert_c_set ( struct clib_set* pSet, void* key, size_t key_size);
+extern clib_bool    exists_c_set ( struct clib_set* pSet, void* key);
+extern clib_error   remove_c_set ( struct clib_set* pSet, void* key);
+extern clib_bool    find_c_set   ( struct clib_set* pSet, void* key, void* outKey);
+extern clib_error   delete_c_set ( struct clib_set* pSet);
 
 #endif

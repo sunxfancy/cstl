@@ -1,4 +1,4 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+/** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **
  *  This file is part of clib library
  *  Copyright (C) 2011 Avinash Dongre ( dongre.avinash@gmail.com )
  *
@@ -19,37 +19,34 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **/
 
 #ifndef _C_RB_H_
 #define _C_RB_H_
 
-typedef struct __c_rb_node {
-    struct __c_rb_node *left;
-    struct __c_rb_node *right;
-    struct __c_rb_node *parent;
-    clib_int color; 
+struct clib_rb_node {
+    struct clib_rb_node *left;
+    struct clib_rb_node *right;
+    struct clib_rb_node *parent;
+    int color; 
+    struct clib_object* key;
+    struct clib_object* value; 
+};
 
-    clib_object_ptr key;
-    clib_object_ptr value;
-
- 
-}clib_rb_node,*clib_rb_node_ptr;
-
-typedef struct __c_rb {
-    clib_rb_node_ptr root;
-    clib_rb_node sentinel;
+struct clib_rb {
+    struct clib_rb_node* root;
+    struct clib_rb_node sentinel;
     clib_destroy destruct_k_fn;
 	clib_destroy destruct_v_fn;
     clib_compare compare_fn;
-}clib_rb,*clib_rb_ptr;
+};
 
-extern clib_rb_ptr new_c_rb(clib_compare fn_c,clib_destroy fn_ed, clib_destroy fn_vd );
-extern clib_error  insert_c_rb(clib_rb_ptr pTree, clib_type key, clib_size key_size, clib_type value, clib_size value_size);
-extern clib_rb_node_ptr   find_c_rb (clib_rb_ptr pTree, clib_type key);
-extern clib_rb_node_ptr remove_c_rb (clib_rb_ptr pTree, clib_type key);
-extern clib_error  delete_c_rb (clib_rb_ptr pTree);
-extern clib_bool   empty_c_rb  (clib_rb_ptr pTree);
-extern clib_rb_node_ptr get_next_c_rb (clib_rb_ptr pTree, clib_rb_node_ptr *, clib_rb_node_ptr *);
+extern struct clib_rb* new_c_rb(clib_compare fn_c,clib_destroy fn_ed, clib_destroy fn_vd );
+extern clib_error  insert_c_rb(struct clib_rb* pTree, void* key, size_t key_size, void* value, size_t value_size);
+extern struct clib_rb_node*   find_c_rb (struct clib_rb* pTree, void* key);
+extern struct clib_rb_node* remove_c_rb (struct clib_rb* pTree, void* key);
+extern clib_error  delete_c_rb (struct clib_rb* pTree);
+extern clib_bool   empty_c_rb  (struct clib_rb* pTree);
+extern struct clib_rb_node* get_next_c_rb (struct clib_rb* pTree, struct clib_rb_node**, struct clib_rb_node**);
 
 #endif

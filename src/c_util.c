@@ -1,4 +1,4 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+/** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **
  *  This file is part of clib library
  *  Copyright (C) 2011 Avinash Dongre ( dongre.avinash@gmail.com )
  *
@@ -19,28 +19,28 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **/
 
 #include "c_lib.h"
 #include <string.h>
 #include <stdlib.h>
 
-clib_type 
+void* 
 clib_malloc( size_t size ) {
-    clib_type t = malloc ( size );
+    void* t = malloc ( size );
     if ( !t ) {
-	    return (clib_type )0;
+	    return (void* )0;
     }
     return t;
 }
 void
-clib_free ( clib_type ptr ) {
+clib_free ( void* ptr ) {
     if ( ptr )
 	    free ( ptr );
 }
 
-clib_type  
-clib_memcpy(clib_type  dest, const clib_type  src, size_t count) {
+void*  
+clib_memcpy(void*  dest, const void*  src, size_t count) {
 	char* dst8 = (char*)dest;
 	char* src8 = (char*)src;
 
@@ -51,32 +51,32 @@ clib_memcpy(clib_type  dest, const clib_type  src, size_t count) {
 }
 
 void 
-clib_copy( clib_type destination, clib_type source, size_t size ) {
+clib_copy( void* destination, void* source, size_t size ) {
     clib_memcpy ( (char*)destination, source, size);
 }
 void
-clib_get ( clib_type destination, clib_type source, size_t size) {
+clib_get ( void* destination, void* source, size_t size) {
     clib_memcpy ( destination, (char*)source, size);
 }
 
-clib_object_ptr
-new_clib_object(clib_type inObject, size_t obj_size) {
-    clib_object_ptr tmp = (clib_object_ptr)malloc(sizeof(clib_object));   
+struct clib_object*
+new_clib_object(void* inObject, size_t obj_size) {
+    struct clib_object* tmp = (struct clib_object*)malloc(sizeof(struct clib_object));   
     if ( ! tmp )
-        return clib_object_null;
+        return (struct clib_object*)0;
     tmp->size        = obj_size;
-    tmp->raw_data    = (clib_type)clib_malloc(obj_size);
+    tmp->raw_data    = (void*)clib_malloc(obj_size);
     if ( !tmp->raw_data ) {
         clib_free ( tmp );
-        return clib_object_null;
+        return (struct clib_object*)0;
     }
     memcpy ( tmp->raw_data, inObject, obj_size);
     return tmp;
 }
 
 clib_error
-get_raw_clib_object ( clib_object *inObject, clib_type *elem) {
-    *elem = (clib_type)clib_malloc(inObject->size);
+get_raw_clib_object ( struct clib_object *inObject, void**elem) {
+    *elem = (void*)clib_malloc(inObject->size);
     if ( ! *elem )
         return CLIB_ELEMENT_RETURN_ERROR;
     memcpy ( *elem, inObject->raw_data, inObject->size );
@@ -85,7 +85,7 @@ get_raw_clib_object ( clib_object *inObject, clib_type *elem) {
 }
 
 void 
-delete_clib_object ( clib_object_ptr inObject ) {
+delete_clib_object ( struct clib_object* inObject ) {
     if (inObject) {
         clib_free (inObject->raw_data);
         clib_free (inObject);

@@ -1,4 +1,4 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+/** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **
  *  This file is part of clib library
  *  Copyright (C) 2011 Avinash Dongre ( dongre.avinash@gmail.com )
  *
@@ -19,7 +19,7 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **/
 
 #ifndef _C_LIB_H_
 #define _C_LIB_H_
@@ -31,57 +31,28 @@
 /*       C O M M O N       D E F I N I T O N S                             */
 /* ------------------------------------------------------------------------*/
 
-typedef void*     clib_type;
-typedef void      (*clib_destroy)(clib_type);
-typedef int       clib_int;
-typedef clib_int  (*clib_compare)(clib_type,clib_type);
-typedef void      (*clib_traversal)( clib_type);
-typedef clib_int  clib_error;
-typedef clib_int  clib_bool;
-typedef size_t    clib_size;
+typedef void (*clib_destroy)(void*);
+typedef int  (*clib_compare)(void*,void*);
+typedef void (*clib_traversal)( void*);
 
+typedef int  clib_error;
+typedef int  clib_bool;
 
 #define clib_black           0
 #define clib_red             1
 #define clib_true            1
 #define clib_false           0
-#define clib_null            (clib_type)0
 
 /* ------------------------------------------------------------------------*/
 /*                            P  A  I   R                                  */
 /* ------------------------------------------------------------------------*/
 
-typedef struct __c_lib__object {
-    clib_type raw_data;
+struct clib_object {
+    void* raw_data;
     size_t size;
-} clib_object, *clib_object_ptr;
+};
 
-
-
-typedef struct __c_lib_element {
-    clib_type  elem;
-    clib_size  size;
-}clib_element,*clib_element_ptr;
-
-
-
-typedef struct __c_pair {
-    clib_type key;
-    clib_type value;
-}c_pair;
-
-typedef c_pair         clib_pair;
-typedef c_pair*        clib_pair_ptr;
-
-#define clib_object_null (clib_object_ptr)0
-#define clib_array_null  (clib_array_ptr)0 
-#define clib_slist_node_null (clib_slist_node_ptr)0
-#define clib_pair_null (clib_pair_ptr)0
-#define clib_element_null (clib_element_ptr)0
-#define clib_slist_null (clib_slist_ptr)0
-#define clib_set_null  (clib_set_ptr)0 
-#define clib_rb_node_null  (clib_rb_node_ptr)0 
-#define clib_rb_null        (clib_rb_ptr)0 
+#define clib_slist_null (struct clib_slist*)0
 
 #include "c_array.h"
 #include "c_deque.h"
@@ -95,15 +66,15 @@ typedef c_pair*        clib_pair_ptr;
 /*            H E L P E R       F U N C T I O N S                          */
 /* ------------------------------------------------------------------------*/
 
-extern clib_type clib_malloc(size_t size);
-extern void  clib_free (clib_type ptr);
-extern clib_type  clib_memcpy(clib_type  destination, const clib_type  source, size_t size );
-extern void  clib_copy ( clib_type destination, clib_type source, size_t size );
-extern void  clib_get  ( clib_type destination, clib_type source, size_t size);
+extern void* clib_malloc(size_t size);
+extern void  clib_free (void* ptr);
+extern void*  clib_memcpy(void*  destination, const void*  source, size_t size );
+extern void  clib_copy ( void* destination, void* source, size_t size );
+extern void  clib_get  ( void* destination, void* source, size_t size);
 extern char* clib_strdup ( char *ptr );
 
-extern clib_object_ptr new_clib_object     (clib_type inObject, size_t obj_size);
-extern clib_error      get_raw_clib_object (clib_object *inObject, clib_type *elem);
-extern void            delete_clib_object  (clib_object_ptr inObject );
+extern struct clib_object* new_clib_object     (void* inObject, size_t obj_size);
+extern clib_error      get_raw_clib_object (struct clib_object *inObject, void**elem);
+extern void            delete_clib_object  (struct clib_object* inObject );
 
 #endif

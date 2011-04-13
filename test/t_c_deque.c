@@ -1,4 +1,4 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+/** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **
  *  This file is part of clib library
  *  Copyright (C) 2011 Avinash Dongre ( dongre.avinash@gmail.com )
  *
@@ -19,7 +19,7 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **/
 
 #include "c_lib.h"
 
@@ -28,35 +28,35 @@
 #include <string.h>
 #include <assert.h>
 
-static clib_int 
-compare_e ( clib_type left, clib_type right ) {
-    clib_int *l = (clib_int*) left;
-    clib_int *r = (clib_int*) right;
+static int 
+compare_e ( void* left, void* right ) {
+    int *l = (int*) left;
+    int *r = (int*) right;
     return *l == *r ;
 }
 static void 
-free_e ( clib_type ptr ) {
+free_e ( void* ptr ) {
     if ( ptr )
     free ( ptr);
 }
 
 void 
 test_c_deque() {
-    clib_int flip = 1;
-    clib_int i = 0;
-    clib_int limit = 20;
-    clib_type  element;
-    clib_int j = 0;
+    int flip = 1;
+    int i = 0;
+    int limit = 20;
+    void*  element;
+    int j = 0;
 
-    clib_deque_ptr myDeq = new_c_deque ( 10, compare_e, NULL);
-    assert ( clib_deque_null != myDeq );
+    struct clib_deque* myDeq = new_c_deque ( 10, compare_e, NULL);
+    assert ( (struct clib_deque*)0 != myDeq );
 
     for ( i = 0; i <= limit; i++ ) { 
         if ( flip ) {
-            push_back_c_deque ( myDeq, &i , sizeof(clib_int));
+            push_back_c_deque ( myDeq, &i , sizeof(int));
             flip = 0;
         } else {
-            push_front_c_deque ( myDeq, &i, sizeof(clib_int) );
+            push_front_c_deque ( myDeq, &i, sizeof(int) );
             flip = 1;
         }
     }
@@ -75,13 +75,13 @@ test_c_deque() {
 
     myDeq = new_c_deque ( 10, compare_e, free_e); 
     for ( i = 0; i <= limit; i ++ ) { 
-        clib_int *v = (clib_int*)malloc(sizeof(clib_int ));
-        memcpy ( v, &i, sizeof ( clib_int ));
-        push_back_c_deque ( myDeq, v , sizeof(clib_int*));
+        int *v = (int*)malloc(sizeof(int ));
+        memcpy ( v, &i, sizeof ( int ));
+        push_back_c_deque ( myDeq, v , sizeof(int*));
         free ( v );
     }   
     for ( i = myDeq->head + 1; i < myDeq->tail; i++ ){
-        clib_type elem;
+        void* elem;
         if ( element_at_c_deque( myDeq, i, &elem ) == CLIB_ERROR_SUCCESS ) {
                 assert ( *(int*)elem == j++ );
                 clib_free ( elem );

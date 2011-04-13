@@ -1,4 +1,4 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+/** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **
  *  This file is part of clib library
  *  Copyright (C) 2011 Avinash Dongre ( dongre.avinash@gmail.com )
  *
@@ -19,7 +19,7 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **/
 
 #include "c_lib.h"
 
@@ -29,18 +29,18 @@
 
 #define rb_sentinel &pTree->sentinel
 
-static void debug_verify_properties(clib_rb_ptr);
-static void debug_verify_property_1(clib_rb_ptr,clib_rb_node_ptr);
-static void debug_verify_property_2(clib_rb_ptr,clib_rb_node_ptr);
-static clib_int debug_node_color(clib_rb_ptr,clib_rb_node_ptr n);
-static void debug_verify_property_4(clib_rb_ptr,clib_rb_node_ptr);
-static void debug_verify_property_5(clib_rb_ptr,clib_rb_node_ptr);
-static void debug_verify_property_5_helper(clib_rb_ptr,clib_rb_node_ptr,clib_int,clib_int*);
+static void debug_verify_properties(struct clib_rb*);
+static void debug_verify_property_1(struct clib_rb*,struct clib_rb_node*);
+static void debug_verify_property_2(struct clib_rb*,struct clib_rb_node*);
+static int debug_node_color(struct clib_rb*,struct clib_rb_node* n);
+static void debug_verify_property_4(struct clib_rb*,struct clib_rb_node*);
+static void debug_verify_property_5(struct clib_rb*,struct clib_rb_node*);
+static void debug_verify_property_5_helper(struct clib_rb*,struct clib_rb_node*,int,int*);
 
 
 static void
-__left_rotate(clib_rb_ptr pTree, clib_rb_node_ptr x){
-    clib_rb_node_ptr y;
+__left_rotate(struct clib_rb* pTree, struct clib_rb_node* x){
+    struct clib_rb_node* y;
     y = x->right;
     x->right = y->left;
     if (y->left != rb_sentinel)
@@ -60,8 +60,8 @@ __left_rotate(clib_rb_ptr pTree, clib_rb_node_ptr x){
         x->parent = y;
 }
 static void
-__right_rotate(clib_rb_ptr pTree, clib_rb_node_ptr x) {
-    clib_rb_node_ptr y = x->left;
+__right_rotate(struct clib_rb* pTree, struct clib_rb_node* x) {
+    struct clib_rb_node* y = x->left;
     x->left = y->right;
     if (y->right != rb_sentinel)
         y->right->parent = x;
@@ -80,12 +80,12 @@ __right_rotate(clib_rb_ptr pTree, clib_rb_node_ptr x) {
         x->parent = y;
 }
 
-clib_rb_ptr
+struct clib_rb*
 new_c_rb(clib_compare fn_c,clib_destroy fn_ed, clib_destroy fn_vd ){
 
-    clib_rb_ptr pTree = (clib_rb_ptr)clib_malloc(sizeof(clib_rb));
-    if ( pTree == clib_rb_null )
-        return clib_rb_null;
+    struct clib_rb* pTree = (struct clib_rb*)clib_malloc(sizeof(struct clib_rb));
+    if ( pTree == (struct clib_rb*)0 )
+        return (struct clib_rb*)0;
 
     pTree->compare_fn           = fn_c;
     pTree->destruct_k_fn        = fn_ed;
@@ -93,16 +93,16 @@ new_c_rb(clib_compare fn_c,clib_destroy fn_ed, clib_destroy fn_vd ){
     pTree->root                 = rb_sentinel;
     pTree->sentinel.left        = rb_sentinel;
     pTree->sentinel.right       = rb_sentinel;
-    pTree->sentinel.parent      = clib_rb_node_null;
+    pTree->sentinel.parent      = (struct clib_rb_node*)0 ;
     pTree->sentinel.color       = clib_black;
 
     return pTree;
 }
 static void
-__rb_insert_fixup( clib_rb_ptr pTree, clib_rb_node_ptr x ) {
+__rb_insert_fixup( struct clib_rb* pTree, struct clib_rb_node* x ) {
     while (x != pTree->root && x->parent->color == clib_red) {
         if (x->parent == x->parent->parent->left) {
-            clib_rb_node_ptr y = x->parent->parent->right;
+            struct clib_rb_node* y = x->parent->parent->right;
             if (y->color == clib_red) {
                 x->parent->color         = clib_black;
                 y->color                 = clib_black;
@@ -118,7 +118,7 @@ __rb_insert_fixup( clib_rb_ptr pTree, clib_rb_node_ptr x ) {
                 __right_rotate (pTree, x->parent->parent);
             }
         } else {
-            clib_rb_node_ptr y = x->parent->parent->left;
+            struct clib_rb_node* y = x->parent->parent->left;
             if (y->color == clib_red) {
                 x->parent->color         = clib_black;
                 y->color                 = clib_black;
@@ -137,13 +137,13 @@ __rb_insert_fixup( clib_rb_ptr pTree, clib_rb_node_ptr x ) {
     }
     pTree->root->color = clib_black;
 }
-clib_rb_node_ptr   
-find_c_rb (clib_rb_ptr pTree, clib_type key) {
-    clib_rb_node_ptr x = pTree->root;
+struct clib_rb_node*   
+find_c_rb (struct clib_rb* pTree, void* key) {
+    struct clib_rb_node* x = pTree->root;
 
     while (x != rb_sentinel) {
-        clib_int c = 0;
-        clib_type cur_key ;
+        int c = 0;
+        void* cur_key ;
         get_raw_clib_object ( x->key, &cur_key );
         c = pTree->compare_fn (key, cur_key);
         clib_free ( cur_key );
@@ -154,19 +154,21 @@ find_c_rb (clib_rb_ptr pTree, clib_type key) {
         }
     }
     if ( x == rb_sentinel )
-        return clib_rb_node_null;
+        return (struct clib_rb_node*)0 ;
 
     return x;
 }
 
 clib_error  
-insert_c_rb(clib_rb_ptr pTree, clib_type k, clib_size key_size, clib_type v, clib_size value_size) {
+insert_c_rb(struct clib_rb* pTree, void* k, size_t key_size, void* v, size_t value_size) {
 
     clib_error rc = CLIB_ERROR_SUCCESS;
-    clib_rb_node_ptr x,y,z;
+    struct clib_rb_node* x;
+	struct clib_rb_node* y;
+	struct clib_rb_node* z;
 
-    x = (clib_rb_node_ptr)clib_malloc (sizeof(clib_rb_node));
-    if ( x == clib_rb_node_null ) 
+    x = (struct clib_rb_node*)clib_malloc (sizeof(struct clib_rb_node));
+    if ( x == (struct clib_rb_node*)0  ) 
         return CLIB_ERROR_MEMORY;
 
     x->left    = rb_sentinel;
@@ -177,15 +179,16 @@ insert_c_rb(clib_rb_ptr pTree, clib_type k, clib_size key_size, clib_type v, cli
     if ( v ) {
         x->value   = new_clib_object ( v, value_size );
     } else {
-        x->value =  clib_object_null;
+        x->value =  (struct clib_object*)0;
     }
 
     y = pTree->root;
-    z = clib_rb_node_null;
+    z = (struct clib_rb_node*)0 ;
 
     while (y != rb_sentinel) {
-        clib_int c = 0;
-        clib_type cur_key,new_key ;
+        int c = 0;
+        void* cur_key;
+		void* new_key;
 
         get_raw_clib_object ( y->key, &cur_key );
         get_raw_clib_object ( x->key, &new_key );
@@ -205,8 +208,9 @@ insert_c_rb(clib_rb_ptr pTree, clib_type k, clib_size key_size, clib_type v, cli
     }    
     x->parent = z;
     if (z) {
-        clib_int c = 0;
-        clib_type cur_key,new_key ;
+        int c = 0;
+        void* cur_key;
+		void *new_key;
         get_raw_clib_object ( z->key, &cur_key );
         get_raw_clib_object ( x->key, &new_key );
 
@@ -228,10 +232,10 @@ insert_c_rb(clib_rb_ptr pTree, clib_type k, clib_size key_size, clib_type v, cli
     return rc;
 }
 static void
-__rb_remove_fixup( clib_rb_ptr pTree, clib_rb_node_ptr x ) {
+__rb_remove_fixup( struct clib_rb* pTree, struct clib_rb_node* x ) {
     while (x != pTree->root && x->color == clib_black) {
         if (x == x->parent->left) {
-            clib_rb_node_ptr w = x->parent->right;
+            struct clib_rb_node* w = x->parent->right;
             if (w->color == clib_red) {
                 w->color         = clib_black;
                 x->parent->color = clib_red;
@@ -255,7 +259,7 @@ __rb_remove_fixup( clib_rb_ptr pTree, clib_rb_node_ptr x ) {
                 x = pTree->root;
             }
         } else {
-            clib_rb_node_ptr w = x->parent->left;
+            struct clib_rb_node* w = x->parent->left;
             if (w->color == clib_red) {
                 w->color = clib_black;
                 x->parent->color = clib_red;
@@ -283,10 +287,10 @@ __rb_remove_fixup( clib_rb_ptr pTree, clib_rb_node_ptr x ) {
     x->color = clib_black;
 }
 
-static clib_rb_node_ptr  
-__remove_c_rb(clib_rb_ptr pTree, clib_rb_node_ptr z ) {
-    clib_rb_node_ptr x = clib_rb_node_null;
-    clib_rb_node_ptr y = clib_rb_node_null;
+static struct clib_rb_node*  
+__remove_c_rb(struct clib_rb* pTree, struct clib_rb_node* z ) {
+    struct clib_rb_node* x = (struct clib_rb_node*)0 ;
+    struct clib_rb_node* y = (struct clib_rb_node*)0 ;
 
     if (z->left == rb_sentinel || z->right == rb_sentinel)
         y = z;
@@ -311,7 +315,7 @@ __remove_c_rb(clib_rb_ptr pTree, clib_rb_node_ptr z ) {
     else
         pTree->root = x;
     if (y != z) {
-        clib_object_ptr tmp;
+        struct clib_object* tmp;
         tmp    = z->key;
         z->key = y->key;
         y->key = tmp;
@@ -327,14 +331,14 @@ __remove_c_rb(clib_rb_ptr pTree, clib_rb_node_ptr z ) {
     return y;
 }
 
-clib_rb_node_ptr
-remove_c_rb (clib_rb_ptr pTree, clib_type key) {
-    clib_rb_node_ptr z = clib_rb_node_null;
+struct clib_rb_node*
+remove_c_rb (struct clib_rb* pTree, void* key) {
+    struct clib_rb_node* z = (struct clib_rb_node*)0 ;
 
     z = pTree->root;
     while (z != rb_sentinel) {
-        clib_int c = 0;
-        clib_type cur_key;
+        int c = 0;
+        void* cur_key;
         get_raw_clib_object ( z->key, &cur_key );
         c = pTree->compare_fn (key, cur_key);
         clib_free ( cur_key );
@@ -346,13 +350,14 @@ remove_c_rb (clib_rb_ptr pTree, clib_type key) {
         }
     }
     if (z == rb_sentinel)
-        return clib_rb_node_null;
+        return (struct clib_rb_node*)0 ;
     return __remove_c_rb(pTree, z );
 }
 static void
-__delete_c_rb_node (clib_rb_ptr pTree, clib_rb_node_ptr x ) {
+__delete_c_rb_node (struct clib_rb* pTree, struct clib_rb_node* x ) {
 
-    clib_type key, value;
+    void* key;
+	void* value;
 
     if ( pTree->destruct_k_fn ) {
         get_raw_clib_object ( x->key, &key );
@@ -370,10 +375,10 @@ __delete_c_rb_node (clib_rb_ptr pTree, clib_rb_node_ptr x ) {
 }
 
 clib_error  
-delete_c_rb(clib_rb_ptr pTree) {
+delete_c_rb(struct clib_rb* pTree) {
 
     clib_error rc = CLIB_ERROR_SUCCESS;
-    clib_rb_node_ptr z = pTree->root;
+    struct clib_rb_node* z = pTree->root;
 
     while (z != rb_sentinel) {
         if (z->left != rb_sentinel)
@@ -402,14 +407,14 @@ delete_c_rb(clib_rb_ptr pTree) {
 }
 
 clib_bool 
-empty_c_rb(clib_rb_ptr pTree) {
+empty_c_rb(struct clib_rb* pTree) {
     if ( pTree->root != rb_sentinel )
         return clib_true;
     return clib_false;
 }
-/*clib_rb_node_ptr
-get_next_c_rb(clib_rb_ptr pTree, clib_rb_node_ptr *current, clib_rb_node_ptr *pre) {
-    clib_rb_node_ptr prev_current;
+/*struct clib_rb_node*
+get_next_c_rb(struct clib_rb* pTree, struct clib_rb_node**current, struct clib_rb_node**pre) {
+    struct clib_rb_node* prev_current;
     while((*current) != rb_sentinel) {
         if((*current)->left == rb_sentinel){
             prev_current = (*current);
@@ -430,32 +435,32 @@ get_next_c_rb(clib_rb_ptr pTree, clib_rb_node_ptr *current, clib_rb_node_ptr *pr
             }
         } 
     } 
-    return clib_rb_node_null;
+    return (struct clib_rb_node*)0 ;
 }*/
 
-void debug_verify_properties(clib_rb_ptr t) {
+void debug_verify_properties(struct clib_rb* t) {
     debug_verify_property_1(t,t->root);
     debug_verify_property_2(t,t->root);
     debug_verify_property_4(t,t->root);
     debug_verify_property_5(t,t->root);
 }
 
-void debug_verify_property_1(clib_rb_ptr pTree,clib_rb_node_ptr n) {
+void debug_verify_property_1(struct clib_rb* pTree,struct clib_rb_node* n) {
     assert(debug_node_color(pTree,n) == clib_red || debug_node_color(pTree,n) == clib_black);
     if (n == rb_sentinel) return;
     debug_verify_property_1(pTree,n->left);
     debug_verify_property_1(pTree,n->right);
 }
 
-void debug_verify_property_2(clib_rb_ptr pTree,clib_rb_node_ptr root) {
+void debug_verify_property_2(struct clib_rb* pTree,struct clib_rb_node* root) {
     assert(debug_node_color(pTree,root) == clib_black);
 }
 
-clib_int debug_node_color(clib_rb_ptr pTree,clib_rb_node_ptr n) {
+int debug_node_color(struct clib_rb* pTree,struct clib_rb_node* n) {
     return n == rb_sentinel ? clib_black : n->color;
 }
 
-void debug_verify_property_4(clib_rb_ptr pTree,clib_rb_node_ptr n) {
+void debug_verify_property_4(struct clib_rb* pTree,struct clib_rb_node* n) {
     if (debug_node_color(pTree,n) == clib_red) {
         assert (debug_node_color(pTree,n->left)   == clib_black);
         assert (debug_node_color(pTree,n->right)  == clib_black);
@@ -466,12 +471,12 @@ void debug_verify_property_4(clib_rb_ptr pTree,clib_rb_node_ptr n) {
     debug_verify_property_4(pTree,n->right);
 }
 
-void debug_verify_property_5(clib_rb_ptr pTree,clib_rb_node_ptr root) {
-    clib_int black_count_path = -1;
+void debug_verify_property_5(struct clib_rb* pTree,struct clib_rb_node* root) {
+    int black_count_path = -1;
     debug_verify_property_5_helper(pTree,root, 0, &black_count_path);
 }
 
-void debug_verify_property_5_helper(clib_rb_ptr pTree,clib_rb_node_ptr n, clib_int black_count, clib_int* path_black_count) {
+void debug_verify_property_5_helper(struct clib_rb* pTree,struct clib_rb_node* n, int black_count, int* path_black_count) {
     if (debug_node_color(pTree,n) == clib_black) {
         black_count++;
     }

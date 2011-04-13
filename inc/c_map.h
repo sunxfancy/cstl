@@ -1,4 +1,4 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+/** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **
  *  This file is part of clib library
  *  Copyright (C) 2011 Avinash Dongre ( dongre.avinash@gmail.com )
  *
@@ -19,21 +19,21 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **/
 
 #ifndef _C_MAP_H_
 #define _C_MAP_H_
 
-typedef struct __c_map {
-    clib_rb_ptr root;
-}clib_map,*clib_map_ptr;
-#define clib_map_null  (clib_map_ptr)0 
+struct clib_map {
+    struct clib_rb* root;
+};
 
-extern clib_map_ptr new_c_map    ( clib_compare fn_c_k, clib_destroy fn_k_d, clib_destroy fn_v_d);
-extern clib_error   insert_c_map ( clib_map_ptr pMap, clib_type key, clib_size key_size, clib_type value,  clib_size value_size);
-extern clib_bool    exists_c_map ( clib_map_ptr pMap, clib_type key);
-extern clib_error   remove_c_map ( clib_map_ptr pMap, clib_type key);
-extern clib_bool    find_c_map   ( clib_map_ptr pMap, clib_type key, clib_type *value);
-extern clib_error   delete_c_map ( clib_map_ptr pMap);
+
+extern struct clib_map* new_c_map    ( clib_compare fn_c_k, clib_destroy fn_k_d, clib_destroy fn_v_d);
+extern clib_error   insert_c_map ( struct clib_map* pMap, void* key, size_t key_size, void* value,  size_t value_size);
+extern clib_bool    exists_c_map ( struct clib_map* pMap, void* key);
+extern clib_error   remove_c_map ( struct clib_map* pMap, void* key);
+extern clib_bool    find_c_map   ( struct clib_map* pMap, void* key, void**value);
+extern clib_error   delete_c_map ( struct clib_map* pMap);
 
 #endif

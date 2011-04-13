@@ -1,4 +1,4 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+/** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **
  *  This file is part of clib library
  *  Copyright (C) 2011 Avinash Dongre ( dongre.avinash@gmail.com )
  *
@@ -19,69 +19,69 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **/
 
 #include "c_lib.h"
 
 #include <stdio.h>
 
-clib_set_ptr 
+struct clib_set* 
 new_c_set ( clib_compare fn_c, clib_destroy fn_d) {
 
-    clib_set_ptr pSet  =  (clib_set_ptr)clib_malloc(sizeof(clib_set));
-    if (pSet == clib_set_null)
-        return clib_set_null;
+    struct clib_set* pSet  =  (struct clib_set*)clib_malloc(sizeof(struct clib_set));
+    if (pSet == (struct clib_set*)0 )
+        return (struct clib_set*)0 ;
 
-    pSet->root  = new_c_rb (fn_c, fn_d, clib_null);
-    if (pSet->root == clib_rb_null)
-        return clib_set_null;
+    pSet->root  = new_c_rb (fn_c, fn_d, (void*)0);
+    if (pSet->root == (struct clib_rb*)0)
+        return (struct clib_set*)0 ;
 
     return pSet;
 }
 clib_error   
-insert_c_set (clib_set_ptr pSet, clib_type key, clib_size key_size) {
-    if (pSet == clib_set_null)
+insert_c_set (struct clib_set* pSet, void* key, size_t key_size) {
+    if (pSet == (struct clib_set*)0 )
         return CLIB_SET_NOT_INITIALIZED;
 
-    return insert_c_rb ( pSet->root, key, key_size, clib_null, 0);
+    return insert_c_rb ( pSet->root, key, key_size, (void*)0, 0);
 }
 clib_bool    
-exists_c_set ( clib_set_ptr pSet, clib_type key) {
+exists_c_set ( struct clib_set* pSet, void* key) {
     clib_bool found = clib_false;
-    clib_rb_node_ptr node;
+    struct clib_rb_node* node;
 
-    if (pSet == clib_set_null)
+    if (pSet == (struct clib_set*)0 )
         return clib_false;
     
     node = find_c_rb ( pSet->root, key);
-    if ( node != clib_rb_node_null ) {
+    if ( node != (struct clib_rb_node*)0  ) {
         return clib_true;
     }
     return found;    
 }
 clib_error   
-remove_c_set ( clib_set_ptr pSet, clib_type key) {
+remove_c_set ( struct clib_set* pSet, void* key) {
     clib_error rc = CLIB_ERROR_SUCCESS;
-    clib_rb_node_ptr node;
-    if (pSet == clib_set_null)
+    struct clib_rb_node* node;
+    if (pSet == (struct clib_set*)0 )
         return CLIB_SET_NOT_INITIALIZED;
 
     node = remove_c_rb ( pSet->root, key );
-    if ( node != clib_rb_node_null ) {
+    if ( node != (struct clib_rb_node*)0  ) {
         /*clib_free ( node->raw_data.key);
         clib_free ( node );*/
     }
     return rc;
 }
 clib_bool    
-find_c_set ( clib_set_ptr pSet, clib_type key, clib_type outKey) {
-    clib_rb_node_ptr node;
+find_c_set ( struct clib_set* pSet, void* key, void* outKey) {
+    struct clib_rb_node* node;
 
-    if (pSet == clib_set_null)
+    if (pSet == (struct clib_set*)0 )
         return clib_false;
 
     node = find_c_rb ( pSet->root, key);
-    if ( node == clib_rb_node_null ) 
+    if ( node == (struct clib_rb_node*)0  ) 
         return clib_false;
 
     get_raw_clib_object ( node->key, outKey );
@@ -91,9 +91,9 @@ find_c_set ( clib_set_ptr pSet, clib_type key, clib_type outKey) {
 }
 
 clib_error    
-delete_c_set ( clib_set_ptr x) {
+delete_c_set ( struct clib_set* x) {
     clib_error rc = CLIB_ERROR_SUCCESS;
-    if ( x != clib_set_null ){
+    if ( x != (struct clib_set*)0  ){
         rc = delete_c_rb ( x->root );
         clib_free ( x );
     }

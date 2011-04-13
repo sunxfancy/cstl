@@ -1,4 +1,4 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+/** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **
  *  This file is part of clib library
  *  Copyright (C) 2011 Avinash Dongre ( dongre.avinash@gmail.com )
  *
@@ -19,40 +19,40 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **/
 
 #include "c_lib.h"
 #include <string.h>
 #include <assert.h>
 
-static clib_int
-compare_e ( clib_type left, clib_type right ) {
+static int
+compare_e ( void* left, void* right ) {
     return strcmp ( (const char *)left, (const char *) right );
 }
 char *char_value[] = {  "A","B","C","D","E","F","G","H","I","J","K","L","M"
                         "N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
-clib_int int_value[] = { 1,2,3,4,5,6,7,8,9,10,
+int int_value[] = { 1,2,3,4,5,6,7,8,9,10,
                       11,12,13,14,15,16,17,18,19,20,
                       21,22,23,24,25,26};
 
 static void 
-insert_all ( clib_map_ptr myMap) {
-    clib_int size = sizeof(char_value)/sizeof(char_value[0]);
-    clib_int i = 0;
+insert_all ( struct clib_map* myMap) {
+    int size = sizeof(char_value)/sizeof(char_value[0]);
+    int i = 0;
     for ( i = 0; i < size; i++ ) {
         char *key = clib_strdup( char_value[i]);
-        clib_int key_length = (clib_int)strlen ( key ) + 1;
-        clib_int value = int_value[i];
-        insert_c_map ( myMap, key, key_length, &value, sizeof(clib_int)); 
+        int key_length = (int)strlen ( key ) + 1;
+        int value = int_value[i];
+        insert_c_map ( myMap, key, key_length, &value, sizeof(int)); 
         clib_free ( key );
     }
 }
 static void 
-check_exists_all( clib_map_ptr myMap) {
-    clib_int size = sizeof(char_value)/sizeof(char_value[0]);
-    clib_int i = 0;
+check_exists_all( struct clib_map* myMap) {
+    int size = sizeof(char_value)/sizeof(char_value[0]);
+    int i = 0;
     for ( i = 0; i < size; i++ ) {
-        clib_type value ;
+        void* value ;
         assert ( clib_true == exists_c_map ( myMap, char_value[i]));
         assert ( clib_true == find_c_map( myMap, char_value[i], &value));
         assert ( *(int*)value == int_value[i]);
@@ -61,7 +61,7 @@ check_exists_all( clib_map_ptr myMap) {
 }
 
 static void 
-remove_some_exist(clib_map_ptr myMap) {
+remove_some_exist(struct clib_map* myMap) {
     assert ( CLIB_ERROR_SUCCESS == remove_c_map ( myMap, "A"));
     assert ( clib_false == exists_c_map ( myMap, "A"));
 
@@ -75,26 +75,26 @@ remove_some_exist(clib_map_ptr myMap) {
     assert ( clib_false == exists_c_map ( myMap, "H"));
 }
 static void
-add_removed_check_all(clib_map_ptr myMap) {
+add_removed_check_all(struct clib_map* myMap) {
 
     char *key       = clib_strdup ("A");
-    clib_int  key_length = (clib_int)strlen ( key ) + 1;
-    insert_c_map ( myMap, key, key_length , &int_value[0], sizeof(clib_int)); 
+    int  key_length = (int)strlen ( key ) + 1;
+    insert_c_map ( myMap, key, key_length , &int_value[0], sizeof(int)); 
     clib_free ( key );
 
     key        = clib_strdup ("X");
-    key_length = (clib_int)strlen ( key ) + 1;
-    insert_c_map ( myMap, key, key_length, &int_value[22], sizeof(clib_int)); 
+    key_length = (int)strlen ( key ) + 1;
+    insert_c_map ( myMap, key, key_length, &int_value[22], sizeof(int)); 
     clib_free ( key );
 
     key        = clib_strdup ("Z");
-    key_length = (clib_int)strlen ( key ) + 1;
-    insert_c_map ( myMap, key, key_length, &int_value[24], sizeof(clib_int)); 
+    key_length = (int)strlen ( key ) + 1;
+    insert_c_map ( myMap, key, key_length, &int_value[24], sizeof(int)); 
     clib_free ( key );
 
     key        = clib_strdup ("H");
-    key_length = (clib_int)strlen ( key ) + 1;
-    insert_c_map ( myMap, key, key_length, &int_value[7 ], sizeof(clib_int)); 
+    key_length = (int)strlen ( key ) + 1;
+    insert_c_map ( myMap, key, key_length, &int_value[7 ], sizeof(int)); 
     clib_free ( key );
 
     check_exists_all(myMap);
@@ -102,7 +102,7 @@ add_removed_check_all(clib_map_ptr myMap) {
 
 void 
 test_c_map() {
-    clib_map_ptr myMap = new_c_map ( compare_e, NULL, NULL);
+    struct clib_map* myMap = new_c_map ( compare_e, NULL, NULL);
     insert_all(myMap);
     check_exists_all(myMap);   
     remove_some_exist(myMap);
