@@ -47,6 +47,8 @@ extern struct clib_rb_node*   find_c_rb (struct clib_rb* pTree, void* key);
 extern struct clib_rb_node* remove_c_rb (struct clib_rb* pTree, void* key);
 extern clib_error  delete_c_rb (struct clib_rb* pTree);
 extern clib_bool   empty_c_rb  (struct clib_rb* pTree);
-extern struct clib_rb_node* get_next_c_rb (struct clib_rb* pTree, struct clib_rb_node**, struct clib_rb_node**);
+
+extern struct clib_rb_node *minimum_c_rb( struct clib_rb* pTree, struct clib_rb_node* x );
+extern struct clib_rb_node* tree_successor(struct clib_rb* pTree, struct clib_rb_node* x);
 
 #endif

@@ -30,7 +30,7 @@ struct clib_map*
 new_c_map ( clib_compare fn_c_k, clib_destroy fn_k_d,  
             clib_destroy fn_v_d) {
 
-    struct clib_map* pMap  =  (struct clib_map*)clib_malloc(sizeof(struct clib_map));
+    struct clib_map* pMap  =  (struct clib_map*)malloc(sizeof(struct clib_map));
     if (pMap == (struct clib_map*)0)
         return (struct clib_map*)0;
 
@@ -72,14 +72,14 @@ remove_c_map ( struct clib_map* pMap, void* key) {
     if ( node != (struct clib_rb_node*)0  ) {
         void* removed_node;
         get_raw_clib_object ( node->key, &removed_node );
-        clib_free ( removed_node);
+        free ( removed_node);
         delete_clib_object ( node->key );
 
         get_raw_clib_object ( node->value, &removed_node );
-        clib_free ( removed_node);
+        free ( removed_node);
         delete_clib_object ( node->value);
 
-        clib_free ( node );
+        free ( node );
     }
     return rc;
 }
@@ -105,7 +105,60 @@ delete_c_map ( struct clib_map* x) {
     clib_error rc = CLIB_ERROR_SUCCESS;
     if ( x != (struct clib_map*)0 ){
         rc = delete_c_rb ( x->root );
-        clib_free ( x );
+        free ( x );
     }
     return rc;
+}
+
+static struct clib_rb_node *
+minimum_c_map( struct clib_map *x ) {
+	return minimum_c_rb( x->root, x->root->root);
+}
+
+static struct clib_object* 
+get_next_c_map( struct clib_iterator* pIterator ) {
+	if ( ! pIterator->pCurrentElement ) {
+		pIterator->pCurrentElement = minimum_c_map(pIterator->pContainer);
+	}else {
+		struct clib_map *x = (struct clib_map*)pIterator->pContainer;
+		pIterator->pCurrentElement = tree_successor( x->root, pIterator->pCurrentElement);			              
+	}
+	if ( ! pIterator->pCurrentElement)
+		return (struct clib_object*)0;
+
+	return ((struct clib_rb_node*)pIterator->pCurrentElement)->value;
+}
+static void* 
+get_value_c_map( void* pObject) {
+	void* elem;
+	get_raw_clib_object ( pObject, &elem );
+	return elem;
+}
+static void
+replace_value_c_map(struct clib_iterator *pIterator, void* elem, size_t elem_size) {
+	struct clib_map*  pMap = (struct clib_map*)pIterator->pContainer;
+	
+	if ( pMap->root->destruct_v_fn ) {
+		void* old_element;
+		get_raw_clib_object ( pIterator->pCurrentElement, &old_element );
+		pMap->root->destruct_v_fn(old_element);
+    }
+	replace_raw_clib_object(((struct clib_rb_node*)pIterator->pCurrentElement)->value, elem, elem_size);
+}
+
+
+struct clib_iterator* 
+new_iterator_c_map(struct clib_map* pMap) {
+	struct clib_iterator *itr = ( struct clib_iterator*) malloc ( sizeof ( struct clib_iterator));
+	itr->get_next     = get_next_c_map;
+	itr->get_value    = get_value_c_map;
+	itr->replace_value = replace_value_c_map;
+	itr->pContainer   = pMap;
+	itr->pCurrent     = 0;
+	itr->pCurrentElement = (void*)0;
+	return itr;
+}
+void
+delete_iterator_c_map ( struct clib_iterator* pItr) {
+	free ( pItr );
 }

@@ -96,8 +96,8 @@ __find_c_rb ( struct clib_rb* tree, clib_compare fn_c, void* key ) {
     void* current_key = (void*)0;
     int compare_result = 0;
 
-    current_key = (void*)clib_malloc ( tree->size_of_key);
-    clib_memcpy ( current_key, key, tree->size_of_key);
+    current_key = (void*)malloc ( tree->size_of_key);
+    memcpy ( current_key, key, tree->size_of_key);
 
     compare_result = (fn_c)(current_key, node->raw_data.key);
     while ((node != rb_sentinel) && (compare_result = (fn_c)(current_key, node->raw_data.key)) != 0 ){
@@ -107,7 +107,7 @@ __find_c_rb ( struct clib_rb* tree, clib_compare fn_c, void* key ) {
             node = node->right;
         }
     } 
-    clib_free ( current_key );
+    free ( current_key );
     return node;
 }
 struct clib_rb_node*
@@ -218,8 +218,8 @@ test_c_rb() {
         size_after_delete = (sizeof(ts_delete_leaf_13)/sizeof(TS));
         node = remove_c_rb( tree, &i);
         if ( node != (struct clib_rb_node*)0  ) {
-            clib_free ( node->raw_data.key);
-            clib_free ( node);
+            free ( node->raw_data.key);
+            free ( node);
         }
         test_all_elements(tree, ts_delete_leaf_13, size_after_delete);
     }
@@ -228,8 +228,8 @@ test_c_rb() {
         size_after_delete = (sizeof(ts_delete_9)/sizeof(TS));
         node = remove_c_rb( tree, &i);
         if ( node != (struct clib_rb_node*)0  ) {
-            clib_free ( node->raw_data.key);
-            clib_free ( node);
+            free ( node->raw_data.key);
+            free ( node);
         }
         test_all_elements(tree, ts_delete_9, size_after_delete);
     }
@@ -238,8 +238,8 @@ test_c_rb() {
         size_after_delete = (sizeof(ts_delete_15)/sizeof(TS));
         node = remove_c_rb( tree, &i);
         if ( node != (struct clib_rb_node*)0  ) {
-            clib_free ( node->raw_data.key);
-            clib_free ( node);
+            free ( node->raw_data.key);
+            free ( node);
         }
         test_all_elements(tree, ts_delete_15, size_after_delete);
     }

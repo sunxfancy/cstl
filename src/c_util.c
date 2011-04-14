@@ -25,38 +25,13 @@
 #include <string.h>
 #include <stdlib.h>
 
-void* 
-clib_malloc( size_t size ) {
-    void* t = malloc ( size );
-    if ( !t ) {
-	    return (void* )0;
-    }
-    return t;
-}
-void
-clib_free ( void* ptr ) {
-    if ( ptr )
-	    free ( ptr );
-}
-
-void*  
-clib_memcpy(void*  dest, const void*  src, size_t count) {
-	char* dst8 = (char*)dest;
-	char* src8 = (char*)src;
-
-	while (count--) {
-		*dst8++ = *src8++;
-	}
-	return dest;
-}
-
 void 
 clib_copy( void* destination, void* source, size_t size ) {
-    clib_memcpy ( (char*)destination, source, size);
+    memcpy ( (char*)destination, source, size);
 }
 void
 clib_get ( void* destination, void* source, size_t size) {
-    clib_memcpy ( destination, (char*)source, size);
+    memcpy ( destination, (char*)source, size);
 }
 
 struct clib_object*
@@ -65,9 +40,9 @@ new_clib_object(void* inObject, size_t obj_size) {
     if ( ! tmp )
         return (struct clib_object*)0;
     tmp->size        = obj_size;
-    tmp->raw_data    = (void*)clib_malloc(obj_size);
+    tmp->raw_data    = (void*)malloc(obj_size);
     if ( !tmp->raw_data ) {
-        clib_free ( tmp );
+        free ( tmp );
         return (struct clib_object*)0;
     }
     memcpy ( tmp->raw_data, inObject, obj_size);
@@ -76,19 +51,26 @@ new_clib_object(void* inObject, size_t obj_size) {
 
 clib_error
 get_raw_clib_object ( struct clib_object *inObject, void**elem) {
-    *elem = (void*)clib_malloc(inObject->size);
+    *elem = (void*)malloc(inObject->size);
     if ( ! *elem )
         return CLIB_ELEMENT_RETURN_ERROR;
     memcpy ( *elem, inObject->raw_data, inObject->size );
 
     return CLIB_ERROR_SUCCESS;
 }
+void 
+replace_raw_clib_object(struct clib_object* current_object,void* elem, size_t elem_size) {
+	free (current_object->raw_data);
+	current_object->raw_data = (void*)malloc(elem_size);
+	memcpy ( current_object->raw_data, elem, elem_size);
+}
+
 
 void 
 delete_clib_object ( struct clib_object* inObject ) {
     if (inObject) {
-        clib_free (inObject->raw_data);
-        clib_free (inObject);
+        free (inObject->raw_data);
+        free (inObject);
     }
 }
 

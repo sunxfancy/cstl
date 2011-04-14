@@ -258,9 +258,76 @@ test_with_strings() {
 
     delete_c_array ( myArray );
 }
+
+static void 
+print_using_iterators(struct clib_array* myArray) {
+	struct clib_iterator *myItr;
+	struct clib_object *pElement;
+	printf ( "------------------------------------------------\n");
+	myItr     = new_iterator_c_array (myArray);
+	pElement  = myItr->get_next(myItr);
+	while ( pElement ) {
+		void* value = myItr->get_value(pElement);
+		printf ( "%d\n", *(int*)value);
+		free ( value );
+		pElement = myItr->get_next(myItr);
+	}
+	delete_iterator_c_array( myItr );
+}
+
+static void 
+replace_values_using_iterators(struct clib_array* myArray) {
+	struct clib_iterator *myItr;
+	struct clib_object *pElement;
+	printf ( "------------------------------------------------\n");
+	myItr     = new_iterator_c_array (myArray);
+	pElement  = myItr->get_next(myItr);
+	while ( pElement ) {
+		void* old_value = myItr->get_value(pElement);
+		int new_value = *(int*)old_value;
+		new_value = new_value * 2;
+		myItr->replace_value( myItr, &new_value, sizeof(new_value));
+		free ( old_value );
+
+		pElement = myItr->get_next(myItr);
+	}
+	delete_iterator_c_array( myItr );
+}
+static struct clib_array*
+create_array() {
+    int size = 10;
+    int i = 0;
+    int rc ;
+    void* p_rv = (void* )0;
+    int rv = 0;
+
+    struct clib_array* myArray  = new_c_array (8,compare_e,NULL);
+    assert ( clib_true == empty_c_array( myArray ));
+
+    for ( i = 0; i <= size; i++) {
+        push_back_c_array ( myArray, &i ,sizeof(int));
+    }
+    assert ( clib_false == empty_c_array( myArray ));
+    assert ( size == size_c_array( myArray ));
+	for ( i = 0; i <= size; i++) {	    
+        rc = element_at_c_array ( myArray, i , &p_rv );
+        rv = *(int*)p_rv;
+	    assert ( rv == i );
+        free ( p_rv );
+    }	
+	return myArray;
+}
+void test_with_iterator_function() {
+	struct clib_array* myArray = create_array();
+	print_using_iterators(myArray);
+	replace_values_using_iterators(myArray);
+	print_using_iterators(myArray);
+	delete_c_array ( myArray );
+}
 void 
 test_c_array(){
     test_with_int();
     test_with_pointers();
     test_with_strings();
+	test_with_iterator_function();
 }

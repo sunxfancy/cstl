@@ -40,6 +40,68 @@ free_e ( void* ptr ) {
     free ( ptr);
 }
 
+static void 
+replace_values_using_iterators(struct clib_deque* myDeq) {
+	struct clib_iterator *myItr;
+	struct clib_object *pElement;
+
+	myItr     = new_iterator_c_deque (myDeq);
+	pElement  = myItr->get_next(myItr);
+	while ( pElement ) {
+		void* old_value = myItr->get_value(pElement);
+		int new_value = *(int*)old_value;
+		new_value = new_value * 2;
+		myItr->replace_value( myItr, &new_value, sizeof(new_value));
+		free ( old_value );
+		pElement = myItr->get_next(myItr);
+	}
+	delete_iterator_c_deque( myItr );
+}
+static struct clib_deque* 
+create_deque() {
+    int flip = 1;
+    int i = 0;
+    int limit = 20;
+    struct clib_deque* myDeq = new_c_deque ( 10, compare_e, NULL);
+    assert ( (struct clib_deque*)0 != myDeq );
+
+    for ( i = 0; i <= limit; i++ ) { 
+        if ( flip ) {
+            push_back_c_deque ( myDeq, &i , sizeof(int));
+            flip = 0;
+        } else {
+            push_front_c_deque ( myDeq, &i, sizeof(int) );
+            flip = 1;
+        }
+	}
+	return myDeq;
+}
+static void
+print_using_iterator(struct clib_deque* myDeq) {
+	struct clib_iterator *myItr;
+	struct clib_object *pElement;
+
+	printf ( "------------------------------------------------\n");
+	myItr     = new_iterator_c_deque (myDeq);
+	pElement  = myItr->get_next(myItr);
+	while ( pElement ) {
+		void* value = myItr->get_value(pElement);
+		printf ( "%d\n", *(int*)value);
+		free ( value );
+		pElement = myItr->get_next(myItr);
+	}
+	delete_iterator_c_deque( myItr );
+}
+
+static void
+test_with_deque_iterator() {
+	struct clib_deque* myDeq = create_deque();
+	print_using_iterator(myDeq);
+	replace_values_using_iterators(myDeq);
+	print_using_iterator(myDeq);
+	delete_c_deque ( myDeq );
+}
+
 void 
 test_c_deque() {
     int flip = 1;
@@ -84,8 +146,9 @@ test_c_deque() {
         void* elem;
         if ( element_at_c_deque( myDeq, i, &elem ) == CLIB_ERROR_SUCCESS ) {
                 assert ( *(int*)elem == j++ );
-                clib_free ( elem );
+                free ( elem );
         }
     }
     delete_c_deque(myDeq);
+	test_with_deque_iterator();
 }

@@ -50,6 +50,38 @@ compare_int ( void* left, void* right ) {
         return 1;
     return 0;
 }
+
+static void
+test_with_iterators() {
+	int test[] = {13,8,17,1,11,15,25,6,22,27};
+	int	index  = 0;
+	int size   = sizeof (test) /sizeof(test[0]);
+	struct clib_iterator *myItr;
+	struct clib_object *pElement;
+
+	struct clib_set* pSet = new_c_set ( compare_int, NULL);
+
+	for ( index = 0; index < size; index++ ) {
+		int v = test[index];
+		insert_c_set ( pSet, &v, sizeof(int));
+	}
+	for ( index = 0; index < size; index++ ) {
+		int v = test[index];
+		assert ( clib_true == exists_c_set ( pSet, &v));
+	}
+	printf ( "------------------------------------------------\n");
+	myItr     = new_iterator_c_set (pSet);
+	pElement  = myItr->get_next(myItr);
+	while ( pElement ) {
+		void* value = myItr->get_value(pElement);
+		printf ( "%d\n", *(int*)value);
+		free ( value );
+		pElement = myItr->get_next(myItr);
+	}
+	delete_iterator_c_array( myItr );
+	delete_c_set( pSet);
+}
+
 void 
 test_c_set(){
     {
@@ -72,7 +104,7 @@ test_c_set(){
         index = 9;
         find_c_set ( pSet, &index, &outKey);
         assert ( 9 == *(int*)outKey);
-        clib_free ( outKey );
+        free ( outKey );
         delete_c_set(pSet);
     }
     {
@@ -100,7 +132,7 @@ test_c_set(){
         for ( index = 0; index < size; index++ ){
             char *temp = clib_strdup ( ti[index].string );
             insert_c_set ( pSet, temp, strlen(temp) + 1 );
-            clib_free ( temp );
+            free ( temp );
         }
         for ( index = 0; index < size; index++ ){
             v = ti[index].string;
@@ -108,4 +140,5 @@ test_c_set(){
         }
         delete_c_set(pSet);
     }
+	test_with_iterators();
 }

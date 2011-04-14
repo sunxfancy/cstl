@@ -211,6 +211,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\inc\c_iterator.h"
+				>
+			</File>
+			<File
 				RelativePath="..\inc\c_lib.h"
 				>
 			</File>

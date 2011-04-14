@@ -83,7 +83,7 @@ __right_rotate(struct clib_rb* pTree, struct clib_rb_node* x) {
 struct clib_rb*
 new_c_rb(clib_compare fn_c,clib_destroy fn_ed, clib_destroy fn_vd ){
 
-    struct clib_rb* pTree = (struct clib_rb*)clib_malloc(sizeof(struct clib_rb));
+    struct clib_rb* pTree = (struct clib_rb*)malloc(sizeof(struct clib_rb));
     if ( pTree == (struct clib_rb*)0 )
         return (struct clib_rb*)0;
 
@@ -146,7 +146,7 @@ find_c_rb (struct clib_rb* pTree, void* key) {
         void* cur_key ;
         get_raw_clib_object ( x->key, &cur_key );
         c = pTree->compare_fn (key, cur_key);
-        clib_free ( cur_key );
+        free ( cur_key );
         if (c == 0) {
             break;
         } else {
@@ -167,7 +167,7 @@ insert_c_rb(struct clib_rb* pTree, void* k, size_t key_size, void* v, size_t val
 	struct clib_rb_node* y;
 	struct clib_rb_node* z;
 
-    x = (struct clib_rb_node*)clib_malloc (sizeof(struct clib_rb_node));
+    x = (struct clib_rb_node*)malloc (sizeof(struct clib_rb_node));
     if ( x == (struct clib_rb_node*)0  ) 
         return CLIB_ERROR_MEMORY;
 
@@ -194,8 +194,8 @@ insert_c_rb(struct clib_rb* pTree, void* k, size_t key_size, void* v, size_t val
         get_raw_clib_object ( x->key, &new_key );
 
         c = (pTree->compare_fn) ( new_key , cur_key);
-        clib_free ( cur_key );
-        clib_free ( new_key );
+        free ( cur_key );
+        free ( new_key );
         if (c == 0) {
             /* TODO : Delete node here */
             return CLIB_RBTREE_KEY_DUPLICATE;
@@ -210,13 +210,13 @@ insert_c_rb(struct clib_rb* pTree, void* k, size_t key_size, void* v, size_t val
     if (z) {
         int c = 0;
         void* cur_key;
-		void *new_key;
+		void* new_key;
         get_raw_clib_object ( z->key, &cur_key );
         get_raw_clib_object ( x->key, &new_key );
 
         c = pTree->compare_fn( new_key, cur_key);
-        clib_free ( cur_key );
-        clib_free ( new_key );
+        free ( cur_key );
+        free ( new_key );
         if (c < 0) {
             z->left = x;
         } else {
@@ -341,7 +341,7 @@ remove_c_rb (struct clib_rb* pTree, void* key) {
         void* cur_key;
         get_raw_clib_object ( z->key, &cur_key );
         c = pTree->compare_fn (key, cur_key);
-        clib_free ( cur_key );
+        free ( cur_key );
         if ( c == 0) {
             break;
         }
@@ -390,27 +390,57 @@ delete_c_rb(struct clib_rb* pTree) {
             if (z->parent) {
                 z = z->parent;
                 if (z->left != rb_sentinel){
-                    clib_free ( z->left );
+                    free ( z->left );
                     z->left = rb_sentinel;
                 }else if (z->right != rb_sentinel){
-                    clib_free ( z->right );
+                    free ( z->right );
                     z->right = rb_sentinel;
                 }
             } else {
-                clib_free ( z );
+                free ( z );
                 z = rb_sentinel;
             }
         }
     }
-    clib_free ( pTree );
+    free ( pTree );
     return rc;
 }
+struct clib_rb_node *
+minimum_c_rb( struct clib_rb* pTree, struct clib_rb_node* x ) {
+	while ( x->left != rb_sentinel)
+		x = x->left;
+	return x;
+}
+
+struct clib_rb_node *
+maximum_c_rb( struct clib_rb* pTree, struct clib_rb_node* x ) {
+	while ( x->right != rb_sentinel)
+		x = x->right;
+	return x;
+}
+
 
 clib_bool 
 empty_c_rb(struct clib_rb* pTree) {
     if ( pTree->root != rb_sentinel )
         return clib_true;
     return clib_false;
+}
+struct clib_rb_node*
+tree_successor(struct clib_rb* pTree, struct clib_rb_node* x) {
+	struct clib_rb_node *y = (struct clib_rb_node*)0;
+	if ( x->right != rb_sentinel)
+		return minimum_c_rb( pTree, x->right);
+	
+	if ( x  == maximum_c_rb(pTree,pTree->root)) 
+		return (struct clib_rb_node*)0;
+
+	y = x->parent;
+	while ( y != rb_sentinel && x == y->right ){
+		x = y;
+		y = y->parent;
+	}
+	return y;
 }
 /*struct clib_rb_node*
 get_next_c_rb(struct clib_rb* pTree, struct clib_rb_node**current, struct clib_rb_node**pre) {

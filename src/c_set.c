@@ -28,7 +28,7 @@
 struct clib_set* 
 new_c_set ( clib_compare fn_c, clib_destroy fn_d) {
 
-    struct clib_set* pSet  =  (struct clib_set*)clib_malloc(sizeof(struct clib_set));
+    struct clib_set* pSet  =  (struct clib_set*)malloc(sizeof(struct clib_set));
     if (pSet == (struct clib_set*)0 )
         return (struct clib_set*)0 ;
 
@@ -68,8 +68,8 @@ remove_c_set ( struct clib_set* pSet, void* key) {
 
     node = remove_c_rb ( pSet->root, key );
     if ( node != (struct clib_rb_node*)0  ) {
-        /*clib_free ( node->raw_data.key);
-        clib_free ( node );*/
+        /*free ( node->raw_data.key);
+        free ( node );*/
     }
     return rc;
 }
@@ -95,7 +95,46 @@ delete_c_set ( struct clib_set* x) {
     clib_error rc = CLIB_ERROR_SUCCESS;
     if ( x != (struct clib_set*)0  ){
         rc = delete_c_rb ( x->root );
-        clib_free ( x );
+        free ( x );
     }
     return rc;
+}
+static struct clib_rb_node *
+minimum_c_set( struct clib_set *x ) {
+	return minimum_c_rb( x->root, x->root->root);
+}
+
+static struct clib_object* 
+get_next_c_set( struct clib_iterator* pIterator ) {
+	if ( ! pIterator->pCurrentElement ) {
+		pIterator->pCurrentElement = minimum_c_set(pIterator->pContainer);
+	}else {
+		struct clib_set *x = (struct clib_set*)pIterator->pContainer;
+		pIterator->pCurrentElement = tree_successor( x->root, pIterator->pCurrentElement);			              
+	}
+	if ( ! pIterator->pCurrentElement)
+		return (struct clib_object*)0;
+
+	return ((struct clib_rb_node*)pIterator->pCurrentElement)->key;
+}
+static void* 
+get_value_c_set( void* pObject) {
+	void* elem;
+	get_raw_clib_object ( pObject, &elem );
+	return elem;
+}
+
+struct clib_iterator* 
+new_iterator_c_set(struct clib_set* pSet) {
+	struct clib_iterator *itr = ( struct clib_iterator*) malloc ( sizeof ( struct clib_iterator));
+	itr->get_next     = get_next_c_set;
+	itr->get_value    = get_value_c_set;
+	itr->pContainer   = pSet;
+	itr->pCurrent     = 0;
+	itr->pCurrentElement = (void*)0;
+	return itr;
+}
+void
+delete_iterator_c_set ( struct clib_iterator* pItr) {
+	free ( pItr );
 }
