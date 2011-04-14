@@ -30,6 +30,7 @@ extern void test_c_set();
 extern void test_c_map();
 extern void test_c_slist();
 extern void test_c_map();
+extern void test_c_algorithms();
 
 int main( int argc, char**argv ) {	
     printf ( "Performing test for dynamic array\n");
@@ -42,5 +43,8 @@ int main( int argc, char**argv ) {
     test_c_map();
     printf ( "Performing test for slist\n");
     test_c_slist();
+    printf ( "Performing algorithms tests\n");
+    test_c_algorithms();
+
     return 0;
 }

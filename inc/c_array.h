@@ -25,11 +25,11 @@
 #define _C_ARRAY_H_
 
 struct clib_array {
-    int no_max_elements;
-    int no_of_elements;
-    struct clib_object** pElements;
-    clib_compare compare_fn;
-    clib_destroy destruct_fn;
+    int no_max_elements; /* Number of maximum elements array can hold without reallocation */
+    int no_of_elements;  /* Number of current elements in the array */
+    struct clib_object** pElements; /* actual storage area */
+    clib_compare compare_fn; /* Compare function pointer*/
+    clib_destroy destruct_fn; /* Destructor function pointer*/
 };
 
 extern struct clib_array* new_c_array ( int init_size, clib_compare fn_c, clib_destroy fn_d);

@@ -52,9 +52,16 @@ struct clib_object {
     size_t size;
 };
 
-#define clib_slist_null (struct clib_slist*)0
 
-#include "c_iterator.h"
+struct clib_iterator {
+	struct clib_object* (*get_next)(struct clib_iterator*);
+	void (*replace_value)(struct clib_iterator*,void*,size_t);
+	void* (*get_value)(void*);
+	void* pContainer;
+	int   pCurrent;
+	void* pCurrentElement;
+};
+
 #include "c_array.h"
 #include "c_deque.h"
 #include "c_rb.h"
@@ -62,6 +69,7 @@ struct clib_object {
 #include "c_map.h"
 #include "c_slist.h"
 #include "c_map.h"
+#include "c_algorithms.h"
 
 /* ------------------------------------------------------------------------*/
 /*            H E L P E R       F U N C T I O N S                          */
